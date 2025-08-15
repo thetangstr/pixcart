@@ -8,7 +8,7 @@ import bcrypt from 'bcryptjs'
 import { FirestoreAdapter } from '@/app/lib/firestoreAdapter'
 import { FirestoreUsers } from '@/app/lib/firestore'
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   adapter: FirestoreAdapter(),
   providers: [
     // Google OAuth
@@ -67,12 +67,48 @@ const authOptions: NextAuthOptions = {
   },
   
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // Admin always allowed
+      if (user.email === 'thetangstr@gmail.com') {
+        // Set admin flag
+        const dbUser = await FirestoreUsers.findByEmail(user.email);
+        if (dbUser) {
+          await FirestoreUsers.update(dbUser.id, { isAdmin: true, isWhitelisted: true });
+        }
+        return true;
+      }
+
+      // Check if email is whitelisted
+      const { FirestoreWhitelist } = await import('@/app/lib/firestore');
+      const isWhitelisted = await FirestoreWhitelist.isWhitelisted(user.email!);
+      
+      if (!isWhitelisted) {
+        // Redirect to not authorized page
+        return '/auth/not-authorized';
+      }
+
+      // Update user whitelist status
+      const dbUser = await FirestoreUsers.findByEmail(user.email!);
+      if (dbUser) {
+        await FirestoreUsers.update(dbUser.id, { isWhitelisted: true });
+      }
+
+      return true;
+    },
+    
     async session({ session, token, user }) {
       if (token && session.user) {
         session.user.id = token.id as string
         session.user.name = token.name
         session.user.email = token.email
         session.user.image = token.picture
+        
+        // Add admin and beta tester status to session
+        const dbUser = await FirestoreUsers.findByEmail(session.user.email!);
+        if (dbUser) {
+          (session.user as any).isAdmin = dbUser.isAdmin || false;
+          (session.user as any).isBetaTester = dbUser.isBetaTester || false;
+        }
       }
       return session
     },

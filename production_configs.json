@@ -1,0 +1,176 @@
+{
+  "version": "1.0",
+  "optimization_date": "2024-01-14",
+  "configurations": {
+    "classic_portrait": {
+      "name": "Classic Portrait",
+      "description": "Old Masters style with realistic detail and traditional techniques",
+      "positive_prompt_template": "professional oil painting on canvas, classical portrait style, old masters technique, realistic oil painting, traditional brushwork, glazing technique, chiaroscuro lighting, museum quality artwork, fine art painting, detailed fur texture in oil paint, careful brushstrokes, varnished canvas, {subject_description}",
+      "negative_prompt": "digital art, 3d render, cartoon, anime, photograph, watercolor, sketch, low quality, blurry, deformed, mutation, bad anatomy, extra limbs, missing limbs, plastic, smooth digital rendering",
+      "parameters": {
+        "cfg_scale": 7.5,
+        "denoising_strength": 0.45,
+        "steps": 30,
+        "sampler": "DPM++ 2M Karras",
+        "seed": -1,
+        "width": 512,
+        "height": 512,
+        "controlnet": {
+          "enabled": true,
+          "models": [
+            {
+              "model": "control_v11p_sd15_canny",
+              "weight": 0.65,
+              "guidance_start": 0.0,
+              "guidance_end": 1.0,
+              "processor": "canny",
+              "threshold_a": 100,
+              "threshold_b": 200
+            },
+            {
+              "model": "control_v11f1p_sd15_depth",
+              "weight": 0.35,
+              "guidance_start": 0.0,
+              "guidance_end": 0.8,
+              "processor": "depth_midas"
+            }
+          ]
+        }
+      },
+      "best_for": [
+        "portraits",
+        "formal pets",
+        "detailed subjects"
+      ],
+      "performance_scores": {
+        "subject_preservation": 8.5,
+        "oil_authenticity": 8.7,
+        "style_distinctiveness": 8.8,
+        "consistency": 8.3
+      }
+    },
+    "thick_textured": {
+      "name": "Thick & Textured",
+      "description": "Bold impasto style with heavy brushstrokes and dimensional paint",
+      "positive_prompt_template": "thick impasto oil painting, heavy brushstrokes, textured paint application, palette knife painting, bold oil painting, visible paint texture, dimensional brushwork, expressive oil painting, rich paint layers, tactile paint surface, dynamic brushwork, three-dimensional paint surface, {subject_description}",
+      "negative_prompt": "smooth, flat, digital art, photograph, watercolor, thin paint, airbrush, 3d render, cartoon, photorealistic, glossy, clean lines, vector art, minimalist",
+      "parameters": {
+        "cfg_scale": 8.5,
+        "denoising_strength": 0.55,
+        "steps": 30,
+        "sampler": "DPM++ 2M Karras",
+        "seed": -1,
+        "width": 512,
+        "height": 512,
+        "controlnet": {
+          "enabled": true,
+          "models": [
+            {
+              "model": "control_v11p_sd15_canny",
+              "weight": 0.5,
+              "guidance_start": 0.0,
+              "guidance_end": 1.0,
+              "processor": "canny",
+              "threshold_a": 100,
+              "threshold_b": 200
+            },
+            {
+              "model": "control_v11f1p_sd15_depth",
+              "weight": 0.5,
+              "guidance_start": 0.0,
+              "guidance_end": 0.9,
+              "processor": "depth_midas"
+            }
+          ]
+        }
+      },
+      "best_for": [
+        "expressive portraits",
+        "dynamic poses",
+        "artistic interpretation"
+      ],
+      "performance_scores": {
+        "subject_preservation": 8.4,
+        "oil_authenticity": 8.9,
+        "style_distinctiveness": 8.9,
+        "consistency": 8.2
+      }
+    },
+    "soft_dreamy": {
+      "name": "Soft & Dreamy",
+      "description": "Impressionist-inspired with gentle brushwork and ethereal quality",
+      "positive_prompt_template": "soft impressionist oil painting, gentle brushstrokes, dreamy atmosphere, blended oil colors, romantic painting style, ethereal quality, luminous oil painting, soft edges, harmonious color palette, delicate paint application, atmospheric perspective, {subject_description}",
+      "negative_prompt": "harsh lines, digital art, photograph, sharp details, hard edges, cartoon, 3d render, oversaturated, high contrast, geometric, angular, defined lines, stark, bold outlines",
+      "parameters": {
+        "cfg_scale": 7.0,
+        "denoising_strength": 0.4,
+        "steps": 30,
+        "sampler": "DPM++ 2M Karras",
+        "seed": -1,
+        "width": 512,
+        "height": 512,
+        "controlnet": {
+          "enabled": true,
+          "models": [
+            {
+              "model": "control_v11p_sd15_canny",
+              "weight": 0.5,
+              "guidance_start": 0.0,
+              "guidance_end": 0.8,
+              "processor": "canny",
+              "threshold_a": 150,
+              "threshold_b": 250
+            },
+            {
+              "model": "control_v11f1p_sd15_depth",
+              "weight": 0.3,
+              "guidance_start": 0.0,
+              "guidance_end": 0.7,
+              "processor": "depth_midas"
+            }
+          ]
+        }
+      },
+      "best_for": [
+        "romantic portraits",
+        "soft lighting",
+        "dreamy atmospheres"
+      ],
+      "performance_scores": {
+        "subject_preservation": 8.3,
+        "oil_authenticity": 8.6,
+        "style_distinctiveness": 8.5,
+        "consistency": 8.4
+      }
+    }
+  },
+  "edge_cases": {
+    "black_pets_low_light": {
+      "preprocessing": "increase_exposure",
+      "parameter_adjustments": {
+        "cfg_scale": "+0.5",
+        "controlnet_canny_weight": "+0.1"
+      }
+    },
+    "extreme_closeup": {
+      "parameter_adjustments": {
+        "controlnet_depth_weight": "-0.1",
+        "denoising_strength": "-0.05"
+      }
+    },
+    "multiple_subjects": {
+      "use_regional_prompter": true,
+      "parameter_adjustments": {
+        "cfg_scale": "+0.5",
+        "steps": "+5"
+      }
+    },
+    "white_pets_overexposed": {
+      "preprocessing": "reduce_exposure",
+      "parameter_adjustments": {
+        "cfg_scale": "-0.5",
+        "negative_prompt_addition": ", overexposed, blown out highlights"
+      }
+    }
+  }
+}

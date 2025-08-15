@@ -21,8 +21,32 @@ export interface User {
   name?: string | null;
   image?: string | null;
   emailVerified?: Date | null;
+  isAdmin?: boolean;
+  isWhitelisted?: boolean;
+  isBetaTester?: boolean;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface Feedback {
+  id: string;
+  userId: string;
+  userEmail: string;
+  type: 'bug' | 'feature' | 'improvement' | 'other';
+  title: string;
+  description: string;
+  status: 'new' | 'in_progress' | 'resolved' | 'wont_fix';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Whitelist {
+  id: string;
+  email: string;
+  addedBy: string;
+  addedAt: Date;
+  notes?: string;
 }
 
 export interface Account {
@@ -323,5 +347,116 @@ export class FirestoreConversions {
   static async delete(id: string): Promise<void> {
     const conversionRef = doc(db, this.collection, id);
     await deleteDoc(conversionRef);
+  }
+}
+
+// Feedback operations
+export class FirestoreFeedback {
+  static collection = 'feedback';
+
+  static async create(feedbackData: Omit<Feedback, 'id' | 'createdAt' | 'updatedAt'>): Promise<Feedback> {
+    const feedbackRef = doc(collection(db, this.collection));
+    const now = new Date();
+    
+    const feedback: Feedback = {
+      id: feedbackRef.id,
+      ...feedbackData,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    await setDoc(feedbackRef, {
+      ...feedback,
+      createdAt: dateToTimestamp(feedback.createdAt),
+      updatedAt: dateToTimestamp(feedback.updatedAt),
+    });
+
+    return feedback;
+  }
+
+  static async getAll(): Promise<Feedback[]> {
+    const querySnapshot = await getDocs(collection(db, this.collection));
+    
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        createdAt: timestampToDate(data.createdAt),
+        updatedAt: timestampToDate(data.updatedAt),
+      } as Feedback;
+    });
+  }
+
+  static async update(id: string, updates: Partial<Omit<Feedback, 'id' | 'createdAt'>>): Promise<void> {
+    const feedbackRef = doc(db, this.collection, id);
+    await updateDoc(feedbackRef, {
+      ...updates,
+      updatedAt: dateToTimestamp(new Date()),
+    });
+  }
+}
+
+// Whitelist operations
+export class FirestoreWhitelist {
+  static collection = 'whitelist';
+
+  static async add(email: string, addedBy: string, notes?: string): Promise<Whitelist> {
+    const whitelistRef = doc(collection(db, this.collection));
+    const now = new Date();
+    
+    const entry: Whitelist = {
+      id: whitelistRef.id,
+      email: email.toLowerCase(),
+      addedBy,
+      addedAt: now,
+      notes,
+    };
+
+    await setDoc(whitelistRef, {
+      ...entry,
+      addedAt: dateToTimestamp(entry.addedAt),
+    });
+
+    // Also update the user if they exist
+    const user = await FirestoreUsers.findByEmail(email);
+    if (user) {
+      await FirestoreUsers.update(user.id, { isWhitelisted: true });
+    }
+
+    return entry;
+  }
+
+  static async remove(email: string): Promise<void> {
+    const q = query(collection(db, this.collection), where("email", "==", email.toLowerCase()));
+    const querySnapshot = await getDocs(q);
+    
+    const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
+    await Promise.all(deletePromises);
+
+    // Also update the user if they exist
+    const user = await FirestoreUsers.findByEmail(email);
+    if (user) {
+      await FirestoreUsers.update(user.id, { isWhitelisted: false });
+    }
+  }
+
+  static async isWhitelisted(email: string): Promise<boolean> {
+    const q = query(collection(db, this.collection), where("email", "==", email.toLowerCase()));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+  }
+
+  static async getAll(): Promise<Whitelist[]> {
+    const querySnapshot = await getDocs(collection(db, this.collection));
+    
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        addedAt: timestampToDate(data.addedAt),
+      } as Whitelist;
+    });
   }
 }

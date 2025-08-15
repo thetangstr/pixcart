@@ -2,8 +2,10 @@
 
 import { useState, useRef, useCallback } from 'react'
 import Image from 'next/image'
-import { Upload, X, Download, Loader2, ImageIcon, Sparkles, ArrowRight, Palette, Info, CheckCircle } from 'lucide-react'
+import { Upload, X, Download, Loader2, ImageIcon, Sparkles, ArrowRight, CheckCircle } from 'lucide-react'
 import { oilPaintingStyles, type OilPaintingStyle } from '../lib/oilPaintingStyles'
+import StyleSelector from '../components/StyleSelector'
+import VideoTutorial from '../components/VideoTutorial'
 
 interface ConvertedImage {
   original: string
@@ -86,7 +88,7 @@ export default function UploadPage() {
       formData.append('denoising_strength', selectedStyle.denoising_strength.toString())
       formData.append('steps', selectedStyle.steps.toString())
 
-      const response = await fetch('/api/convert', {
+      const response = await fetch('/api/convert-v3', {
         method: 'POST',
         body: formData,
       })
@@ -95,12 +97,11 @@ export default function UploadPage() {
       setConversionProgress(100)
 
       if (response.ok) {
-        const blob = await response.blob()
-        const convertedUrl = URL.createObjectURL(blob)
+        const data = await response.json()
         
         const newConvertedImage: ConvertedImage = {
           original: previewUrl!,
-          converted: convertedUrl,
+          converted: data.image, // Use the data URL from the response
           originalName: selectedFile.name,
           style: selectedStyle
         }
@@ -158,82 +159,26 @@ export default function UploadPage() {
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <VideoTutorial />
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white text-sm font-medium mb-4">
-            <Sparkles className="h-4 w-4 mr-2" />
-            AI Oil Painting Converter
-          </div>
-          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Transform Your Photos into Art
+        {/* Compact Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Transform Your Photo
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Choose from 8 masterful oil painting styles to transform your photos into museum-quality artwork
+          <p className="text-gray-600">
+            Upload an image and select an oil painting style
           </p>
         </div>
 
-        {/* Style Selector */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-            <Palette className="h-6 w-6 mr-2 text-amber-500" />
-            Choose Your Oil Painting Style
-          </h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {oilPaintingStyles.map((style) => (
-              <button
-                key={style.id}
-                onClick={() => setSelectedStyle(style)}
-                className={`relative p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-lg ${
-                  selectedStyle.id === style.id
-                    ? 'border-amber-500 bg-gradient-to-br from-amber-50 to-orange-50 shadow-md'
-                    : 'border-gray-200 bg-white hover:border-amber-300'
-                }`}
-              >
-                {selectedStyle.id === style.id && (
-                  <div className="absolute top-2 right-2">
-                    <CheckCircle className="h-5 w-5 text-amber-500" />
-                  </div>
-                )}
-                {triedStyles.has(style.id) && selectedStyle.id !== style.id && (
-                  <div className="absolute top-2 right-2">
-                    <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
-                      <span className="text-white text-xs">✓</span>
-                    </div>
-                  </div>
-                )}
-                <div className="text-3xl mb-2">{style.icon}</div>
-                <h3 className="font-semibold text-gray-900 text-sm">{style.name}</h3>
-                <p className="text-xs text-gray-500 mt-1 line-clamp-2">{style.description}</p>
-                {triedStyles.has(style.id) && (
-                  <p className="text-xs text-green-600 mt-1 font-medium">Already tried</p>
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Style Details */}
-          <div className="mt-4 p-4 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-200">
-            <div className="flex items-start space-x-2">
-              <Info className="h-5 w-5 text-amber-600 mt-0.5" />
-              <div>
-                <h4 className="font-semibold text-gray-900">{selectedStyle.name}</h4>
-                <p className="text-sm text-gray-600 mt-1">{selectedStyle.description}</p>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  <span className="text-xs px-2 py-1 bg-white rounded-full">
-                    Intensity: {(selectedStyle.denoising_strength * 100).toFixed(0)}%
-                  </span>
-                  <span className="text-xs px-2 py-1 bg-white rounded-full">
-                    Detail: {selectedStyle.steps} steps
-                  </span>
-                  <span className="text-xs px-2 py-1 bg-white rounded-full">
-                    Style: {selectedStyle.cfg_scale.toFixed(1)}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Enhanced Style Selector with Integrated Tips */}
+        <div className="mb-6 bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
+          <StyleSelector
+            styles={oilPaintingStyles}
+            selectedStyle={selectedStyle}
+            onStyleSelect={setSelectedStyle}
+            triedStyles={triedStyles}
+          />
         </div>
 
         {/* Upload Area */}
@@ -378,7 +323,7 @@ export default function UploadPage() {
         {convertedImages.length > 0 && (
           <div className="space-y-8">
             <h2 className="text-3xl font-bold text-gray-900 text-center">
-              Your Oil Painting Gallery
+              Your Oil Painting Result
             </h2>
             
             {convertedImages.map((image, index) => (
@@ -394,39 +339,28 @@ export default function UploadPage() {
                     </div>
                     <button
                       onClick={() => downloadImage(image.converted, image.originalName)}
-                      className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-medium rounded-lg hover:from-amber-600 hover:to-orange-700 transition-all duration-200 shadow-md"
+                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold rounded-lg hover:from-amber-600 hover:to-orange-700 transition-all duration-200 shadow-lg text-lg"
                     >
-                      <Download className="h-4 w-4 mr-2" />
-                      Download
+                      <Download className="h-5 w-5 mr-2" />
+                      Download Oil Painting
                     </button>
                   </div>
                   
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Original */}
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-medium text-gray-700">Original Photo</h4>
-                      <div className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden">
-                        <Image
-                          src={image.original}
-                          alt="Original"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Converted */}
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-medium text-gray-700">Oil Painting Result</h4>
-                      <div className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden">
-                        <Image
-                          src={image.converted}
-                          alt="Converted Oil Painting"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    </div>
+                  {/* Large Result Display */}
+                  <div className="relative aspect-[4/3] bg-gray-100 rounded-xl overflow-hidden shadow-inner">
+                    <Image
+                      src={image.converted}
+                      alt="Oil Painting Result"
+                      fill
+                      className="object-contain"
+                      priority
+                      sizes="(max-width: 1280px) 100vw, 1280px"
+                    />
+                  </div>
+                  
+                  {/* Small original reference */}
+                  <div className="mt-4 flex items-center space-x-2 text-sm text-gray-500">
+                    <span>Original photo: {image.originalName}</span>
                   </div>
                 </div>
               </div>
@@ -434,40 +368,6 @@ export default function UploadPage() {
           </div>
         )}
 
-        {/* Tips Section */}
-        <div className="mt-12 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-8 border border-amber-200">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Pro Tips for Best Results</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
-            <div>
-              <h4 className="font-semibold mb-2 flex items-center">
-                <span className="text-amber-500 mr-2">👤</span> 
-                For Portraits
-              </h4>
-              <p className="text-sm">Use "Portrait Master" or "Classical Renaissance" styles for best facial preservation. These styles maintain details while adding artistic flair.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2 flex items-center">
-                <span className="text-amber-500 mr-2">🌄</span>
-                For Landscapes
-              </h4>
-              <p className="text-sm">Try "Romantic Landscape" or "Impressionist Light" styles for stunning natural scenes with atmospheric effects.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2 flex items-center">
-                <span className="text-amber-500 mr-2">🐾</span>
-                For Pets
-              </h4>
-              <p className="text-sm">"Classical Renaissance" or "Photorealistic Oil" work wonderfully for pet portraits, preserving their unique features.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2 flex items-center">
-                <span className="text-amber-500 mr-2">🎨</span>
-                For Artistic Effect
-              </h4>
-              <p className="text-sm">"Post-Impressionist" or "Modern Abstract" styles create bold, expressive artwork with dramatic transformations.</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   )

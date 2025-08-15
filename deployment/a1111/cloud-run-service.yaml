@@ -1,0 +1,112 @@
+# Cloud Run service configuration for Automatic1111 Stable Diffusion WebUI
+# Optimized for GPU workloads with auto-scaling to zero
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: a1111-webui
+  labels:
+    cloud.googleapis.com/location: us-central1
+  annotations:
+    # GPU configuration
+    run.googleapis.com/execution-environment: gen2
+    run.googleapis.com/gpu-type: nvidia-l4
+    
+    # Traffic configuration
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+    
+    # Billing and quota
+    run.googleapis.com/cpu-throttling: "true"
+    
+spec:
+  template:
+    metadata:
+      annotations:
+        # Resource allocation
+        run.googleapis.com/cpu: "4"
+        run.googleapis.com/memory: "16Gi"
+        run.googleapis.com/gpu: "1"
+        
+        # Scaling configuration
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "10"
+        
+        # Concurrency (1 for GPU workloads)
+        run.googleapis.com/execution-environment: gen2
+        run.googleapis.com/timeout: "3600s"
+        
+        # Custom annotations for better performance
+        run.googleapis.com/cpu-throttling: "true"
+        run.googleapis.com/startup-cpu-boost: "true"
+        
+    spec:
+      # Container configuration
+      containerConcurrency: 1
+      timeoutSeconds: 3600
+      serviceAccountName: a1111-service
+      
+      containers:
+      - name: a1111-webui
+        image: gcr.io/PROJECT_ID/a1111-webui:latest
+        
+        ports:
+        - name: http1
+          containerPort: 8080
+          protocol: TCP
+          
+        env:
+        # CUDA and PyTorch optimizations
+        - name: PYTORCH_CUDA_ALLOC_CONF
+          value: "max_split_size_mb:512"
+        - name: CUDA_LAUNCH_BLOCKING
+          value: "0"
+        - name: GRADIO_SERVER_NAME
+          value: "0.0.0.0"
+        - name: PORT
+          value: "8080"
+        # Memory optimizations
+        - name: TCMALLOC_AGGRESSIVE_DECOMMIT
+          value: "t"
+        
+        resources:
+          limits:
+            cpu: "4"
+            memory: "16Gi"
+            nvidia.com/gpu: "1"
+          requests:
+            cpu: "2"
+            memory: "8Gi"
+            nvidia.com/gpu: "1"
+            
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /sdapi/v1/options
+            port: 8080
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+          
+        readinessProbe:
+          httpGet:
+            path: /sdapi/v1/options
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 3
+          
+        startupProbe:
+          httpGet:
+            path: /sdapi/v1/options
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 30  # Allow up to 5 minutes for startup
+          
+  traffic:
+  - percent: 100
+    latestRevision: true

@@ -1,0 +1,202 @@
+{
+  "iterations": [
+    {
+      "iteration": 1,
+      "timestamp": "2025-08-14T12:00:00Z",
+      "style": "Classic Portrait",
+      "scores": {
+        "subjectPreservation": 7.2,
+        "oilAuthenticity": 7.5,
+        "styleDistinctiveness": 7.8,
+        "consistency": 7.0,
+        "overall": 7.4
+      },
+      "prompt": {
+        "positive": "oil painting portrait, Renaissance technique...",
+        "negative": "photograph, digital art...",
+        "settings": {
+          "cfg_scale": 7,
+          "denoising_strength": 0.4,
+          "steps": 35,
+          "sampler": "DPM++ 2M Karras"
+        }
+      }
+    },
+    {
+      "iteration": 2,
+      "timestamp": "2025-08-14T12:02:00Z",
+      "style": "Thick & Textured",
+      "scores": {
+        "subjectPreservation": 6.8,
+        "oilAuthenticity": 8.5,
+        "styleDistinctiveness": 9.0,
+        "consistency": 7.5,
+        "overall": 7.95
+      },
+      "prompt": {
+        "positive": "thick impasto oil painting...",
+        "negative": "smooth surface, flat painting...",
+        "settings": {
+          "cfg_scale": 8,
+          "denoising_strength": 0.52,
+          "steps": 40,
+          "sampler": "Euler a"
+        }
+      }
+    },
+    {
+      "iteration": 3,
+      "timestamp": "2025-08-14T12:04:00Z",
+      "style": "Soft & Dreamy",
+      "scores": {
+        "subjectPreservation": 7.5,
+        "oilAuthenticity": 7.8,
+        "styleDistinctiveness": 7.2,
+        "consistency": 8.0,
+        "overall": 7.6
+      },
+      "prompt": {
+        "positive": "soft impressionist oil painting...",
+        "negative": "sharp focus, hard edges...",
+        "settings": {
+          "cfg_scale": 6,
+          "denoising_strength": 0.45,
+          "steps": 30,
+          "sampler": "DPM++ 2M Karras"
+        }
+      }
+    },
+    {
+      "iteration": 4,
+      "timestamp": "2025-08-14T12:06:00Z",
+      "style": "Classic Portrait",
+      "scores": {
+        "subjectPreservation": 7.8,
+        "oilAuthenticity": 7.9,
+        "styleDistinctiveness": 8.0,
+        "consistency": 7.5,
+        "overall": 7.8
+      },
+      "prompt": {
+        "positive": "oil painting portrait, Renaissance technique...",
+        "negative": "photograph, digital art...",
+        "settings": {
+          "cfg_scale": 7.2,
+          "denoising_strength": 0.42,
+          "steps": 35,
+          "sampler": "DPM++ 2M Karras"
+        }
+      }
+    },
+    {
+      "iteration": 5,
+      "timestamp": "2025-08-14T12:08:00Z",
+      "style": "Thick & Textured",
+      "scores": {
+        "subjectPreservation": 7.2,
+        "oilAuthenticity": 8.8,
+        "styleDistinctiveness": 9.2,
+        "consistency": 8.0,
+        "overall": 8.3
+      },
+      "prompt": {
+        "positive": "thick impasto oil painting...",
+        "negative": "smooth surface, flat painting...",
+        "settings": {
+          "cfg_scale": 8.2,
+          "denoising_strength": 0.54,
+          "steps": 40,
+          "sampler": "Euler a"
+        }
+      }
+    },
+    {
+      "iteration": 6,
+      "timestamp": "2025-08-14T12:10:00Z",
+      "style": "Soft & Dreamy",
+      "scores": {
+        "subjectPreservation": 7.9,
+        "oilAuthenticity": 8.2,
+        "styleDistinctiveness": 7.5,
+        "consistency": 8.3,
+        "overall": 8.0
+      },
+      "prompt": {
+        "positive": "soft impressionist oil painting...",
+        "negative": "sharp focus, hard edges...",
+        "settings": {
+          "cfg_scale": 6.2,
+          "denoising_strength": 0.47,
+          "steps": 30,
+          "sampler": "DPM++ 2M Karras"
+        }
+      }
+    },
+    {
+      "iteration": 7,
+      "timestamp": "2025-08-14T12:12:00Z",
+      "style": "Classic Portrait",
+      "scores": {
+        "subjectPreservation": 8.2,
+        "oilAuthenticity": 8.3,
+        "styleDistinctiveness": 8.2,
+        "consistency": 8.0,
+        "overall": 8.2
+      },
+      "prompt": {
+        "positive": "oil painting portrait, Renaissance technique...",
+        "negative": "photograph, digital art...",
+        "settings": {
+          "cfg_scale": 7.4,
+          "denoising_strength": 0.44,
+          "steps": 35,
+          "sampler": "DPM++ 2M Karras"
+        }
+      }
+    },
+    {
+      "iteration": 8,
+      "timestamp": "2025-08-14T12:14:00Z",
+      "style": "Thick & Textured",
+      "scores": {
+        "subjectPreservation": 7.5,
+        "oilAuthenticity": 9.0,
+        "styleDistinctiveness": 9.3,
+        "consistency": 8.2,
+        "overall": 8.5
+      },
+      "prompt": {
+        "positive": "thick impasto oil painting...",
+        "negative": "smooth surface, flat painting...",
+        "settings": {
+          "cfg_scale": 8.4,
+          "denoising_strength": 0.56,
+          "steps": 40,
+          "sampler": "Euler a"
+        }
+      }
+    },
+    {
+      "iteration": 9,
+      "timestamp": "2025-08-14T12:16:00Z",
+      "style": "Soft & Dreamy",
+      "scores": {
+        "subjectPreservation": 8.1,
+        "oilAuthenticity": 8.4,
+        "styleDistinctiveness": 7.8,
+        "consistency": 8.5,
+        "overall": 8.2
+      },
+      "prompt": {
+        "positive": "soft impressionist oil painting...",
+        "negative": "sharp focus, hard edges...",
+        "settings": {
+          "cfg_scale": 6.4,
+          "denoising_strength": 0.49,
+          "steps": 30,
+          "sampler": "DPM++ 2M Karras"
+        }
+      }
+    }
+  ]
+}

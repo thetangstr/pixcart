@@ -1,0 +1,225 @@
+# GitHub Actions workflow for automated deployment of Automatic1111 to Google Cloud Run
+# This workflow builds and deploys the A1111 Stable Diffusion WebUI with GPU support
+
+name: Deploy A1111 to Cloud Run
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'testing'
+        type: choice
+        options:
+          - testing
+          - production
+      force_rebuild:
+        description: 'Force rebuild Docker image'
+        required: false
+        default: false
+        type: boolean
+
+  # Automatic trigger on main branch (optional)
+  push:
+    branches:
+      - main
+    paths:
+      - 'deployment/a1111/**'
+    
+  # Scheduled rebuild (weekly, to get security updates)
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6 AM UTC
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+  SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SA_KEY }}
+  
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120  # 2 hours for model downloads and build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ env.PROJECT_ID }}
+        service_account_key: ${{ env.SERVICE_ACCOUNT_KEY }}
+        export_default_credentials: true
+        
+    - name: Configure Docker for Google Cloud
+      run: |
+        gcloud auth configure-docker
+        
+    - name: Determine deployment configuration
+      id: config
+      run: |
+        if [[ "${{ github.event.inputs.environment }}" == "production" ]]; then
+          echo "config_file=cloud-run-service.yaml" >> $GITHUB_OUTPUT
+          echo "service_name=a1111-webui" >> $GITHUB_OUTPUT
+          echo "max_instances=10" >> $GITHUB_OUTPUT
+        else
+          echo "config_file=cloud-run-testing.yaml" >> $GITHUB_OUTPUT
+          echo "service_name=a1111-webui-testing" >> $GITHUB_OUTPUT
+          echo "max_instances=1" >> $GITHUB_OUTPUT
+        fi
+        
+        # Determine if we should rebuild
+        if [[ "${{ github.event.inputs.force_rebuild }}" == "true" ]] || [[ "${{ github.event_name }}" == "schedule" ]]; then
+          echo "should_rebuild=true" >> $GITHUB_OUTPUT
+        else
+          # Check if image exists
+          if gcloud container images describe gcr.io/${{ env.PROJECT_ID }}/a1111-webui:latest 2>/dev/null; then
+            echo "should_rebuild=false" >> $GITHUB_OUTPUT
+          else
+            echo "should_rebuild=true" >> $GITHUB_OUTPUT
+          fi
+        fi
+        
+    - name: Enable required Google Cloud APIs
+      run: |
+        gcloud services enable cloudbuild.googleapis.com
+        gcloud services enable run.googleapis.com
+        gcloud services enable containerregistry.googleapis.com
+        
+    - name: Create service account (if not exists)
+      run: |
+        if ! gcloud iam service-accounts describe a1111-service@${{ env.PROJECT_ID }}.iam.gserviceaccount.com 2>/dev/null; then
+          gcloud iam service-accounts create a1111-service \
+            --display-name="Automatic1111 WebUI Service Account" \
+            --description="Service account for A1111 Stable Diffusion WebUI"
+            
+          # Grant necessary permissions
+          gcloud projects add-iam-policy-binding ${{ env.PROJECT_ID }} \
+            --member="serviceAccount:a1111-service@${{ env.PROJECT_ID }}.iam.gserviceaccount.com" \
+            --role="roles/logging.logWriter"
+            
+          gcloud projects add-iam-policy-binding ${{ env.PROJECT_ID }} \
+            --member="serviceAccount:a1111-service@${{ env.PROJECT_ID }}.iam.gserviceaccount.com" \
+            --role="roles/monitoring.metricWriter"
+        fi
+        
+    - name: Build and push Docker image
+      if: steps.config.outputs.should_rebuild == 'true'
+      run: |
+        echo "Building Docker image..."
+        gcloud builds submit \
+          --config=deployment/a1111/cloudbuild.yaml \
+          --substitutions=_REGION=${{ env.REGION }},_DEPLOY_TO_CLOUD_RUN=false \
+          --timeout=7200s \
+          .
+          
+    - name: Deploy to Cloud Run
+      run: |
+        echo "Deploying to Cloud Run..."
+        
+        # Replace PROJECT_ID in the service YAML
+        sed "s/PROJECT_ID/${{ env.PROJECT_ID }}/g" deployment/a1111/${{ steps.config.outputs.config_file }} > /tmp/cloud-run-service.yaml
+        
+        # Deploy the service
+        gcloud run services replace /tmp/cloud-run-service.yaml \
+          --region=${{ env.REGION }}
+          
+        # Ensure the service allows unauthenticated requests
+        gcloud run services add-iam-policy-binding ${{ steps.config.outputs.service_name }} \
+          --member="allUsers" \
+          --role="roles/run.invoker" \
+          --region=${{ env.REGION }}
+          
+    - name: Get service URL
+      id: url
+      run: |
+        SERVICE_URL=$(gcloud run services describe ${{ steps.config.outputs.service_name }} \
+          --region=${{ env.REGION }} \
+          --format="value(status.url)")
+        echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
+        echo "Service URL: $SERVICE_URL"
+        
+    - name: Test deployment
+      run: |
+        echo "Testing deployment..."
+        SERVICE_URL="${{ steps.url.outputs.service_url }}"
+        
+        # Wait for service to be ready (with timeout)
+        for i in {1..30}; do
+          if curl -s -f "$SERVICE_URL/sdapi/v1/options" > /dev/null 2>&1; then
+            echo "✅ Service is responding!"
+            break
+          else
+            echo "⏳ Waiting for service... (attempt $i/30)"
+            sleep 20
+          fi
+          
+          if [ $i -eq 30 ]; then
+            echo "❌ Service did not respond within expected time"
+            echo "Check logs with: gcloud run services logs read ${{ steps.config.outputs.service_name }} --region=${{ env.REGION }}"
+            exit 1
+          fi
+        done
+        
+    - name: Post deployment summary
+      run: |
+        echo "## 🚀 A1111 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Environment:** ${{ github.event.inputs.environment || 'testing' }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Service Name:** ${{ steps.config.outputs.service_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Service URL:** ${{ steps.url.outputs.service_url }}" >> $GITHUB_STEP_SUMMARY
+        echo "**API Endpoint:** ${{ steps.url.outputs.service_url }}/sdapi/v1" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🧪 Test Commands" >> $GITHUB_STEP_SUMMARY
+        echo '```bash' >> $GITHUB_STEP_SUMMARY
+        echo "# Health check" >> $GITHUB_STEP_SUMMARY
+        echo "curl ${{ steps.url.outputs.service_url }}/sdapi/v1/options" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "# Test image generation" >> $GITHUB_STEP_SUMMARY
+        echo 'curl -X POST "${{ steps.url.outputs.service_url }}/sdapi/v1/txt2img" \' >> $GITHUB_STEP_SUMMARY
+        echo '  -H "Content-Type: application/json" \' >> $GITHUB_STEP_SUMMARY
+        echo '  -d '"'"'{"prompt": "oil painting test", "steps": 20}'"'"'' >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 💰 Cost Information" >> $GITHUB_STEP_SUMMARY
+        if [[ "${{ github.event.inputs.environment }}" == "testing" ]]; then
+          echo "- **Configuration:** Cost-optimized for testing" >> $GITHUB_STEP_SUMMARY
+          echo "- **Resources:** 2 CPU, 8GB RAM, 1 GPU" >> $GITHUB_STEP_SUMMARY
+          echo "- **Max instances:** 1" >> $GITHUB_STEP_SUMMARY
+          echo "- **Estimated cost:** ~$0.65/hour when active" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "- **Configuration:** Production-ready" >> $GITHUB_STEP_SUMMARY
+          echo "- **Resources:** 4 CPU, 16GB RAM, 1 GPU" >> $GITHUB_STEP_SUMMARY
+          echo "- **Max instances:** 10" >> $GITHUB_STEP_SUMMARY
+          echo "- **Estimated cost:** ~$1.30/hour when active" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+    - name: Update environment URL (for oil-painting-app)
+      if: github.event.inputs.environment == 'production'
+      run: |
+        echo "## 🔗 Update Your Application" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Update your oil-painting-app configuration:" >> $GITHUB_STEP_SUMMARY
+        echo '```typescript' >> $GITHUB_STEP_SUMMARY
+        echo "// In app/api/convert/route.ts" >> $GITHUB_STEP_SUMMARY
+        echo "const A1111_BASE_URL = '${{ steps.url.outputs.service_url }}'" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        
+  notify-failure:
+    if: failure()
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Notify on failure
+      run: |
+        echo "## ❌ Deployment Failed" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "The A1111 deployment has failed. Please check the logs above for details." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Common issues:" >> $GITHUB_STEP_SUMMARY
+        echo "- Insufficient GPU quota in the selected region" >> $GITHUB_STEP_SUMMARY
+        echo "- Docker build timeout (large model downloads)" >> $GITHUB_STEP_SUMMARY
+        echo "- Invalid service account permissions" >> $GITHUB_STEP_SUMMARY
+        echo "- Network connectivity issues during model download" >> $GITHUB_STEP_SUMMARY

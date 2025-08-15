@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getStyleById, getDefaultStyle } from '../../lib/oilPaintingStyles'
 
 // A1111 API configuration
-const A1111_BASE_URL = 'http://localhost:7860'
+// Use environment variable for production, fallback to localhost for development
+const A1111_BASE_URL = process.env.A1111_BASE_URL || 'http://localhost:7860'
 
 interface Txt2ImgRequest {
   prompt: string

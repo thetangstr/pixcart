@@ -1,0 +1,190 @@
+{
+  "optimized_parameters": {
+    "classic_portrait": {
+      "parameters": {
+        "denoising_strength": 0.6,
+        "cfg_scale": 7.7,
+        "steps": 38,
+        "sampler": "Euler a",
+        "controlnet_weight": 0.75
+      },
+      "score": 0.6763634259560799,
+      "improvement": -0.023636574043920056
+    },
+    "thick_textured": {
+      "parameters": {
+        "denoising_strength": 0.51,
+        "cfg_scale": 10.3,
+        "steps": 41,
+        "sampler": "Euler a",
+        "controlnet_weight": 0.66
+      },
+      "score": 0.7299198150576265,
+      "improvement": 0.02991981505762653
+    },
+    "soft_impressionist": {
+      "parameters": {
+        "denoising_strength": 0.51,
+        "cfg_scale": 8.8,
+        "steps": 28,
+        "sampler": "DPM++ 2M Karras",
+        "controlnet_weight": 0.62
+      },
+      "score": 0.8910764089455799,
+      "improvement": 0.19107640894557998
+    }
+  },
+  "all_results": {
+    "classic_portrait": [
+      {
+        "iteration": 1,
+        "parameters": {
+          "denoising_strength": 0.6,
+          "cfg_scale": 7.7,
+          "steps": 38,
+          "sampler": "Euler a",
+          "controlnet_weight": 0.75
+        },
+        "scores": {
+          "overall_quality": 0.6672482928651684,
+          "subject_preservation": 0.8148535919065832,
+          "style_effect": 0.41761336023689655,
+          "combined_score": 0.6763634259560799
+        }
+      },
+      {
+        "iteration": 2,
+        "parameters": {
+          "denoising_strength": 0.61,
+          "cfg_scale": 8.3,
+          "steps": 34,
+          "sampler": "Euler a",
+          "controlnet_weight": 0.58
+        },
+        "scores": {
+          "overall_quality": 0.5009669902522209,
+          "subject_preservation": 0.889912307289369,
+          "style_effect": 0.45811482604103054,
+          "combined_score": 0.6479746842248422
+        }
+      },
+      {
+        "iteration": 3,
+        "parameters": {
+          "denoising_strength": 0.66,
+          "cfg_scale": 7.2,
+          "steps": 42,
+          "sampler": "Euler a",
+          "controlnet_weight": 0.64
+        },
+        "scores": {
+          "overall_quality": 0.682740725962155,
+          "subject_preservation": 0.6029568796254727,
+          "style_effect": 0.6824881046474098,
+          "combined_score": 0.6507766631645331
+        }
+      }
+    ],
+    "thick_textured": [
+      {
+        "iteration": 1,
+        "parameters": {
+          "denoising_strength": 0.53,
+          "cfg_scale": 9.9,
+          "steps": 39,
+          "sampler": "Euler a",
+          "controlnet_weight": 0.64
+        },
+        "scores": {
+          "overall_quality": 0.7232779777639442,
+          "subject_preservation": 0.8779305615135706,
+          "style_effect": 0.5715590820571446,
+          "combined_score": 0.7089861946061122
+        }
+      },
+      {
+        "iteration": 2,
+        "parameters": {
+          "denoising_strength": 0.51,
+          "cfg_scale": 10.3,
+          "steps": 41,
+          "sampler": "Euler a",
+          "controlnet_weight": 0.66
+        },
+        "scores": {
+          "overall_quality": 0.5646643099078523,
+          "subject_preservation": 0.8416298740582222,
+          "style_effect": 0.7700788996695103,
+          "combined_score": 0.7299198150576265
+        }
+      },
+      {
+        "iteration": 3,
+        "parameters": {
+          "denoising_strength": 0.48,
+          "cfg_scale": 9.4,
+          "steps": 43,
+          "sampler": "Euler a",
+          "controlnet_weight": 0.64
+        },
+        "scores": {
+          "overall_quality": 0.5249903607480144,
+          "subject_preservation": 0.7040763959481092,
+          "style_effect": 0.5383984261391422,
+          "combined_score": 0.584079397464494
+        }
+      }
+    ],
+    "soft_impressionist": [
+      {
+        "iteration": 1,
+        "parameters": {
+          "denoising_strength": 0.54,
+          "cfg_scale": 8.9,
+          "steps": 30,
+          "sampler": "DPM++ 2M Karras",
+          "controlnet_weight": 0.68
+        },
+        "scores": {
+          "overall_quality": 0.7185253868277032,
+          "subject_preservation": 0.9305067382154156,
+          "style_effect": 0.508621073961,
+          "combined_score": 0.7297475659533914
+        }
+      },
+      {
+        "iteration": 2,
+        "parameters": {
+          "denoising_strength": 0.51,
+          "cfg_scale": 8.8,
+          "steps": 28,
+          "sampler": "DPM++ 2M Karras",
+          "controlnet_weight": 0.62
+        },
+        "scores": {
+          "overall_quality": 0.9891530618477951,
+          "subject_preservation": 0.9328670267955688,
+          "style_effect": 0.7278979264013423,
+          "combined_score": 0.8910764089455799
+        }
+      },
+      {
+        "iteration": 3,
+        "parameters": {
+          "denoising_strength": 0.56,
+          "cfg_scale": 10.1,
+          "steps": 32,
+          "sampler": "DPM++ 2M Karras",
+          "controlnet_weight": 0.7
+        },
+        "scores": {
+          "overall_quality": 0.8247821521498319,
+          "subject_preservation": 0.7537337269112598,
+          "style_effect": 0.8416007914945537,
+          "combined_score": 0.8049607951197482
+        }
+      }
+    ]
+  },
+  "timestamp": "2025-08-14T20:54:01.881668"
+}

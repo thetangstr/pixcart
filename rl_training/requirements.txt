@@ -1,0 +1,47 @@
+# RL Training System Requirements
+
+# Core ML and Data Science
+numpy>=1.21.0
+pandas>=1.3.0
+scikit-learn>=1.0.0
+scipy>=1.7.0
+
+# Deep Learning
+torch>=1.9.0
+torchvision>=0.10.0
+
+# Computer Vision
+opencv-python>=4.5.0
+Pillow>=8.3.0
+scikit-image>=0.18.0
+
+# Visualization
+matplotlib>=3.4.0
+seaborn>=0.11.0
+plotly>=5.3.0
+
+# Web and API
+requests>=2.25.0
+flask>=2.0.0
+
+# Data Processing
+jinja2>=3.0.0
+tqdm>=4.62.0
+
+# System Monitoring
+psutil>=5.8.0
+
+# Optional packages for enhanced functionality
+# openai>=0.27.0  # For GPT-4V evaluation (requires API key)
+# anthropic>=0.3.0  # For Claude evaluation (requires API key)
+
+# Development and Testing
+pytest>=6.2.0
+pytest-cov>=2.12.0
+
+# Database
+# sqlite3 is included in Python standard library
+
+# Image dataset APIs (optional - set API keys as environment variables)
+# UNSPLASH_ACCESS_KEY=your_key
+# PEXELS_API_KEY=your_key

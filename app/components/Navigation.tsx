@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
-import { Palette, Upload, Image as ImageIcon, Home, User, LogOut, LogIn } from 'lucide-react'
+import { Palette, Upload, Image as ImageIcon, Home, User, LogOut, LogIn, BarChart } from 'lucide-react'
 import { useState } from 'react'
 
 export default function Navigation() {
@@ -15,6 +15,7 @@ export default function Navigation() {
     { href: '/', label: 'Home', icon: Home },
     { href: '/upload', label: 'Convert', icon: Upload },
     { href: '/gallery', label: 'Gallery', icon: ImageIcon },
+    { href: '/testing', label: 'Testing', icon: BarChart },
   ]
 
   const handleSignOut = async () => {

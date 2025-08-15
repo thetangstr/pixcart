@@ -1,0 +1,106 @@
+{
+  "test_configs": [
+    {
+      "name": "current_production",
+      "denoising": 0.65,
+      "cfg": 9.0,
+      "steps": 30,
+      "controlnet": 0.65,
+      "description": "Current production settings"
+    },
+    {
+      "name": "lower_denoising",
+      "denoising": 0.55,
+      "cfg": 9.0,
+      "steps": 30,
+      "controlnet": 0.65,
+      "description": "Lower denoising for more preservation"
+    },
+    {
+      "name": "higher_denoising",
+      "denoising": 0.75,
+      "cfg": 9.0,
+      "steps": 30,
+      "controlnet": 0.65,
+      "description": "Higher denoising for more effect"
+    },
+    {
+      "name": "stronger_controlnet",
+      "denoising": 0.65,
+      "cfg": 9.0,
+      "steps": 30,
+      "controlnet": 0.8,
+      "description": "Stronger ControlNet for better preservation"
+    },
+    {
+      "name": "balanced_new",
+      "denoising": 0.6,
+      "cfg": 8.5,
+      "steps": 35,
+      "controlnet": 0.7,
+      "description": "Balanced approach with slight adjustments"
+    }
+  ],
+  "results": [
+    {
+      "config": {
+        "name": "current_production",
+        "denoising": 0.65,
+        "cfg": 9.0,
+        "steps": 30,
+        "controlnet": 0.65,
+        "description": "Current production settings"
+      },
+      "file": "compare_current_production.png",
+      "time": 20.546677827835083
+    },
+    {
+      "config": {
+        "name": "lower_denoising",
+        "denoising": 0.55,
+        "cfg": 9.0,
+        "steps": 30,
+        "controlnet": 0.65,
+        "description": "Lower denoising for more preservation"
+      },
+      "file": "compare_lower_denoising.png",
+      "time": 17.57850694656372
+    },
+    {
+      "config": {
+        "name": "higher_denoising",
+        "denoising": 0.75,
+        "cfg": 9.0,
+        "steps": 30,
+        "controlnet": 0.65,
+        "description": "Higher denoising for more effect"
+      },
+      "file": "compare_higher_denoising.png",
+      "time": 62.125447034835815
+    },
+    {
+      "config": {
+        "name": "stronger_controlnet",
+        "denoising": 0.65,
+        "cfg": 9.0,
+        "steps": 30,
+        "controlnet": 0.8,
+        "description": "Stronger ControlNet for better preservation"
+      },
+      "file": "compare_stronger_controlnet.png",
+      "time": 65.80030298233032
+    },
+    {
+      "config": {
+        "name": "balanced_new",
+        "denoising": 0.6,
+        "cfg": 8.5,
+        "steps": 35,
+        "controlnet": 0.7,
+        "description": "Balanced approach with slight adjustments"
+      },
+      "file": "compare_balanced_new.png",
+      "time": 54.46510314941406
+    }
+  ]
+}

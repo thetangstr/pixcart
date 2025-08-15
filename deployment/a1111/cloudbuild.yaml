@@ -1,0 +1,81 @@
+# Cloud Build configuration for Automatic1111 Stable Diffusion WebUI
+# This builds a container optimized for Google Cloud Run with GPU support
+
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', 'gcr.io/$PROJECT_ID/a1111-webui:${SHORT_SHA}',
+      '-t', 'gcr.io/$PROJECT_ID/a1111-webui:latest',
+      '-f', 'deployment/a1111/Dockerfile',
+      '.'
+    ]
+    timeout: '3600s'  # 1 hour timeout for large model downloads
+
+  # Push both tags to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/a1111-webui:${SHORT_SHA}']
+    
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/a1111-webui:latest']
+
+  # Deploy to Cloud Run (optional, can be disabled for manual deployments)
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if [[ "${_DEPLOY_TO_CLOUD_RUN}" == "true" ]]; then
+          gcloud run deploy a1111-webui \
+            --image gcr.io/$PROJECT_ID/a1111-webui:${SHORT_SHA} \
+            --platform managed \
+            --region ${_REGION} \
+            --allow-unauthenticated \
+            --port 8080 \
+            --cpu 4 \
+            --memory 16Gi \
+            --gpu 1 \
+            --gpu-type nvidia-l4 \
+            --concurrency 1 \
+            --max-instances 10 \
+            --min-instances 0 \
+            --cpu-throttling \
+            --execution-environment gen2 \
+            --timeout 3600 \
+            --set-env-vars "PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512" \
+            --set-env-vars "CUDA_LAUNCH_BLOCKING=0" \
+            --set-env-vars "GRADIO_SERVER_NAME=0.0.0.0" \
+            --service-account ${_SERVICE_ACCOUNT}
+        else
+          echo "Skipping Cloud Run deployment (set _DEPLOY_TO_CLOUD_RUN=true to enable)"
+        fi
+
+# Options for the build
+options:
+  # Use a high-memory machine for building
+  machineType: 'E2_HIGHCPU_32'
+  
+  # Enable Docker layer caching
+  env:
+    - 'DOCKER_BUILDKIT=1'
+  
+  # Increase disk size for model downloads
+  diskSizeGb: 200
+  
+  # Use substitution for dynamic values
+  substitution_option: 'ALLOW_LOOSE'
+
+# Substitutions (can be overridden)
+substitutions:
+  _REGION: 'us-central1'
+  _DEPLOY_TO_CLOUD_RUN: 'false'  # Set to 'true' to auto-deploy
+  _SERVICE_ACCOUNT: 'a1111-service@${PROJECT_ID}.iam.gserviceaccount.com'
+
+# Timeout for the entire build
+timeout: '7200s'  # 2 hours
+
+# Images to be produced
+images:
+  - 'gcr.io/$PROJECT_ID/a1111-webui:${SHORT_SHA}'
+  - 'gcr.io/$PROJECT_ID/a1111-webui:latest'

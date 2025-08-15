@@ -1,0 +1,121 @@
+# Cloud Run service configuration for TESTING - Cost Optimized
+# This configuration minimizes costs during development and testing
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: a1111-webui-testing
+  labels:
+    cloud.googleapis.com/location: us-central1
+    environment: testing
+  annotations:
+    # GPU configuration
+    run.googleapis.com/execution-environment: gen2
+    run.googleapis.com/gpu-type: nvidia-l4
+    
+    # Traffic configuration
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+    
+    # Billing and quota - aggressive cost optimization
+    run.googleapis.com/cpu-throttling: "true"
+    
+spec:
+  template:
+    metadata:
+      annotations:
+        # COST OPTIMIZED: Minimal resource allocation
+        run.googleapis.com/cpu: "2"          # Reduced from 4 to 2 CPUs
+        run.googleapis.com/memory: "8Gi"     # Reduced from 16Gi to 8Gi
+        run.googleapis.com/gpu: "1"          # Still need 1 GPU for AI processing
+        
+        # COST OPTIMIZED: Aggressive scaling configuration
+        autoscaling.knative.dev/minScale: "0"     # Scale to zero when idle
+        autoscaling.knative.dev/maxScale: "1"     # Only 1 instance max for testing
+        
+        # COST OPTIMIZED: Shorter timeout to reduce billable time
+        run.googleapis.com/timeout: "900s"        # 15 minutes instead of 1 hour
+        
+        # Performance optimizations
+        run.googleapis.com/execution-environment: gen2
+        run.googleapis.com/cpu-throttling: "true"
+        run.googleapis.com/startup-cpu-boost: "true"
+        
+        # COST OPTIMIZED: Request-based scaling
+        autoscaling.knative.dev/target-utilization-percentage: "70"
+        
+    spec:
+      # COST OPTIMIZED: Single concurrent request (prevents multiple GPUs)
+      containerConcurrency: 1
+      timeoutSeconds: 900  # 15 minutes
+      serviceAccountName: a1111-service
+      
+      containers:
+      - name: a1111-webui
+        image: gcr.io/PROJECT_ID/a1111-webui:latest
+        
+        ports:
+        - name: http1
+          containerPort: 8080
+          protocol: TCP
+          
+        env:
+        # CUDA and PyTorch optimizations for smaller memory
+        - name: PYTORCH_CUDA_ALLOC_CONF
+          value: "max_split_size_mb:256"  # Smaller allocation for 8GB RAM
+        - name: CUDA_LAUNCH_BLOCKING
+          value: "0"
+        - name: GRADIO_SERVER_NAME
+          value: "0.0.0.0"
+        - name: PORT
+          value: "8080"
+        # Memory optimizations for testing
+        - name: TCMALLOC_AGGRESSIVE_DECOMMIT
+          value: "t"
+        # COST OPTIMIZED: Testing environment flags
+        - name: ENVIRONMENT
+          value: "testing"
+        - name: MAX_BATCH_SIZE
+          value: "1"
+        
+        resources:
+          limits:
+            cpu: "2"               # Reduced CPU
+            memory: "8Gi"          # Reduced memory
+            nvidia.com/gpu: "1"    # Still need GPU
+          requests:
+            cpu: "1"               # Minimal CPU request
+            memory: "4Gi"          # Minimal memory request
+            nvidia.com/gpu: "1"
+            
+        # COST OPTIMIZED: Faster health checks to reduce cold start time
+        livenessProbe:
+          httpGet:
+            path: /sdapi/v1/options
+            port: 8080
+          initialDelaySeconds: 60   # Reduced from 120
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 2       # Reduced from 3
+          
+        readinessProbe:
+          httpGet:
+            path: /sdapi/v1/options
+            port: 8080
+          initialDelaySeconds: 30   # Reduced from 60
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 2       # Reduced from 3
+          
+        startupProbe:
+          httpGet:
+            path: /sdapi/v1/options
+            port: 8080
+          initialDelaySeconds: 15   # Reduced from 30
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 20      # Reduced from 30
+          
+  traffic:
+  - percent: 100
+    latestRevision: true
