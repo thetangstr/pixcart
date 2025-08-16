@@ -1,0 +1,14 @@
+{
+  "id": 7,
+  "category": "cat",
+  "style": "modern",
+  "style_name": "Modern Expressive",
+  "original_image": "/evaluation-images/portraits_styled/portrait_7_original.jpg",
+  "converted_image": "/evaluation-images/portraits_styled/portrait_7_modern.jpg",
+  "parameters": {
+    "denoising_strength": 0.3,
+    "cfg_scale": 3.0,
+    "prompt": "modern oil painting, expressive brushwork, contemporary art style, bold strokes, thick paint, impast..."
+  },
+  "timestamp": "2025-08-15 22:11:56"
+}

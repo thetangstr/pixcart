@@ -1,0 +1,21 @@
+{
+  "id": 9,
+  "category": "cat",
+  "original_image": "/evaluation-images/all_tasks/task_9_original.jpg",
+  "source_file": "cat_012.jpg",
+  "conversions": {
+    "classic": {
+      "image": "/evaluation-images/all_tasks/task_9_classic.jpg",
+      "style_name": "Classic Oil Portrait"
+    },
+    "impressionist": {
+      "image": "/evaluation-images/all_tasks/task_9_impressionist.jpg",
+      "style_name": "Impressionist Style"
+    },
+    "modern": {
+      "image": "/evaluation-images/all_tasks/task_9_modern.jpg",
+      "style_name": "Modern Expressive"
+    }
+  },
+  "created": "2025-08-16 08:50:03"
+}

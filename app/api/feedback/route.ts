@@ -1,52 +1,73 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
-import { FirestoreFeedback } from '@/app/lib/firestore';
+import { NextRequest, NextResponse } from 'next/server'
+import { getCurrentUser } from '@/lib/auth'
+import fs from 'fs/promises'
+import path from 'path'
 
-export async function POST(req: NextRequest) {
+const FEEDBACK_FILE = path.join(process.cwd(), 'data', 'feedback.json')
+
+async function ensureDataDir() {
+  const dataDir = path.join(process.cwd(), 'data')
   try {
-    const session = await getServerSession(authOptions);
-    
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { type, title, description } = await req.json();
-
-    if (!type || !title || !description) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
-
-    const feedback = await FirestoreFeedback.create({
-      userId: session.user.id || session.user.email,
-      userEmail: session.user.email,
-      type,
-      title,
-      description,
-      status: 'new',
-      priority: type === 'bug' ? 'high' : 'medium',
-    });
-
-    return NextResponse.json(feedback);
-  } catch (error) {
-    console.error('Error creating feedback:', error);
-    return NextResponse.json({ error: 'Failed to create feedback' }, { status: 500 });
+    await fs.access(dataDir)
+  } catch {
+    await fs.mkdir(dataDir, { recursive: true })
   }
 }
 
-export async function GET(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const user = await getCurrentUser(request)
     
-    // Only admins can view all feedback
-    if (!session?.user?.isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
     }
-
-    const feedback = await FirestoreFeedback.getAll();
-    return NextResponse.json(feedback);
+    
+    const { type, message } = await request.json()
+    
+    if (!type || !message) {
+      return NextResponse.json(
+        { error: 'Type and message are required' },
+        { status: 400 }
+      )
+    }
+    
+    // Ensure data directory exists
+    await ensureDataDir()
+    
+    // Create feedback item
+    const feedbackItem = {
+      id: Date.now().toString(),
+      type,
+      message,
+      userId: user.id,
+      username: user.username,
+      timestamp: new Date().toISOString()
+    }
+    
+    // Read existing feedback
+    let feedback = []
+    try {
+      const data = await fs.readFile(FEEDBACK_FILE, 'utf-8')
+      feedback = JSON.parse(data)
+    } catch {
+      // File doesn't exist yet
+    }
+    
+    // Add new feedback
+    feedback.push(feedbackItem)
+    
+    // Save feedback
+    await fs.writeFile(FEEDBACK_FILE, JSON.stringify(feedback, null, 2))
+    
+    return NextResponse.json({ success: true, feedback: feedbackItem })
   } catch (error) {
-    console.error('Error fetching feedback:', error);
-    return NextResponse.json({ error: 'Failed to fetch feedback' }, { status: 500 });
+    console.error('Error saving feedback:', error)
+    return NextResponse.json(
+      { error: 'Failed to save feedback' },
+      { status: 500 }
+    )
   }
 }

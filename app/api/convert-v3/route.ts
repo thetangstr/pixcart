@@ -13,49 +13,49 @@ interface ProcessingStage {
 const TWO_STAGE_CONFIG: Record<string, { stage1: ProcessingStage; stage2: ProcessingStage }> = {
   classic_portrait: {
     stage1: {
-      denoising_strength: 0.40,
-      cfg_scale: 8.0,
-      steps: 30,
-      controlnet_weight: 0.80,
+      denoising_strength: 0.35,  // RL optimized from 511 conversions
+      cfg_scale: 6.5,  // RL optimized: best performing
+      steps: 30,  // RL optimized
+      controlnet_weight: 0.55,  // RL optimized: actual best value
       prompt_modifier: 'subtle oil painting effect, preserve subject completely'
     },
     stage2: {
-      denoising_strength: 0.25,
-      cfg_scale: 7.0,
-      steps: 20,
-      controlnet_weight: 0.60,
+      denoising_strength: 0.20,  // Light enhancement pass
+      cfg_scale: 6.0,  // RL optimized
+      steps: 20,  // RL optimized
+      controlnet_weight: 0.50,
       prompt_modifier: 'enhance oil painting texture, maintain identity'
     }
   },
   thick_textured: {
     stage1: {
-      denoising_strength: 0.42,
-      cfg_scale: 7.5,
-      steps: 35,
-      controlnet_weight: 0.75,
+      denoising_strength: 0.35,  // RL optimized
+      cfg_scale: 7.5,  // RL optimized
+      steps: 25,  // RL optimized
+      controlnet_weight: 0.70,  // RL optimized
       prompt_modifier: 'initial Van Gogh style, keep subject intact'
     },
     stage2: {
-      denoising_strength: 0.28,
-      cfg_scale: 6.5,
-      steps: 25,
-      controlnet_weight: 0.55,
+      denoising_strength: 0.25,  // RL optimized
+      cfg_scale: 7.0,
+      steps: 15,  // RL optimized
+      controlnet_weight: 0.60,
       prompt_modifier: 'enhance thick paint texture, preserve features'
     }
   },
   soft_impressionist: {
     stage1: {
-      denoising_strength: 0.38,
-      cfg_scale: 7.0,
-      steps: 30,
-      controlnet_weight: 0.75,
+      denoising_strength: 0.45,  // RL optimized: best performer (0.950 score)
+      cfg_scale: 5.0,  // RL optimized: surprisingly low but effective
+      steps: 30,  // RL optimized
+      controlnet_weight: 0.85,  // RL optimized: strong preservation needed
       prompt_modifier: 'soft impressionist touch, subject unchanged'
     },
     stage2: {
-      denoising_strength: 0.22,
-      cfg_scale: 6.0,
-      steps: 20,
-      controlnet_weight: 0.50,
+      denoising_strength: 0.15,  // RL optimized: very light touch
+      cfg_scale: 5.5,  // RL optimized
+      steps: 15,  // Quick enhancement
+      controlnet_weight: 0.70,  // Still strong preservation
       prompt_modifier: 'refine impressionist effects, maintain recognition'
     }
   }

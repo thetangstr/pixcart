@@ -1,0 +1,32 @@
+{
+  "id": 6,
+  "category": "cat",
+  "original_image": "/evaluation-images/quality_three_styles/task_6_original.jpg",
+  "conversions": {
+    "classic": {
+      "image": "/evaluation-images/quality_three_styles/task_6_classic.jpg",
+      "style_name": "Classic Oil Portrait",
+      "parameters": {
+        "denoising_strength": 0.3,
+        "cfg_scale": 3.0
+      }
+    },
+    "impressionist": {
+      "image": "/evaluation-images/quality_three_styles/task_6_impressionist.jpg",
+      "style_name": "Impressionist Style",
+      "parameters": {
+        "denoising_strength": 0.3,
+        "cfg_scale": 3.0
+      }
+    },
+    "modern": {
+      "image": "/evaluation-images/quality_three_styles/task_6_modern.jpg",
+      "style_name": "Modern Expressive",
+      "parameters": {
+        "denoising_strength": 0.3,
+        "cfg_scale": 3.0
+      }
+    }
+  },
+  "timestamp": "2025-08-15 23:17:30"
+}

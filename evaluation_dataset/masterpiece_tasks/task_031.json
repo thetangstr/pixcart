@@ -1,0 +1,20 @@
+{
+  "id": 31,
+  "category": "cat",
+  "original_image": "/evaluation-images/batch_tasks/task_31_original.jpg",
+  "conversions": {
+    "classic": {
+      "image": "/evaluation-images/batch_tasks/task_31_classic.jpg",
+      "style_name": "Classic Oil Master"
+    },
+    "impressionist": {
+      "image": "/evaluation-images/batch_tasks/task_31_impressionist.jpg",
+      "style_name": "Impressionist Master"
+    },
+    "modern": {
+      "image": "/evaluation-images/batch_tasks/task_31_modern.jpg",
+      "style_name": "Modern Expression"
+    }
+  },
+  "timestamp": "2025-08-16 10:16:22"
+}

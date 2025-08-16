@@ -1,0 +1,21 @@
+{
+  "classic": {
+    "preservation": 1,
+    "style": 4,
+    "overall": 3,
+    "feedback": "cat is in a different position than original"
+  },
+  "lastUpdated": "2025-08-16T15:27:05.943Z",
+  "impressionist": {
+    "preservation": 1,
+    "style": 3,
+    "overall": 2,
+    "feedback": ""
+  },
+  "modern": {
+    "preservation": 1,
+    "style": 2,
+    "overall": 1,
+    "feedback": ""
+  }
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "demo_1",
+    "title": "Oil Painting Cat #1",
+    "description": "Professional oil painting conversion of a cat portrait",
+    "originalImage": "/gallery/demo_1_original.jpg",
+    "paintingImage": "/gallery/demo_1_painting.jpg",
+    "category": "cat",
+    "timestamp": "2025-08-16 10:22:35"
+  },
+  {
+    "id": "demo_2",
+    "title": "Oil Painting Cat #2",
+    "description": "Professional oil painting conversion of a cat portrait",
+    "originalImage": "/gallery/demo_2_original.jpg",
+    "paintingImage": "/gallery/demo_2_painting.jpg",
+    "category": "cat",
+    "timestamp": "2025-08-16 10:23:20"
+  },
+  {
+    "id": "demo_3",
+    "title": "Oil Painting Cat #3",
+    "description": "Professional oil painting conversion of a cat portrait",
+    "originalImage": "/gallery/demo_3_original.jpg",
+    "paintingImage": "/gallery/demo_3_painting.jpg",
+    "category": "cat",
+    "timestamp": "2025-08-16 10:24:21"
+  },
+  {
+    "id": "demo_5",
+    "title": "Oil Painting Dog #5",
+    "description": "Professional oil painting conversion of a dog portrait",
+    "originalImage": "/gallery/demo_5_original.jpg",
+    "paintingImage": "/gallery/demo_5_painting.jpg",
+    "category": "dog",
+    "timestamp": "2025-08-16 10:25:23"
+  },
+  {
+    "id": "demo_6",
+    "title": "Oil Painting Dog #6",
+    "description": "Professional oil painting conversion of a dog portrait",
+    "originalImage": "/gallery/demo_6_original.jpg",
+    "paintingImage": "/gallery/demo_6_painting.jpg",
+    "category": "dog",
+    "timestamp": "2025-08-16 10:26:22"
+  }
+]

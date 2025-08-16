@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-08-16 08:30:45",
+  "optimization_method": "RLHF (Reinforcement Learning with Human Feedback)",
+  "styles": {
+    "classic": {
+      "denoising_strength": 0.35,
+      "cfg_scale": 5.0,
+      "steps": 30,
+      "controlnet_weight": 0.7,
+      "sampler": "DPM++ 2M Karras",
+      "clip_skip": 1
+    },
+    "impressionist": {
+      "denoising_strength": 0.45,
+      "cfg_scale": 4.5,
+      "steps": 30,
+      "controlnet_weight": 0.55,
+      "sampler": "Euler a",
+      "clip_skip": 2
+    },
+    "modern": {
+      "denoising_strength": 0.55,
+      "cfg_scale": 5.5,
+      "steps": 30,
+      "controlnet_weight": 0.45,
+      "sampler": "DPM++ SDE Karras",
+      "clip_skip": 2
+    }
+  }
+}

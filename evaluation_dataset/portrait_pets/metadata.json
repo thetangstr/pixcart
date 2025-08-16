@@ -1,0 +1,11 @@
+{
+  "dataset": "portrait_pets",
+  "description": "Front-facing portraits of cats and dogs",
+  "stats": {
+    "cats_downloaded": 50,
+    "dogs_downloaded": 38,
+    "total": 88,
+    "image_size": "600x600 max",
+    "quality": "90% JPEG"
+  }
+}

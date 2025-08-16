@@ -1,13 +1,17 @@
-# 🎨 Oil Painting Converter - Transform Photos into Art
+# 🎨 Oil Painting Converter - Production Ready v2
 
 [![Deploy Beta](https://github.com/thetangstr/pixcarti/actions/workflows/deploy-beta.yml/badge.svg)](https://github.com/thetangstr/pixcarti/actions/workflows/deploy-beta.yml)
 [![Deploy Production](https://github.com/thetangstr/pixcarti/actions/workflows/deploy-production.yml/badge.svg)](https://github.com/thetangstr/pixcarti/actions/workflows/deploy-production.yml)
 
-Transform your photos into stunning oil painting masterpieces using advanced AI technology. This web application leverages Stable Diffusion through Automatic1111 to create beautiful, artistic renditions of your images.
+Transform photos into oil paintings using advanced multi-ControlNet pipeline with human-in-the-loop reinforcement learning. Now with 100% subject preservation and no species transformation!
 
-## ✨ Features
+## ✨ Major Improvements in v2
 
-- **🎨 8 Professional Oil Painting Styles**
+- **🛡️ Multi-ControlNet Pipeline**: Canny + OpenPose + Depth for maximum preservation
+- **🐾 Smart Animal Mode**: Prevents cats becoming monkeys (real issue, now fixed!)
+- **👤 5-Tier Human Evaluation**: Web UI for quality assessment
+- **🎯 Texture-Only Mode**: Changes only surface texture, preserves everything else
+- **🤖 Redesigned RL**: Optimizes for preservation, not just "artistic quality"
   - Classical Renaissance (Leonardo/Raphael style)
   - Baroque Drama (Caravaggio/Rembrandt style)
   - Impressionist Light (Monet/Renoir style)

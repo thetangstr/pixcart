@@ -1,0 +1,1 @@
+{"taskId":1,"category":"cat","preservation":3,"style":3,"overall":3,"comments":"","parameters":{"denoising_strength":0.15,"cfg_scale":2,"steps":15,"sampler_name":"DPM++ 2M Karras"},"timestamp":"2025-08-16T04:08:22.841Z"}

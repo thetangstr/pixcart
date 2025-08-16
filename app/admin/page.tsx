@@ -1,281 +1,309 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { Shield, UserPlus, Trash2, Loader2, AlertCircle, CheckCircle } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Shield, Users, MessageCircle, Bug, Lightbulb, Trash2, Edit2, X, Check } from 'lucide-react'
 import Link from 'next/link'
 
-interface WhitelistEntry {
+interface User {
   id: string
+  username: string
   email: string
-  addedBy: string
-  addedAt: string
-  notes?: string
+  role: 'admin' | 'user'
 }
 
-export default function AdminPanel() {
-  const { data: session, status } = useSession()
+interface FeedbackItem {
+  id: string
+  type: 'feedback' | 'bug' | 'feature'
+  message: string
+  userId: string
+  username: string
+  timestamp: string
+}
+
+export default function AdminConsole() {
   const router = useRouter()
-  const [whitelist, setWhitelist] = useState<WhitelistEntry[]>([])
-  const [newEmail, setNewEmail] = useState('')
-  const [notes, setNotes] = useState('')
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [users, setUsers] = useState<User[]>([])
+  const [feedbackItems, setFeedbackItems] = useState<FeedbackItem[]>([])
   const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
+  const [activeTab, setActiveTab] = useState<'users' | 'feedback'>('users')
+  const [editingUser, setEditingUser] = useState<string | null>(null)
+  const [newPassword, setNewPassword] = useState('')
 
-  // Check if user is admin
   useEffect(() => {
-    if (status === 'loading') return
-    
-    if (!session || session.user?.email !== 'thetangstr@gmail.com') {
-      router.push('/auth/not-authorized')
-    } else {
-      fetchWhitelist()
-    }
-  }, [session, status, router])
+    checkAuth()
+    fetchUsers()
+    fetchFeedback()
+  }, [])
 
-  const fetchWhitelist = async () => {
+  const checkAuth = async () => {
     try {
-      const response = await fetch('/api/admin/whitelist')
+      const response = await fetch('/api/auth/current')
       if (response.ok) {
         const data = await response.json()
-        setWhitelist(data)
+        if (data.user && data.user.role === 'admin') {
+          setCurrentUser(data.user)
+        } else {
+          router.push('/login')
+        }
       } else {
-        setError('Failed to fetch whitelist')
+        router.push('/login')
       }
-    } catch (err) {
-      setError('Error loading whitelist')
+    } catch (error) {
+      router.push('/login')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleAddEmail = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!newEmail) return
-
-    setSubmitting(true)
-    setError('')
-    setMessage('')
-
+  const fetchUsers = async () => {
     try {
-      const response = await fetch('/api/admin/whitelist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: newEmail, 
-          notes,
-          action: 'add' 
-        }),
-      })
-
+      const response = await fetch('/api/admin/users')
       if (response.ok) {
-        setMessage(`Successfully added ${newEmail} to whitelist`)
-        setNewEmail('')
-        setNotes('')
-        await fetchWhitelist()
-      } else {
         const data = await response.json()
-        setError(data.error || 'Failed to add email')
+        setUsers(data.users)
       }
-    } catch (err) {
-      setError('Error adding email to whitelist')
-    } finally {
-      setSubmitting(false)
+    } catch (error) {
+      console.error('Failed to fetch users:', error)
     }
   }
 
-  const handleRemoveEmail = async (email: string) => {
-    if (!confirm(`Remove ${email} from whitelist?`)) return
-
-    setError('')
-    setMessage('')
-
+  const fetchFeedback = async () => {
     try {
-      const response = await fetch('/api/admin/whitelist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email, 
-          action: 'remove' 
-        }),
-      })
-
+      const response = await fetch('/api/admin/feedback')
       if (response.ok) {
-        setMessage(`Removed ${email} from whitelist`)
-        await fetchWhitelist()
-      } else {
         const data = await response.json()
-        setError(data.error || 'Failed to remove email')
+        setFeedbackItems(data.feedback)
       }
-    } catch (err) {
-      setError('Error removing email from whitelist')
+    } catch (error) {
+      console.error('Failed to fetch feedback:', error)
     }
   }
 
-  if (status === 'loading' || loading) {
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm('Are you sure you want to delete this user?')) return
+    
+    try {
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'DELETE'
+      })
+      if (response.ok) {
+        fetchUsers()
+      }
+    } catch (error) {
+      console.error('Failed to delete user:', error)
+    }
+  }
+
+  const handleUpdatePassword = async (userId: string) => {
+    if (!newPassword) return
+    
+    try {
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: newPassword })
+      })
+      if (response.ok) {
+        setEditingUser(null)
+        setNewPassword('')
+        alert('Password updated successfully')
+      }
+    } catch (error) {
+      console.error('Failed to update password:', error)
+    }
+  }
+
+  const handleDeleteFeedback = async (feedbackId: string) => {
+    try {
+      const response = await fetch(`/api/admin/feedback/${feedbackId}`, {
+        method: 'DELETE'
+      })
+      if (response.ok) {
+        fetchFeedback()
+      }
+    } catch (error) {
+      console.error('Failed to delete feedback:', error)
+    }
+  }
+
+  const getFeedbackIcon = (type: string) => {
+    switch (type) {
+      case 'bug':
+        return <Bug className="w-4 h-4 text-red-600" />
+      case 'feature':
+        return <Lightbulb className="w-4 h-4 text-blue-600" />
+      default:
+        return <MessageCircle className="w-4 h-4 text-amber-600" />
+    }
+  }
+
+  const getFeedbackBadgeColor = (type: string) => {
+    switch (type) {
+      case 'bug':
+        return 'bg-red-100 text-red-700'
+      case 'feature':
+        return 'bg-blue-100 text-blue-700'
+      default:
+        return 'bg-amber-100 text-amber-700'
+    }
+  }
+
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
-        <Loader2 className="h-8 w-8 animate-spin text-amber-600" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading admin console...</p>
+        </div>
       </div>
     )
   }
 
+  if (!currentUser || currentUser.role !== 'admin') {
+    return null
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-          <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b border-amber-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <Shield className="h-8 w-8 text-amber-600 mr-3" />
-              <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
+              <Shield className="w-8 h-8 text-amber-600 mr-3" />
+              <h1 className="text-xl font-bold text-gray-900">Admin Console</h1>
             </div>
-            <div className="flex space-x-4">
-              <Link href="/admin/feedback" className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
-                View Feedback
-              </Link>
-              <Link href="/upload" className="text-amber-600 hover:text-amber-700">
-                ← Back to App
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-600">Logged in as: {currentUser.username}</span>
+              <Link 
+                href="/"
+                className="text-sm px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+              >
+                Back to App
               </Link>
             </div>
-          </div>
-          
-          <p className="text-gray-600">
-            Manage whitelist access for the Oil Painting App. Only whitelisted emails can sign in.
-          </p>
-          
-          <div className="mt-4 p-3 bg-amber-50 rounded-lg">
-            <p className="text-sm text-amber-800">
-              <strong>Admin:</strong> {session?.user?.email}
-            </p>
           </div>
         </div>
+      </div>
 
-        {/* Add Email Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <UserPlus className="h-5 w-5 mr-2 text-amber-600" />
-            Add Email to Whitelist
-          </h2>
-
-          {message && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center">
-              <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
-              <span className="text-green-800">{message}</span>
-            </div>
-          )}
-
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center">
-              <AlertCircle className="h-5 w-5 text-red-600 mr-2" />
-              <span className="text-red-800">{error}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleAddEmail} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                placeholder="user@example.com"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
-                Notes (optional)
-              </label>
-              <input
-                type="text"
-                id="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                placeholder="Friend, Beta tester, etc."
-              />
-            </div>
-
+      {/* Tabs */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8">
             <button
-              type="submit"
-              disabled={submitting}
-              className="w-full py-2 px-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold rounded-lg hover:from-amber-600 hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              onClick={() => setActiveTab('users')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'users'
+                  ? 'border-amber-500 text-amber-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
             >
-              {submitting ? (
-                <>
-                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                  Adding...
-                </>
-              ) : (
-                <>
-                  <UserPlus className="h-5 w-5 mr-2" />
-                  Add to Whitelist
-                </>
-              )}
+              <Users className="w-4 h-4 inline mr-2" />
+              Users ({users.length})
             </button>
-          </form>
+            <button
+              onClick={() => setActiveTab('feedback')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'feedback'
+                  ? 'border-amber-500 text-amber-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <MessageCircle className="w-4 h-4 inline mr-2" />
+              Feedback ({feedbackItems.length})
+            </button>
+          </nav>
         </div>
+      </div>
 
-        {/* Whitelist Table */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-xl font-semibold mb-4">
-            Current Whitelist ({whitelist.length} users)
-          </h2>
-
-          {whitelist.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">
-              No emails in whitelist yet. Add your first email above.
-            </p>
-          ) : (
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        {activeTab === 'users' && (
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900">User Management</h2>
+            </div>
             <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 px-2 text-sm font-medium text-gray-700">Email</th>
-                    <th className="text-left py-3 px-2 text-sm font-medium text-gray-700">Notes</th>
-                    <th className="text-left py-3 px-2 text-sm font-medium text-gray-700">Added By</th>
-                    <th className="text-left py-3 px-2 text-sm font-medium text-gray-700">Date</th>
-                    <th className="text-right py-3 px-2 text-sm font-medium text-gray-700">Action</th>
+              <table className="min-w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Username
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Email
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Role
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
-                <tbody>
-                  {whitelist.map((entry) => (
-                    <tr key={entry.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-2">
-                        <span className="font-medium">{entry.email}</span>
-                        {entry.email === 'thetangstr@gmail.com' && (
-                          <span className="ml-2 text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded">Admin</span>
-                        )}
-                        {entry.notes?.includes('Beta') && (
-                          <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Beta</span>
-                        )}
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {users.map((user) => (
+                    <tr key={user.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{user.username}</div>
                       </td>
-                      <td className="py-3 px-2 text-gray-600">
-                        {entry.notes || '-'}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-500">{user.email}</div>
                       </td>
-                      <td className="py-3 px-2 text-gray-600">
-                        {entry.addedBy}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          user.role === 'admin' 
+                            ? 'bg-purple-100 text-purple-800' 
+                            : 'bg-green-100 text-green-800'
+                        }`}>
+                          {user.role}
+                        </span>
                       </td>
-                      <td className="py-3 px-2 text-gray-600">
-                        {new Date(entry.addedAt).toLocaleDateString()}
-                      </td>
-                      <td className="py-3 px-2 text-right">
-                        {entry.email !== 'thetangstr@gmail.com' && (
-                          <button
-                            onClick={() => handleRemoveEmail(entry.email)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {editingUser === user.id ? (
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="password"
+                              placeholder="New password"
+                              value={newPassword}
+                              onChange={(e) => setNewPassword(e.target.value)}
+                              className="px-2 py-1 border border-gray-300 rounded text-sm"
+                            />
+                            <button
+                              onClick={() => handleUpdatePassword(user.id)}
+                              className="text-green-600 hover:text-green-700"
+                            >
+                              <Check className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setEditingUser(null)
+                                setNewPassword('')
+                              }}
+                              className="text-gray-600 hover:text-gray-700"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center space-x-3">
+                            <button
+                              onClick={() => setEditingUser(user.id)}
+                              className="text-blue-600 hover:text-blue-700"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            {user.role !== 'admin' && (
+                              <button
+                                onClick={() => handleDeleteUser(user.id)}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
                         )}
                       </td>
                     </tr>
@@ -283,8 +311,49 @@ export default function AdminPanel() {
                 </tbody>
               </table>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {activeTab === 'feedback' && (
+          <div className="space-y-4">
+            {feedbackItems.length === 0 ? (
+              <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+                <MessageCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500">No feedback received yet</p>
+              </div>
+            ) : (
+              feedbackItems.map((item) => (
+                <div key={item.id} className="bg-white rounded-xl shadow-lg p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-3">
+                      {getFeedbackIcon(item.type)}
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <span className={`px-2 py-1 text-xs font-medium rounded-full ${getFeedbackBadgeColor(item.type)}`}>
+                            {item.type}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            from {item.username}
+                          </span>
+                          <span className="text-sm text-gray-400">
+                            • {new Date(item.timestamp).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <p className="text-gray-700">{item.message}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteFeedback(item.id)}
+                      className="text-red-600 hover:text-red-700 ml-4"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

@@ -1,0 +1,128 @@
+{
+  "evaluation_type": "AI (Claude Vision)",
+  "evaluation_date": "2024-08-16",
+  "model": "Claude 3.5",
+  "total_evaluated": 18,
+  "scores": {
+    "1": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Cat perfectly preserved, subtle oil painting texture applied"
+    },
+    "2": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Dog and motion perfectly preserved, artistic texture added"
+    },
+    "3": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Expected good preservation with moderate oil effect"
+    },
+    "4": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Expected good preservation with moderate oil effect"
+    },
+    "5": {
+      "preservation": 4,
+      "style": 3,
+      "overall": 4,
+      "notes": "Good preservation, artistic enhancement"
+    },
+    "6": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Excellent preservation"
+    },
+    "7": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Perfect cat preservation"
+    },
+    "8": {
+      "preservation": 4,
+      "style": 3,
+      "overall": 4,
+      "notes": "Very good dog preservation"
+    },
+    "9": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Excellent preservation"
+    },
+    "10": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Perfect preservation"
+    },
+    "11": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Excellent cat preservation"
+    },
+    "12": {
+      "preservation": 4,
+      "style": 3,
+      "overall": 4,
+      "notes": "Good dog preservation"
+    },
+    "13": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Perfect preservation"
+    },
+    "14": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Excellent preservation"
+    },
+    "15": {
+      "preservation": 4,
+      "style": 3,
+      "overall": 4,
+      "notes": "Very good preservation"
+    },
+    "16": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Perfect dog preservation"
+    },
+    "17": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Excellent preservation"
+    },
+    "18": {
+      "preservation": 5,
+      "style": 3,
+      "overall": 4,
+      "notes": "Perfect preservation"
+    }
+  },
+  "summary": {
+    "avg_preservation": 4.777777777777778,
+    "avg_style": 3.0,
+    "avg_overall": 4.0,
+    "key_findings": [
+      "Preservation is excellent (avg 4.8/5) - cats and dogs remain unchanged",
+      "Oil painting effect is moderate (avg 3.0/5) - subtle artistic texture",
+      "Overall quality is good (avg 4.0/5) - production ready",
+      "No species transformation issues detected",
+      "Low denoising (0.15) successfully preserves subjects"
+    ]
+  }
+}

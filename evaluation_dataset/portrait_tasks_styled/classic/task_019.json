@@ -1,0 +1,14 @@
+{
+  "id": 19,
+  "category": "cat",
+  "style": "classic",
+  "style_name": "Classic Oil Portrait",
+  "original_image": "/evaluation-images/portraits_styled/portrait_19_original.jpg",
+  "converted_image": "/evaluation-images/portraits_styled/portrait_19_classic.jpg",
+  "parameters": {
+    "denoising_strength": 0.3,
+    "cfg_scale": 3.0,
+    "prompt": "classical oil painting portrait, old masters style, Rembrandt lighting, traditional portrait, baroqu..."
+  },
+  "timestamp": "2025-08-15 22:24:15"
+}

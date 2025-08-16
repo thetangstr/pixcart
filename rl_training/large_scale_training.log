@@ -1,0 +1,106 @@
+2025-08-14 22:53:41,361 - INFO - Starting large-scale RL training with 5000 images
+2025-08-14 22:53:41,361 - INFO - Starting download of 5000 images...
+2025-08-15 01:53:14,393 - INFO - Starting large-scale RL training with 5000 images
+2025-08-15 01:53:14,394 - INFO - Starting download of 5000 images...
+2025-08-15 01:55:04,022 - INFO - Downloaded 5000 images
+2025-08-15 02:40:08,061 - INFO - 
+        Progress Update:
+        - Total conversions: 100
+        - Success rate: 100.00%
+        - Average quality: 0.787
+        - Best quality: 0.950
+        - Epsilon: 0.606
+        
+2025-08-15 03:25:48,414 - INFO - 
+        Progress Update:
+        - Total conversions: 200
+        - Success rate: 100.00%
+        - Average quality: 0.777
+        - Best quality: 0.950
+        - Epsilon: 0.367
+        
+2025-08-15 04:14:14,317 - INFO - 
+        Progress Update:
+        - Total conversions: 300
+        - Success rate: 100.00%
+        - Average quality: 0.773
+        - Best quality: 0.950
+        - Epsilon: 0.222
+        
+2025-08-15 05:00:14,260 - INFO - 
+        Progress Update:
+        - Total conversions: 400
+        - Success rate: 100.00%
+        - Average quality: 0.770
+        - Best quality: 0.950
+        - Epsilon: 0.135
+        
+2025-08-15 05:47:10,828 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 05:49:10,847 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 05:56:28,188 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 05:58:28,208 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 06:00:28,233 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 06:02:28,253 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 06:04:28,278 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 06:06:28,353 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 06:08:28,380 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 06:10:28,404 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 06:10:28,406 - INFO - 
+        Progress Update:
+        - Total conversions: 500
+        - Success rate: 98.00%
+        - Average quality: 0.774
+        - Best quality: 0.950
+        - Epsilon: 0.100
+        
+2025-08-15 06:10:28,448 - INFO - Checkpoint saved: checkpoints/checkpoint_batch_49.pt
+2025-08-15 06:12:28,458 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 06:14:28,491 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 06:16:28,506 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 06:24:23,370 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 09:18:40,676 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 09:20:47,836 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 09:22:47,859 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 11:11:33,418 - INFO - 
+        Progress Update:
+        - Total conversions: 600
+        - Success rate: 97.17%
+        - Average quality: 0.774
+        - Best quality: 0.950
+        - Epsilon: 0.100
+        
+2025-08-15 13:03:39,112 - INFO - 
+        Progress Update:
+        - Total conversions: 700
+        - Success rate: 97.57%
+        - Average quality: 0.772
+        - Best quality: 0.950
+        - Epsilon: 0.100
+        
+2025-08-15 14:58:37,048 - INFO - 
+        Progress Update:
+        - Total conversions: 800
+        - Success rate: 97.88%
+        - Average quality: 0.770
+        - Best quality: 0.950
+        - Epsilon: 0.100
+        
+2025-08-15 15:56:50,788 - INFO - 
+        Progress Update:
+        - Total conversions: 900
+        - Success rate: 98.11%
+        - Average quality: 0.770
+        - Best quality: 0.950
+        - Epsilon: 0.100
+        
+2025-08-15 16:15:50,798 - ERROR - Conversion error: HTTPConnectionPool(host='localhost', port=7860): Read timed out. (read timeout=120)
+2025-08-15 17:14:50,656 - INFO - 
+        Progress Update:
+        - Total conversions: 1000
+        - Success rate: 98.20%
+        - Average quality: 0.772
+        - Best quality: 0.950
+        - Epsilon: 0.100
+        
+2025-08-15 17:14:50,691 - INFO - Checkpoint saved: checkpoints/checkpoint_batch_99.pt
+2025-08-15 17:14:50,712 - INFO - Final results saved to: final_results_20250815_171450.json

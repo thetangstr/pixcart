@@ -1,0 +1,21 @@
+{
+  "classic": {
+    "preservation": 4,
+    "style": 4,
+    "overall": 4,
+    "feedback": ""
+  },
+  "lastUpdated": "2025-08-16T15:28:17.314Z",
+  "impressionist": {
+    "preservation": 3,
+    "style": 3,
+    "overall": 3,
+    "feedback": ""
+  },
+  "modern": {
+    "preservation": 3,
+    "style": 2,
+    "overall": 2,
+    "feedback": ""
+  }
+}

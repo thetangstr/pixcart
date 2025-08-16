@@ -1,0 +1,17 @@
+2025-08-15 12:20:00,616 - ERROR - No test images found in public/test-images/
+2025-08-15 12:23:41,233 - INFO - Detected 3 ControlNet models
+2025-08-15 12:23:41,235 - INFO - Detected 0 LoRA models
+2025-08-15 12:24:46,278 - INFO - Starting RL training with 1 images
+2025-08-15 12:24:46,278 - INFO - Testing 36 parameter combinations
+2025-08-15 12:24:46,278 - INFO - 
+Iteration 1/10
+2025-08-15 12:24:46,278 - INFO - Testing soft_impressionist with 1 passes
+2025-08-15 12:25:27,735 - INFO - 🎯 New best score: 0.767
+2025-08-15 12:25:29,741 - INFO - 
+Iteration 2/10
+2025-08-15 12:25:29,741 - INFO - Testing soft_impressionist with 2 passes
+2025-08-15 14:00:27,886 - INFO - Detected 3 ControlNet models
+2025-08-15 14:00:27,889 - INFO - Detected 0 LoRA models
+2025-08-15 14:50:40,371 - INFO - Detected 3 ControlNet models
+2025-08-15 14:50:40,375 - INFO - Detected 0 LoRA models
+2025-08-15 14:57:44,183 - INFO - Report saved to rl_training_report_20250815_145040.md
