@@ -15,7 +15,6 @@ export default function Navigation() {
     { href: '/', label: 'Home', icon: Home },
     { href: '/upload', label: 'Convert', icon: Upload },
     { href: '/gallery', label: 'Gallery', icon: ImageIcon },
-    { href: '/testing', label: 'Testing', icon: BarChart },
   ]
 
   const handleSignOut = async () => {

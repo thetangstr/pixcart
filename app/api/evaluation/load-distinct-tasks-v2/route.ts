@@ -123,9 +123,20 @@ export async function GET() {
     // Sort by ID
     tasks.sort((a, b) => a.id - b.id)
     
+    // Filter out tasks where all styles have been evaluated
+    const incompleteTasks = tasks.filter(task => {
+      const hasUncompletedStyle = 
+        !task.styles.classic.human_score ||
+        !task.styles.impressionist.human_score ||
+        !task.styles.modern.human_score
+      return hasUncompletedStyle
+    })
+    
     return NextResponse.json({ 
-      tasks,
-      message: "Distinct styles with optimized parameters"
+      tasks: incompleteTasks,
+      totalTasks: tasks.length,
+      completedTasks: tasks.length - incompleteTasks.length,
+      message: "Showing only uncompleted evaluation tasks"
     })
   } catch (error) {
     console.error('Error loading tasks:', error)

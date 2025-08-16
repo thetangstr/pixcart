@@ -30,6 +30,7 @@ export default function UnifiedEvaluation() {
   const [loading, setLoading] = useState(true)
   const [evaluatingStyle, setEvaluatingStyle] = useState<string | null>(null)
   const [tempScores, setTempScores] = useState<any>({})
+  const [stats, setStats] = useState({ totalTasks: 0, completedTasks: 0 })
 
   useEffect(() => {
     loadTasks()
@@ -61,6 +62,12 @@ export default function UnifiedEvaluation() {
       }
       
       setTasks(data.tasks || [])
+      if (data.totalTasks !== undefined) {
+        setStats({
+          totalTasks: data.totalTasks,
+          completedTasks: data.completedTasks || 0
+        })
+      }
     } catch (error) {
       console.error('Failed to load tasks:', error)
     }
@@ -126,9 +133,23 @@ export default function UnifiedEvaluation() {
   if (tasks.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600">No evaluation tasks available.</p>
-          <p className="text-sm text-gray-500 mt-2">Run the conversion script first.</p>
+        <div className="text-center max-w-md">
+          <div className="text-6xl mb-4">🎉</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">All Tasks Completed!</h2>
+          <p className="text-gray-600 mb-4">
+            Great job! You've evaluated all available tasks.
+            {stats.totalTasks > 0 && (
+              <span className="block mt-2">
+                Completed: {stats.completedTasks} of {stats.totalTasks} tasks
+              </span>
+            )}
+          </p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Check for New Tasks
+          </button>
         </div>
       </div>
     )
