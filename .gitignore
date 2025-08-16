@@ -54,3 +54,30 @@ prisma/*.db-journal
 .firebase/
 .firebaserc
 firebase-debug.log
+
+# Training and evaluation data
+/rl_training/
+/evaluation_dataset/
+/public/evaluation-images/
+/iteration-results/
+/evaluation_results/
+/data/
+
+# Test outputs
+test_output_*.png
+test_output_*.jpg
+UAT_TEST_RESULTS*.md
+PARAMETER_ADJUSTMENT_ANALYSIS.md
+
+# Large files
+*.mp4
+*.mov
+*.avi
+*.zip
+*.tar.gz
+
+# Temporary files
+*.swp
+*.swo
+*~
+.tmp/

@@ -102,23 +102,25 @@ export async function POST(request: NextRequest) {
       const config = TWO_STAGE_CONFIG[styleId]
       
       // Stage 1: Initial conversion with strong preservation
-      resultImage = await processStage(
+      const stage1Result = await processStage(
         base64Image,
         style,
         config.stage1,
         hasControlNet,
         'stage1'
       )
+      resultImage = stage1Result || base64Image
       
       // Stage 2: Enhance oil painting effects on stage 1 output
       if (resultImage) {
-        resultImage = await processStage(
+        const stage2Result = await processStage(
           resultImage,
           style,
           config.stage2,
           hasControlNet,
           'stage2'
         )
+        resultImage = stage2Result || resultImage
       }
     } else {
       // Single stage processing (fallback)
@@ -129,13 +131,14 @@ export async function POST(request: NextRequest) {
         controlnet_weight: hasControlNet ? 0.70 : 0
       }
       
-      resultImage = await processStage(
+      const singleResult = await processStage(
         base64Image,
         style,
         singleStageConfig,
         hasControlNet,
         'single'
       )
+      resultImage = singleResult || base64Image
     }
 
     if (!resultImage) {

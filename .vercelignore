@@ -1,0 +1,46 @@
+# Evaluation datasets (not needed in production)
+evaluation_dataset/
+public/evaluation-images/
+
+# RL Training data (not needed in production)
+rl_training/
+
+# Test outputs
+test_output_*.png
+iteration-results/
+
+# Development files
+*.log
+*.md
+!README.md
+
+# Test files
+tests/
+playwright-report/
+test-results/
+
+# Environment files (Vercel uses its own)
+.env.local
+.env.local.example
+
+# Git
+.git/
+.gitignore
+
+# Node modules (Vercel rebuilds)
+node_modules/
+
+# Build outputs (Vercel rebuilds)
+.next/
+out/
+
+# Misc
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Data files
+data/
+evaluation_results/
+evaluation_data.json
