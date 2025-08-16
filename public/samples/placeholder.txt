@@ -1,0 +1,5 @@
+Place your sample images here:
+- dog-original.jpg (original photo of a dog)
+- dog-oil-painting.jpg (oil painting version of the same dog)
+
+You can use the images from your screenshot or any before/after pair of images.
