@@ -1,0 +1,20 @@
+{
+  "id": 68,
+  "category": "dog",
+  "original_image": "/evaluation-images/batch_tasks/task_68_original.jpg",
+  "conversions": {
+    "classic": {
+      "image": "/evaluation-images/batch_tasks/task_68_classic.jpg",
+      "style_name": "Classic Oil Master"
+    },
+    "impressionist": {
+      "image": "/evaluation-images/batch_tasks/task_68_impressionist.jpg",
+      "style_name": "Impressionist Master"
+    },
+    "modern": {
+      "image": "/evaluation-images/batch_tasks/task_68_modern.jpg",
+      "style_name": "Modern Expression"
+    }
+  },
+  "timestamp": "2025-08-16 10:53:37"
+}

@@ -176,6 +176,12 @@ export default function AdminConsole() {
               <h1 className="text-xl font-bold text-gray-900">Admin Console</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <Link 
+                href="/admin/analytics"
+                className="text-sm px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                Analytics
+              </Link>
               <span className="text-sm text-gray-600">Logged in as: {currentUser.username}</span>
               <Link 
                 href="/"

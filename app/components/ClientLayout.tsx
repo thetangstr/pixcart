@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import FeedbackWidget from '@/components/FeedbackWidget'
+import AnalyticsTracker from './AnalyticsTracker'
 import Link from 'next/link'
 import { Shield } from 'lucide-react'
 
@@ -36,6 +37,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <>
+      <AnalyticsTracker />
+      
       {/* Admin Link for Admin Users */}
       {user?.role === 'admin' && (
         <div className="fixed top-4 right-4 z-50">
