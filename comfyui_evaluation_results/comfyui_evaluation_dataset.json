@@ -1,0 +1,87 @@
+{
+  "experiment_info": {
+    "backend": "comfyui",
+    "styles": [
+      "classic_oil",
+      "monet",
+      "van_gogh"
+    ],
+    "style_names": [
+      "Classic Oil Painting",
+      "Monet Impressionist",
+      "Van Gogh Style"
+    ],
+    "total_images": 2,
+    "total_conversions": 6,
+    "timestamp": 1755585510.1424599,
+    "note": "Real pet photos processed with artistic styles"
+  },
+  "tasks": [
+    {
+      "task_id": 1,
+      "image_name": "Golden Retriever",
+      "pet_type": "dog",
+      "breed": "Golden Retriever",
+      "original_image": "/real-pet-art/golden_retriever_original.jpg",
+      "conversions": [
+        {
+          "style": "classic_oil",
+          "style_name": "Classic Oil Painting",
+          "backend": "comfyui",
+          "processing_time": 72.3,
+          "converted_image": "/real-pet-art/golden_retriever_classic_oil.png",
+          "description": "Renaissance-style oil painting with rich textures and warm tones"
+        },
+        {
+          "style": "monet",
+          "style_name": "Monet Impressionist",
+          "backend": "comfyui",
+          "processing_time": 36.2,
+          "converted_image": "/real-pet-art/golden_retriever_monet.png",
+          "description": "Soft impressionist style with dreamy brushstrokes and pastel colors"
+        },
+        {
+          "style": "van_gogh",
+          "style_name": "Van Gogh Style",
+          "backend": "comfyui",
+          "processing_time": 81.5,
+          "converted_image": "/real-pet-art/golden_retriever_van_gogh.png",
+          "description": "Bold post-impressionist style with swirling brushstrokes and vibrant colors"
+        }
+      ]
+    },
+    {
+      "task_id": 2,
+      "image_name": "Persian Cat",
+      "pet_type": "cat",
+      "breed": "Persian Cat",
+      "original_image": "/real-pet-art/persian_cat_original.jpg",
+      "conversions": [
+        {
+          "style": "classic_oil",
+          "style_name": "Classic Oil Painting",
+          "backend": "comfyui",
+          "processing_time": 39.3,
+          "converted_image": "/real-pet-art/persian_cat_classic_oil.png",
+          "description": "Traditional oil painting with fine detail and classical composition"
+        },
+        {
+          "style": "monet",
+          "style_name": "Monet Impressionist",
+          "backend": "comfyui",
+          "processing_time": 39.1,
+          "converted_image": "/real-pet-art/persian_cat_monet.png",
+          "description": "Impressionist interpretation with soft focus and garden-like atmosphere"
+        },
+        {
+          "style": "van_gogh",
+          "style_name": "Van Gogh Style",
+          "backend": "comfyui",
+          "processing_time": 99.3,
+          "converted_image": "/real-pet-art/persian_cat_van_gogh.png",
+          "description": "Expressive post-impressionist style with dynamic brushwork and emotional intensity"
+        }
+      ]
+    }
+  ]
+}

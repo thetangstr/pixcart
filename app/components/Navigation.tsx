@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
-import { Palette, Upload, Image as ImageIcon, Home, User, LogOut, LogIn, BarChart } from 'lucide-react'
+import { Palette, Upload, Image as ImageIcon, Home, User, LogOut, LogIn, BarChart, GitCompare, Star } from 'lucide-react'
 import { useState } from 'react'
 
 export default function Navigation() {
@@ -14,6 +14,8 @@ export default function Navigation() {
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
     { href: '/upload', label: 'Convert', icon: Upload },
+    { href: '/upload-enhanced', label: 'Compare AI', icon: GitCompare },
+    { href: '/comfyui-evaluation', label: 'ComfyUI Eval', icon: Star },
     { href: '/gallery', label: 'Gallery', icon: ImageIcon },
   ]
 
