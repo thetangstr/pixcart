@@ -92,5 +92,306 @@
     "timestamp": "2025-08-16T18:23:42.650Z",
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
     "referrer": "http://localhost:3000/gallery/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-19T05:36:15.964Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3001/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-19T05:36:45.516Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3001/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload-enhanced/",
+    "timestamp": "2025-08-19T05:38:25.848Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3000/upload-enhanced/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload-enhanced/",
+    "timestamp": "2025-08-19T05:38:43.167Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3001/upload-enhanced/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload-enhanced/",
+    "timestamp": "2025-08-19T05:39:03.383Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3001/upload-enhanced/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-19T05:44:41.879Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3001/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-19T05:44:42.808Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3001/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-19T05:52:33.662Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T05:52:35.339Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-19T05:52:35.367Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-19T05:52:36.672Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-19T05:52:36.691Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-19T05:52:37.053Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T05:52:37.517Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T05:52:37.930Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-19T05:52:39.454Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-19T05:52:39.546Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T05:52:40.362Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T05:52:40.386Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T05:52:40.412Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T05:52:40.536Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-19T05:52:40.711Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T05:52:41.509Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-19T05:54:41.219Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T05:54:42.106Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T05:55:03.204Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:3000/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T06:43:35.778Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T06:45:58.017Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T06:47:00.082Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T06:47:02.907Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T06:47:02.912Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T06:48:08.006Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T07:00:00.712Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T07:00:45.338Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-19T15:32:32.344Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-20T00:35:47.970Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload-enhanced/",
+    "timestamp": "2025-08-20T00:35:51.432Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/upload-enhanced/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload-enhanced/",
+    "timestamp": "2025-08-20T00:35:52.158Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/upload-enhanced/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-20T00:35:52.534Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/gallery/",
+    "timestamp": "2025-08-20T00:35:53.480Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/gallery/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-20T00:35:54.025Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
+  },
+  {
+    "type": "pageview",
+    "page": "/gallery/",
+    "timestamp": "2025-08-20T00:35:54.798Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/gallery/"
+  },
+  {
+    "type": "pageview",
+    "page": "/comfyui-evaluation/",
+    "timestamp": "2025-08-20T00:35:55.741Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3002/comfyui-evaluation/"
   }
 ]
