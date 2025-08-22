@@ -9,57 +9,57 @@ export const sdxlComfyUIStyles: Record<string, ComfyUIStyleConfig> = {
   classic_oil_sdxl: {
     checkpoint: 'sd_xl_base_1.0_0.9vae.safetensors',
     lora_name: undefined,  // Will be filled if available
-    lora_strength: 0.8,
-    lora_clip_strength: 0.8,
-    positive_prompt: '(masterpiece:1.2), best quality, oil painting portrait, by Rembrandt, baroque style, dramatic chiaroscuro lighting, fine brushwork, ((oil on canvas)), glazing technique, classical composition, rich golden tones, museum quality artwork, traditional oil painting technique, visible but refined brushstrokes',
-    negative_prompt: '(worst quality, low quality:1.4), photograph, photo, photographic, photorealistic, digital art, 3d render, smooth surface, flat colors, anime, cartoon, sharp edges, modern, oversaturated',
-    steps: 35,
-    cfg: 7.0,
-    sampler_name: 'dpmpp_2m_sde',
-    scheduler: 'karras',
-    denoise: 0.60,  // Lower denoise for classic portraits as per guide
-    controlnet_strength: 0.7,  // Higher control for portrait preservation
+    lora_strength: 0.6,
+    lora_clip_strength: 0.6,
+    positive_prompt: 'oil painting, classical portrait style, soft brushwork, muted colors, traditional oil technique, gentle lighting, refined brushstrokes, oil on canvas, painterly style',
+    negative_prompt: 'photograph, digital art, sharp contrast, oversaturated, harsh lighting, modern style, 3d render, smooth surface',
+    steps: 30,
+    cfg: 5.5,  // Lower CFG for softer results
+    sampler_name: 'euler_ancestral',
+    scheduler: 'normal',
+    denoise: 0.55,  // Lower denoise for subtle changes
+    controlnet_strength: 0.5,  // Reduced control for more natural feel
     controlnet_model: 'control-lora-canny-rank256.safetensors',
     preprocessor: 'CannyEdgePreprocessor',
-    style_intensity: 0.65
+    style_intensity: 0.5
   },
   
   // Monet Style - Medium denoise (0.65-0.75) with impressionism keywords
   impressionist_sdxl: {
     checkpoint: 'sd_xl_base_1.0_0.9vae.safetensors',
     lora_name: undefined,  // Will use oil painting LoRA if available
-    lora_strength: 0.9,
-    lora_clip_strength: 0.85,
-    positive_prompt: '(masterpiece:1.2), oil painting by Claude Monet, impressionism, broken color technique, ((visible brushstrokes)), thick paint dabs, plein air painting, light reflecting off paint texture, French impressionist masterpiece, water lilies style, soft edges, atmospheric perspective, oil on canvas',
-    negative_prompt: '(worst quality:1.4), photograph, photorealistic, sharp focus, digital art, 3d render, smooth rendering, clean edges, flat colors, anime, cartoon',
-    steps: 30,
-    cfg: 7.5,
+    lora_strength: 0.7,
+    lora_clip_strength: 0.7,
+    positive_prompt: 'oil painting, impressionist style, soft brushstrokes, natural lighting, gentle colors, painterly texture, plein air style, atmospheric, oil on canvas, subtle brushwork',
+    negative_prompt: 'photograph, digital art, sharp details, high contrast, oversaturated, harsh shadows, modern style, 3d render',
+    steps: 28,
+    cfg: 6.0,  // Lower CFG for softer impressionist feel
     sampler_name: 'euler_ancestral',
-    scheduler: 'karras',
-    denoise: 0.70,  // Medium denoise for Monet style as per guide
-    controlnet_strength: 0.6,  // Moderate control for impressionist freedom
+    scheduler: 'normal',
+    denoise: 0.65,  // Medium denoise for Monet style
+    controlnet_strength: 0.45,  // Lower control for more artistic freedom
     controlnet_model: 'control-lora-depth-rank256.safetensors',  // Depth for soft painterly feel
     preprocessor: 'DepthPreprocessor',
-    style_intensity: 0.75
+    style_intensity: 0.65
   },
   
   // Van Gogh Style - Higher denoise (0.75-0.85) with expressionism/impasto
   van_gogh_sdxl: {
     checkpoint: 'sd_xl_base_1.0_0.9vae.safetensors',
     lora_name: undefined,  // Will use oil painting LoRA if available
-    lora_strength: 1.0,
-    lora_clip_strength: 0.95,
-    positive_prompt: '(masterpiece:1.3), oil painting by Vincent Van Gogh, thick impasto technique, heavy paint application, swirling brushstrokes, expressionism, post-impressionist, vibrant complementary colors, emotional intensity, starry night style, palette knife texture, ((very thick paint)), dramatic brushwork, oil on canvas',
-    negative_prompt: '(worst quality:1.4), photograph, smooth surface, digital art, flat colors, 3d render, photorealistic, clean lines, anime, cartoon, watermark',
-    steps: 35,
-    cfg: 8.0,
+    lora_strength: 0.75,
+    lora_clip_strength: 0.75,
+    positive_prompt: 'oil painting, Van Gogh style, visible brushstrokes, textured paint, expressive style, warm colors, thick paint application, post-impressionist, oil on canvas, artistic brushwork',
+    negative_prompt: 'photograph, digital art, smooth surface, high contrast, oversaturated, modern style, 3d render, sharp details',
+    steps: 32,
+    cfg: 6.5,  // Lower CFG to reduce harsh contrasts
     sampler_name: 'euler_ancestral',
-    scheduler: 'karras',
-    denoise: 0.80,  // Higher denoise for Van Gogh style as per guide
-    controlnet_strength: 0.5,  // Lower control for expressive freedom
+    scheduler: 'normal',
+    denoise: 0.70,  // Reduced denoise for more subtle Van Gogh effect
+    controlnet_strength: 0.4,  // Lower control for expressive freedom
     controlnet_model: 'control-lora-depth-rank256.safetensors',
-    preprocessor: 'DepthAnythingV2Preprocessor',
-    style_intensity: 0.85
+    preprocessor: 'DepthPreprocessor',
+    style_intensity: 0.7
   },
   
   // Method 1: Simple Img2Img with LoRA (from guide)
