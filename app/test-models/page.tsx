@@ -67,8 +67,24 @@ const AVAILABLE_MODELS: ModelOption[] = [
   }
 ]
 
-const STYLES = ['classic_portrait', 'soft_impressionist', 'thick_textured', 'modern_abstract']
-const PRESERVATION_MODES = ['extreme', 'high', 'medium', 'low']
+// Extended style options for comprehensive testing
+const STYLES = [
+  { id: 'classic_portrait', name: 'Classic Portrait', description: 'Renaissance-style refinement' },
+  { id: 'soft_impressionist', name: 'Soft Impressionist', description: 'Monet-style gentle brushwork' },
+  { id: 'thick_textured', name: 'Thick Textured', description: 'Van Gogh-style bold strokes' },
+  { id: 'modern_abstract', name: 'Modern Abstract', description: 'Contemporary artistic interpretation' },
+  { id: 'romantic_portrait', name: 'Romantic Portrait', description: 'Soft, romantic oil painting' },
+  { id: 'vibrant_colors', name: 'Vibrant Colors', description: 'Bold, saturated color palette' },
+  { id: 'monochrome_sepia', name: 'Monochrome Sepia', description: 'Sepia-toned classical style' },
+  { id: 'fine_details', name: 'Fine Details', description: 'Hyper-detailed oil painting technique' }
+]
+
+const PRESERVATION_MODES = [
+  { id: 'extreme', name: 'Extreme', description: 'Maximum subject preservation' },
+  { id: 'high', name: 'High', description: 'Strong preservation with artistic flair' },
+  { id: 'medium', name: 'Medium', description: 'Balanced preservation and artistry' },
+  { id: 'low', name: 'Low', description: 'More artistic interpretation' }
+]
 
 interface ConversionResult {
   modelId: string
@@ -265,53 +281,126 @@ export default function TestModelsPage() {
                 </div>
               </div>
 
-              {/* Style & Preservation */}
+              {/* Style Grid Selector */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">Painting Style</label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {STYLES.map(s => (
+                    <button
+                      key={s.id}
+                      onClick={() => setStyle(s.id)}
+                      className={`p-3 text-left rounded-lg border-2 transition-all duration-200 ${
+                        style === s.id
+                          ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
+                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="font-semibold text-sm text-gray-900">{s.name}</div>
+                      <div className="text-xs text-gray-600 mt-1 line-clamp-2">{s.description}</div>
+                      {style === s.id && (
+                        <div className="mt-2 text-xs text-blue-600 font-medium">✓ Selected</div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Preservation & Strength Settings */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Style</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Subject Preservation</label>
                   <select
-                    value={style}
-                    onChange={(e) => setStyle(e.target.value)}
-                    className="w-full p-2 border rounded-lg"
+                    value={preservationMode}
+                    onChange={(e) => setPreservationMode(e.target.value)}
+                    className="w-full p-3 border rounded-lg bg-white"
                   >
-                    <option value="classic_portrait">Classic Portrait</option>
-                    <option value="soft_impressionist">Soft Impressionist (Monet)</option>
-                    <option value="thick_textured">Thick Textured (Van Gogh)</option>
-                    <option value="modern_abstract">Modern Abstract</option>
+                    {PRESERVATION_MODES.map(mode => (
+                      <option key={mode.id} value={mode.id}>
+                        {mode.name} - {mode.description}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Preservation Mode</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Subject Preservation</label>
                   <select
                     value={preservationMode}
                     onChange={(e) => setPreservationMode(e.target.value)}
-                    className="w-full p-2 border rounded-lg"
+                    className="w-full p-3 border rounded-lg bg-white"
                   >
                     {PRESERVATION_MODES.map(mode => (
-                      <option key={mode} value={mode}>{mode.charAt(0).toUpperCase() + mode.slice(1)}</option>
+                      <option key={mode.id} value={mode.id}>
+                        {mode.name} - {mode.description}
+                      </option>
                     ))}
                   </select>
                 </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Artistic Strength: {strength.toFixed(2)}
+                  </label>
+                  <input
+                    type="range"
+                    min="0.1"
+                    max="1.0"
+                    step="0.05"
+                    value={strength}
+                    onChange={(e) => setStrength(parseFloat(e.target.value))}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>More preserved</span>
+                    <span>More artistic</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Strength Slider */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Strength: {strength.toFixed(2)}
-                </label>
-                <input
-                  type="range"
-                  min="0.1"
-                  max="1.0"
-                  step="0.05"
-                  value={strength}
-                  onChange={(e) => setStrength(parseFloat(e.target.value))}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>More preserved</span>
-                  <span>More artistic</span>
+              {/* Quick Style Presets */}
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <h3 className="text-sm font-medium text-gray-700 mb-2">Quick Presets</h3>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => {
+                      setStyle('classic_portrait');
+                      setPreservationMode('high');
+                      setStrength(0.35);
+                    }}
+                    className="px-3 py-1 text-xs bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200"
+                  >
+                    🖼️ Portrait Mode
+                  </button>
+                  <button
+                    onClick={() => {
+                      setStyle('thick_textured');
+                      setPreservationMode('medium');
+                      setStrength(0.55);
+                    }}
+                    className="px-3 py-1 text-xs bg-green-100 text-green-800 rounded-lg hover:bg-green-200"
+                  >
+                    🌻 Van Gogh Style
+                  </button>
+                  <button
+                    onClick={() => {
+                      setStyle('soft_impressionist');
+                      setPreservationMode('high');
+                      setStrength(0.40);
+                    }}
+                    className="px-3 py-1 text-xs bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200"
+                  >
+                    🪷 Monet Style
+                  </button>
+                  <button
+                    onClick={() => {
+                      setStyle('vibrant_colors');
+                      setPreservationMode('low');
+                      setStrength(0.70);
+                    }}
+                    className="px-3 py-1 text-xs bg-red-100 text-red-800 rounded-lg hover:bg-red-200"
+                  >
+                    🎨 Artistic Freedom
+                  </button>
                 </div>
               </div>
             </div>
