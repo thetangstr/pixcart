@@ -146,7 +146,16 @@ export default function TestModelsPage() {
         if (model.model?.includes('turbo')) quality = 'quick'
         if (model.model?.includes('jiupinjia')) quality = 'premium'
         
+        // Map styles to Replicate expected format
+        let replicateStyle = 'classic'
+        if (style === 'soft_impressionist') replicateStyle = 'impressionist'
+        else if (style === 'thick_textured') replicateStyle = 'vangogh'
+        else if (style === 'modern_abstract') replicateStyle = 'modern'
+        else if (style === 'classic_portrait') replicateStyle = 'classic'
+        
         formData.append('quality', quality)
+        formData.delete('style') // Remove the original style
+        formData.append('style', replicateStyle) // Add the mapped style
         response = await fetch('/api/convert-replicate', {
           method: 'POST',
           body: formData,
