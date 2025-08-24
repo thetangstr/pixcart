@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
     const styleId = formData.get('style') as string
     const backend = formData.get('backend') as string || 'a1111'
     const compareMode = formData.get('compareMode') === 'true'
+    const checkpoint = formData.get('checkpoint') as string || null
 
     if (!image || !styleId) {
       return NextResponse.json({ error: 'Missing image or style' }, { status: 400 })
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
       // Process with both backends for comparison
       const [a1111Result, comfyResult] = await Promise.allSettled([
         processWithA1111(base64Image, styleId),
-        processWithComfyUI(base64Image, styleId)
+        processWithComfyUI(base64Image, styleId, checkpoint)
       ])
 
       return NextResponse.json({
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
       let resultImage: string
       
       if (backend === 'comfyui') {
-        resultImage = await processWithComfyUI(base64Image, styleId)
+        resultImage = await processWithComfyUI(base64Image, styleId, checkpoint)
       } else {
         resultImage = await processWithA1111(base64Image, styleId)
       }
@@ -149,10 +150,15 @@ async function processWithA1111(base64Image: string, styleId: string): Promise<s
   return `data:image/png;base64,${result.images[0]}`
 }
 
-async function processWithComfyUI(base64Image: string, styleId: string): Promise<string> {
+async function processWithComfyUI(base64Image: string, styleId: string, checkpoint?: string | null): Promise<string> {
   const config = getComfyUIStyleById(styleId)
   if (!config) {
     throw new Error(`ComfyUI style not found: ${styleId}`)
+  }
+
+  // Override checkpoint if specified
+  if (checkpoint) {
+    config.checkpoint = checkpoint
   }
 
   return await comfyUIClient.convertImage(base64Image, config)

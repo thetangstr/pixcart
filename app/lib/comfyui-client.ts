@@ -212,7 +212,7 @@ export class ComfyUIClient {
       }
     }
     
-    // Add LoRA if specified (Method 1 from guide)
+    // Add LoRA if specified (Method 1 from expert guide)
     if (config.lora_name && config.lora_strength) {
       workflow["2"] = {
         "inputs": {
@@ -277,7 +277,7 @@ export class ComfyUIClient {
     // Update KSampler to use current model node
     workflow["10"]["inputs"]["model"] = currentModelNode
 
-    // Add ControlNet if enabled (Method 2 from guide - Advanced with ControlNet)
+    // Add ControlNet if enabled (Method 2 from expert guide - Advanced with ControlNet)
     if (useControlNet && config.controlnet_strength && config.controlnet_model) {
       console.log('Adding ControlNet with model:', config.controlnet_model)
       // Load ControlNet Model
@@ -292,17 +292,18 @@ export class ComfyUIClient {
       }
       
       // Preprocessor selection based on style and guide recommendations
-      const preprocessorType = config.preprocessor || "CannyEdgePreprocessor"
+      const preprocessorType = config.preprocessor || "Canny"
       
-      if (preprocessorType === "CannyEdgePreprocessor") {
+      if (preprocessorType === "CannyEdgePreprocessor" || preprocessorType === "Canny") {
         // Canny - Best for preserving sharp lines and details (portraits, architecture)
+        // As per expert guide: Excellent for architecture, portraits, clear subjects
         workflow["7"] = {
           "inputs": {
-            "low_threshold": 100,
-            "high_threshold": 200,
+            "low_threshold": 0.4,  // Normalized value (was 100/255)
+            "high_threshold": 0.8,  // Normalized value (was 200/255)
             "image": ["3", 0]
           },
-          "class_type": "CannyEdgePreprocessor",
+          "class_type": "Canny",
           "_meta": {
             "title": "Canny Edge Preprocessor"
           }
@@ -406,6 +407,7 @@ export class ComfyUIClient {
   
   /**
    * Enhance prompt with oil painting keywords based on the expert guide
+   * Guide recommends: impasto, palette knife, textured brushstrokes, thick paint
    */
   private enhancePromptForOilPainting(basePrompt: string, intensity: number): string {
     const oilKeywords = [
@@ -413,7 +415,8 @@ export class ComfyUIClient {
       'oil on canvas',
       'visible brushstrokes',
       'painterly texture',
-      'artistic masterpiece'
+      'artistic masterpiece',
+      'museum quality'
     ]
     
     const techniqueKeywords = [
@@ -421,35 +424,45 @@ export class ComfyUIClient {
       'palette knife',
       'textured brushstrokes',
       'thick paint',
-      'heavy paint application'
+      'heavy paint application',
+      'alla prima',
+      'wet-on-wet'
     ]
     
+    // Artists recommended by the expert guide
     const artistKeywords = [
       'by Vincent Van Gogh',
       'by Claude Monet',
       'by Rembrandt',
-      'by John Singer Sargent'
+      'by John Singer Sargent',
+      'by Caravaggio',
+      'by J.M.W. Turner'
     ]
     
+    // Styles recommended by the expert guide
     const styleKeywords = [
       'impressionism',
       'expressionism',
       'baroque',
-      'post-impressionist'
+      'post-impressionist',
+      'romanticism',
+      'classical realism'
     ]
     
-    // Build enhanced prompt based on intensity
+    // Build enhanced prompt based on intensity and expert guide recommendations
     let enhancedPrompt = basePrompt
     
-    // Always include basic oil painting keywords
+    // Always include basic oil painting keywords (essential as per guide)
     if (!basePrompt.toLowerCase().includes('oil painting')) {
-      enhancedPrompt = `oil painting, ${enhancedPrompt}`
+      enhancedPrompt = `(masterpiece:1.2), best quality, oil painting, ${enhancedPrompt}`
     }
     
-    // Add technique keywords for higher intensity
+    // Add technique keywords for higher intensity (guide emphasizes these)
     if (intensity > 0.5 && !basePrompt.toLowerCase().includes('impasto')) {
-      const technique = techniqueKeywords[Math.floor(Math.random() * techniqueKeywords.length)]
-      enhancedPrompt += `, ${technique}`
+      // Add multiple techniques for stronger effect
+      const technique1 = techniqueKeywords[0] // impasto is most important
+      const technique2 = techniqueKeywords[Math.floor(Math.random() * (techniqueKeywords.length - 1)) + 1]
+      enhancedPrompt += `, ${technique1}, ${technique2}`
     }
     
     // Add artist reference for high intensity
@@ -469,9 +482,14 @@ export class ComfyUIClient {
       }
     }
     
-    // Add quality markers
+    // Add quality markers and medium description (important for oil painting effect)
     if (!basePrompt.includes('masterpiece')) {
-      enhancedPrompt += ', masterpiece, museum quality'
+      enhancedPrompt += ', masterpiece, museum quality, fine art'
+    }
+    
+    // Add canvas texture description for realism
+    if (!basePrompt.includes('canvas')) {
+      enhancedPrompt += ', visible canvas texture'
     }
     
     return enhancedPrompt
@@ -479,6 +497,7 @@ export class ComfyUIClient {
   
   /**
    * Enhance negative prompt to avoid photographic qualities
+   * Based on expert guide: avoid photo, photographic, realism, digital art
    */
   private enhanceNegativePrompt(baseNegative: string): string {
     const photoKeywords = [
@@ -518,9 +537,14 @@ export class ComfyUIClient {
       enhancedNegative += ', digital art, 3d render'
     }
     
-    // Always avoid smooth surfaces for oil painting
+    // Always avoid smooth surfaces for oil painting (critical for texture)
     if (!baseNegative.includes('smooth')) {
-      enhancedNegative += ', smooth surface, flat colors'
+      enhancedNegative += ', smooth surface, flat colors, plastic, glossy'
+    }
+    
+    // Add specific quality issues to avoid
+    if (!baseNegative.includes('blurry')) {
+      enhancedNegative += ', blurry, ugly, deformed'
     }
     
     return enhancedNegative
@@ -614,6 +638,20 @@ export class ComfyUIClient {
     const isConnected = await this.checkConnection()
     if (!isConnected) {
       throw new Error('ComfyUI is not available')
+    }
+
+    // Check if this is a FLUX or SDXL model request
+    const isFluxModel = config.checkpoint && config.checkpoint.toLowerCase().includes('flux')
+    const isSDXLModel = config.checkpoint && (
+      config.checkpoint.toLowerCase().includes('sdxl') || 
+      config.checkpoint.toLowerCase().includes('sd_xl')
+    )
+    
+    if (isFluxModel || isSDXLModel) {
+      // FLUX and SDXL not available - use regular SD 1.5 workflow with enhanced prompts
+      console.log('FLUX/SDXL requested but not available - using enhanced SD 1.5 workflow')
+      config.checkpoint = 'v1-5-pruned-emaonly.safetensors'
+      // Continue with normal workflow below
     }
 
     // Upload the image first
@@ -785,6 +823,92 @@ export class ComfyUIClient {
     }
     
     return fallbackConfig
+  }
+
+  async convertImageWithSDXL(imageBase64: string, config: ComfyUIStyleConfig): Promise<string> {
+    // Import SDXL workflow
+    const { createSDXLOilPaintingWorkflow } = await import('./comfyui-sdxl-workflow')
+    
+    // Upload the image first
+    const uploadedImageName = await this.uploadImage(imageBase64)
+    console.log(`SDXL: Image uploaded as: ${uploadedImageName}`)
+    
+    // Map style from config to SDXL style
+    let sdxlStyle: 'classic' | 'impressionist' | 'vangogh' | 'modern' = 'classic'
+    const prompt = config.positive_prompt.toLowerCase()
+    
+    if (prompt.includes('monet') || prompt.includes('impressionist')) {
+      sdxlStyle = 'impressionist'
+    } else if (prompt.includes('van gogh') || prompt.includes('vangogh')) {
+      sdxlStyle = 'vangogh'
+    } else if (prompt.includes('modern') || prompt.includes('contemporary')) {
+      sdxlStyle = 'modern'
+    }
+    
+    // Calculate preservation strength based on denoise value
+    // Lower denoise = higher preservation
+    const preservationStrength = 1.0 - (config.denoise || 0.5)
+    
+    // Create SDXL workflow
+    const workflow = createSDXLOilPaintingWorkflow(
+      uploadedImageName,
+      sdxlStyle,
+      preservationStrength
+    )
+    
+    console.log('SDXL workflow created for style:', sdxlStyle, 'preservation:', preservationStrength)
+    
+    // Queue the workflow
+    const promptId = await this.queuePrompt(workflow as any)
+    console.log(`SDXL workflow queued with ID: ${promptId}`)
+    
+    // Wait for completion
+    const resultImage = await this.waitForCompletion(promptId, 120000) // 2 minutes timeout for SDXL
+    
+    return resultImage
+  }
+
+  async convertImageWithFlux(imageBase64: string, config: ComfyUIStyleConfig): Promise<string> {
+    // Import new FLUX img2img workflow
+    const { createFLUXOilPaintingWorkflow } = await import('./comfyui-flux-img2img')
+    
+    // Upload the image first
+    const uploadedImageName = await this.uploadImage(imageBase64)
+    console.log(`FLUX: Image uploaded as: ${uploadedImageName}`)
+    
+    // Map style from config to FLUX style
+    let fluxStyle: 'classic' | 'impressionist' | 'vangogh' | 'modern' = 'classic'
+    const prompt = config.positive_prompt.toLowerCase()
+    
+    if (prompt.includes('monet') || prompt.includes('impressionist')) {
+      fluxStyle = 'impressionist'
+    } else if (prompt.includes('van gogh') || prompt.includes('vangogh')) {
+      fluxStyle = 'vangogh'
+    } else if (prompt.includes('modern') || prompt.includes('contemporary')) {
+      fluxStyle = 'modern'
+    }
+    
+    // Calculate preservation strength based on denoise value
+    // Lower denoise = higher preservation
+    const preservationStrength = 1.0 - (config.denoise || 0.5)
+    
+    // Create FLUX workflow
+    const workflow = createFLUXOilPaintingWorkflow(
+      uploadedImageName,
+      fluxStyle,
+      preservationStrength
+    )
+    
+    console.log('FLUX workflow created for style:', fluxStyle, 'preservation:', preservationStrength)
+    
+    // Queue the workflow
+    const promptId = await this.queuePrompt(workflow as any)
+    console.log(`FLUX workflow queued with ID: ${promptId}`)
+    
+    // Wait for completion (FLUX may take longer)
+    const resultImage = await this.waitForCompletion(promptId, 180000) // 3 minutes timeout for FLUX
+    
+    return resultImage
   }
 }
 
