@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import { Upload, X, Download, Loader2, ImageIcon, Sparkles, ArrowRight, CheckCircle } from 'lucide-react'
+import { getAllComfyUIStyles } from '../lib/comfyui-styles'
 import { oilPaintingStyles, type OilPaintingStyle } from '../lib/oilPaintingStyles'
 import StyleSelector from '../components/StyleSelector'
 import VideoTutorial from '../components/VideoTutorial'
@@ -23,6 +24,8 @@ export default function UploadPage() {
   const [selectedStyle, setSelectedStyle] = useState<OilPaintingStyle>(oilPaintingStyles[0])
   const [conversionProgress, setConversionProgress] = useState(0)
   const [triedStyles, setTriedStyles] = useState<Set<string>>(new Set())
+  const [useReplicate, setUseReplicate] = useState(true) // Default to Replicate for better quality
+  const [preservationMode, setPreservationMode] = useState<'low' | 'medium' | 'high' | 'extreme'>('high')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleDrag = useCallback((e: React.DragEvent) => {
@@ -83,12 +86,17 @@ export default function UploadPage() {
     try {
       const formData = new FormData()
       formData.append('image', selectedFile)
-      formData.append('style', selectedStyle.id)
-      formData.append('cfg_scale', selectedStyle.cfg_scale.toString())
-      formData.append('denoising_strength', selectedStyle.denoising_strength.toString())
-      formData.append('steps', selectedStyle.steps.toString())
-
-      const response = await fetch('/api/convert-v3', {
+      
+      let response
+      
+      // Use optimized production pipeline (local SDXL with expert settings)
+      formData.append('style', selectedStyle.id === 'impressionist' ? 'impressionist' : 
+                               selectedStyle.id === 'van_gogh' ? 'vangogh' : 
+                               selectedStyle.id === 'modern' ? 'modern' : 'classic')
+      formData.append('subject', 'general') // Auto-detect or let user specify
+      formData.append('mode', 'local') // Use optimized local SDXL
+      
+      response = await fetch('/api/convert-production-optimized', {
         method: 'POST',
         body: formData,
       })
@@ -101,7 +109,7 @@ export default function UploadPage() {
         
         const newConvertedImage: ConvertedImage = {
           original: previewUrl!,
-          converted: data.image, // Use the data URL from the response
+          converted: data.bestResult?.image || data.image, // Use best result from production pipeline
           originalName: selectedFile.name,
           style: selectedStyle
         }
@@ -119,8 +127,21 @@ export default function UploadPage() {
         console.error('Conversion failed:', errorData)
         
         let errorMessage = 'Conversion failed. Please try again.'
-        if (errorData.message) {
-          errorMessage = errorData.message
+        if (errorData.error) {
+          errorMessage = errorData.error
+        }
+        if (errorData.details) {
+          errorMessage += `\n\nDetails: ${errorData.details}`
+        }
+        if (errorData.suggestion) {
+          errorMessage += `\n\n💡 ${errorData.suggestion}`
+        }
+        
+        // Show user-friendly error messages
+        if (errorMessage.includes('cannot identify image file')) {
+          errorMessage = '❌ Image format not supported.\n\n💡 Try uploading a different image format (JPG, PNG) or a smaller file size.'
+        } else if (errorMessage.includes('too large')) {
+          errorMessage = '❌ Image is too large for processing.\n\n💡 Please resize your image to under 2MB and try again.'
         }
         
         alert(errorMessage)
@@ -161,6 +182,18 @@ export default function UploadPage() {
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <VideoTutorial />
       <div className="max-w-6xl mx-auto">
+        {/* Development Tools */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="mb-4 flex justify-end">
+            <a
+              href="/test-models"
+              className="text-sm text-blue-600 hover:text-blue-800 underline"
+            >
+              🧪 Model Testing Page
+            </a>
+          </div>
+        )}
+        
         {/* Compact Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -179,6 +212,61 @@ export default function UploadPage() {
             onStyleSelect={setSelectedStyle}
             triedStyles={triedStyles}
           />
+          
+          {/* Backend Toggle */}
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-medium text-gray-900">AI Model</h3>
+                <p className="text-xs text-gray-500 mt-1">
+                  {useReplicate ? 'Premium quality with SDXL (Replicate)' : 'Local processing with ComfyUI'}
+                </p>
+              </div>
+              <button
+                onClick={() => setUseReplicate(!useReplicate)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  useReplicate ? 'bg-amber-600' : 'bg-gray-200'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    useReplicate ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+            
+            {/* Preservation Mode (only for Replicate) */}
+            {useReplicate && (
+              <div className="mt-4">
+                <h3 className="text-sm font-medium text-gray-900 mb-2">Object Preservation</h3>
+                <div className="grid grid-cols-4 gap-2">
+                  {(['extreme', 'high', 'medium', 'low'] as const).map((mode) => (
+                    <button
+                      key={mode}
+                      onClick={() => setPreservationMode(mode)}
+                      className={`px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
+                        preservationMode === mode
+                          ? 'bg-amber-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      <div className="capitalize">{mode}</div>
+                      <div className="text-[10px] opacity-75 mt-0.5">
+                        {mode === 'extreme' && 'Max preserve'}
+                        {mode === 'high' && 'Recommended'}
+                        {mode === 'medium' && 'Balanced'}
+                        {mode === 'low' && 'More artistic'}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Higher preservation keeps objects more recognizable but less painterly
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Upload Area */}
