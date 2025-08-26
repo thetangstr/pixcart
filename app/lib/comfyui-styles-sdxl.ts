@@ -20,7 +20,7 @@ export const sdxlComfyUIStyles: Record<string, ComfyUIStyleConfig> = {
     denoise: 0.60,  // Lower denoise for classic portraits as per guide
     controlnet_strength: 0.7,  // Higher control for portrait preservation
     controlnet_model: 'control-lora-canny-rank256.safetensors',
-    preprocessor: 'CannyEdgePreprocessor',
+    preprocessor: 'Canny',
     style_intensity: 0.65
   },
   
@@ -94,7 +94,7 @@ export const sdxlComfyUIStyles: Record<string, ComfyUIStyleConfig> = {
     denoise: 0.90,  // Higher denoise with ControlNet (0.8-1.0 range from guide)
     controlnet_strength: 1.0,  // Default from guide
     controlnet_model: 'control-lora-canny-rank256.safetensors',
-    preprocessor: 'CannyEdgePreprocessor',
+    preprocessor: 'Canny',
     style_intensity: 0.9
   },
   
@@ -132,7 +132,7 @@ export const sdxlComfyUIStyles: Record<string, ComfyUIStyleConfig> = {
     denoise: 0.58,  // Lower denoise for portrait preservation
     controlnet_strength: 0.8,
     controlnet_model: 'control-lora-canny-rank256.safetensors',
-    preprocessor: 'CannyEdgePreprocessor',
+    preprocessor: 'Canny',
     style_intensity: 0.6
   },
   

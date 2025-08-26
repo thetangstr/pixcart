@@ -581,7 +581,7 @@ export class ComfyUIClient {
     return result.prompt_id
   }
 
-  async waitForCompletion(promptId: string, timeoutMs = 300000): Promise<string> {
+  async waitForCompletion(promptId: string, timeoutMs = 480000): Promise<string> {
     const startTime = Date.now()
     
     while (Date.now() - startTime < timeoutMs) {
@@ -591,11 +591,24 @@ export class ComfyUIClient {
         
         const execution = history[promptId]
         if (execution && execution.status.completed) {
-          // Find the output image
+          // Look for SaveImage node first (node 12), then fall back to any image
+          // This ensures we get the final processed image, not preview/debug images
+          const saveImageNode = execution.outputs["12"]
+          if (saveImageNode?.images?.length > 0) {
+            const image = saveImageNode.images[0]
+            console.log(`Found SaveImage output: ${image.filename}`)
+            return await this.getImage(image.filename, image.subfolder, image.type)
+          }
+          
+          // Fallback: Find any output image
           for (const nodeId in execution.outputs) {
             const output = execution.outputs[nodeId]
+            // Skip preview nodes (usually node 13)
+            if (nodeId === "13") continue
+            
             if (output.images && output.images.length > 0) {
               const image = output.images[0]
+              console.log(`Found output from node ${nodeId}: ${image.filename}`)
               return await this.getImage(image.filename, image.subfolder, image.type)
             }
           }
@@ -663,11 +676,10 @@ export class ComfyUIClient {
     const validatedConfig = await this.validateAndFallbackConfig(config, models)
     
     // Create workflow with validated config
-    const useControlNet = validatedConfig.controlnet_model && 
-                         validatedConfig.controlnet_strength && 
-                         models.controlnets.includes(validatedConfig.controlnet_model)
+    // TEMPORARILY DISABLE ControlNet to fix oil painting conversion
+    const useControlNet = false // Disabled until we fix the workflow output issue
     
-    console.log('Creating workflow with config:', {
+    console.log('Creating workflow with config (ControlNet disabled for now):', {
       checkpoint: validatedConfig.checkpoint,
       controlnet_model: validatedConfig.controlnet_model,
       useControlNet
@@ -678,8 +690,8 @@ export class ComfyUIClient {
     // Queue the prompt
     const promptId = await this.queuePrompt(workflow)
     
-    // Wait for completion and get result
-    return await this.waitForCompletion(promptId)
+    // Wait for completion and get result with generous timeout for model loading
+    return await this.waitForCompletion(promptId, 480000) // 8 minutes timeout
   }
 
   private async validateAndFallbackConfig(
@@ -835,7 +847,7 @@ export class ComfyUIClient {
     
     // Map style from config to SDXL style
     let sdxlStyle: 'classic' | 'impressionist' | 'vangogh' | 'modern' = 'classic'
-    const prompt = config.positive_prompt.toLowerCase()
+    const prompt = (config.prompt || config.positive_prompt || '').toLowerCase()
     
     if (prompt.includes('monet') || prompt.includes('impressionist')) {
       sdxlStyle = 'impressionist'
@@ -863,7 +875,7 @@ export class ComfyUIClient {
     console.log(`SDXL workflow queued with ID: ${promptId}`)
     
     // Wait for completion
-    const resultImage = await this.waitForCompletion(promptId, 120000) // 2 minutes timeout for SDXL
+    const resultImage = await this.waitForCompletion(promptId, 480000) // 8 minutes timeout for SDXL (models may be slow to load)
     
     return resultImage
   }
@@ -906,7 +918,7 @@ export class ComfyUIClient {
     console.log(`FLUX workflow queued with ID: ${promptId}`)
     
     // Wait for completion (FLUX may take longer)
-    const resultImage = await this.waitForCompletion(promptId, 180000) // 3 minutes timeout for FLUX
+    const resultImage = await this.waitForCompletion(promptId, 600000) // 10 minutes timeout for FLUX (larger model, needs more time)
     
     return resultImage
   }

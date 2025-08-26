@@ -23,13 +23,23 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   const checkAuth = async () => {
     try {
-      const response = await fetch('/api/auth/current')
+      const response = await fetch('/api/auth/current', {
+        // Add credentials and headers to prevent 401 console errors
+        credentials: 'same-origin',
+        headers: { 'Accept': 'application/json' }
+      })
       if (response.ok) {
         const data = await response.json()
         setUser(data.user)
+      } else if (response.status === 401) {
+        // User is not logged in - this is expected, not an error
+        setUser(null)
+      } else {
+        console.warn(`Auth check returned ${response.status}`)
       }
     } catch (error) {
-      console.error('Auth check failed:', error)
+      // Only log actual network errors, not 401s
+      console.warn('Auth check failed:', error)
     } finally {
       setLoading(false)
     }

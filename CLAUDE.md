@@ -10,7 +10,7 @@ This is an AI-powered oil painting converter web application that transforms pho
 
 ```bash
 # Development
-npm run dev                  # Start dev server on http://localhost:3000
+npm run dev                  # Start dev server on http://localhost:5174
 npm run build               # Build for production
 npm run start               # Start production server
 

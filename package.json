@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 5174",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 5174",
     "lint": "next lint --fix",
     "lint:check": "next lint",
     "export": "next export",
@@ -35,8 +35,10 @@
     "lucide-react": "^0.379.0",
     "next": "^14.2.31",
     "next-auth": "^4.24.11",
+    "node-fetch": "^3.3.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "replicate": "^1.1.0",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "stripe": "^18.4.0"

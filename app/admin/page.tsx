@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Shield, Users, MessageCircle, Bug, Lightbulb, Trash2, Edit2, X, Check } from 'lucide-react'
+import { Shield, Users, MessageCircle, Bug, Lightbulb, Trash2, Edit2, X, Check, Server, Activity, BarChart3 } from 'lucide-react'
 import Link from 'next/link'
 
 interface User {
@@ -27,7 +27,7 @@ export default function AdminConsole() {
   const [users, setUsers] = useState<User[]>([])
   const [feedbackItems, setFeedbackItems] = useState<FeedbackItem[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'users' | 'feedback'>('users')
+  const [activeTab, setActiveTab] = useState<'models' | 'users' | 'feedback'>('models')
   const [editingUser, setEditingUser] = useState<string | null>(null)
   const [newPassword, setNewPassword] = useState('')
 
@@ -199,6 +199,17 @@ export default function AdminConsole() {
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
             <button
+              onClick={() => setActiveTab('models')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'models'
+                  ? 'border-amber-500 text-amber-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <Server className="w-4 h-4 inline mr-2" />
+              Models & Production
+            </button>
+            <button
               onClick={() => setActiveTab('users')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'users'
@@ -226,6 +237,59 @@ export default function AdminConsole() {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        {activeTab === 'models' && (
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-800">Model Management & Production Settings</h2>
+              <p className="text-sm text-gray-600 mt-1">Configure and test oil painting models</p>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <Link
+                  href="/admin/models"
+                  className="flex items-center justify-center px-4 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+                >
+                  <Server className="w-5 h-5 mr-2" />
+                  Model Dashboard
+                </Link>
+                <Link
+                  href="/api/system-status"
+                  target="_blank"
+                  className="flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  <Activity className="w-5 h-5 mr-2" />
+                  System Status
+                </Link>
+                <Link
+                  href="/admin/analytics"
+                  className="flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <BarChart3 className="w-5 h-5 mr-2" />
+                  Analytics
+                </Link>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="font-medium text-gray-800 mb-3">Quick Status</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Production Model:</span>
+                    <span className="font-medium text-green-600">Optimized Local SDXL</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Backup Model:</span>
+                    <span className="font-medium text-blue-600">Replicate Cloud</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Processing Mode:</span>
+                    <span className="font-medium">Expert-Tuned (0.75 denoising, CFG 13.0)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
         {activeTab === 'users' && (
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-200">

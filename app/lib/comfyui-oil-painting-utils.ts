@@ -190,7 +190,7 @@ export function selectControlNetModel(
   
   if (style.preferredControlNet === 'canny' && cannyModels.length > 0) {
     selectedModel = cannyModels[0]
-    preprocessor = 'CannyEdgePreprocessor'
+    preprocessor = 'Canny'
     strength = style.name.includes('Portrait') ? 0.75 : 0.6
   } else if (style.preferredControlNet === 'depth' && depthModels.length > 0) {
     selectedModel = depthModels[0]
@@ -199,7 +199,7 @@ export function selectControlNetModel(
   } else if (availableModels.length > 0) {
     // Fallback to any available model
     selectedModel = availableModels[0]
-    preprocessor = selectedModel.includes('canny') ? 'CannyEdgePreprocessor' : 'DepthAnythingV2Preprocessor'
+    preprocessor = selectedModel.includes('canny') ? 'Canny' : 'DepthAnythingV2Preprocessor'
     strength = 0.6
   } else {
     selectedModel = undefined

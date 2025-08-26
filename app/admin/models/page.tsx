@@ -52,13 +52,28 @@ interface ModelConfig {
 }
 
 const MODEL_CONFIGS: ModelConfig[] = [
+  // Production Optimized Model (PRIMARY)
+  {
+    id: 'local_sdxl_optimized',
+    name: '🎨 Production SDXL (Optimized)',
+    provider: 'comfyui',
+    endpoint: 'http://localhost:8188',
+    model: 'sd_xl_base_1.0_0.9vae.safetensors',
+    description: '⚡ PRODUCTION MODEL - Expert-tuned with thick brushstrokes (0.75 denoising, CFG 13.0)',
+    cost: 'Free (local)',
+    estimatedTime: '25-35s',
+    minVram: 12,
+    recommended: true,
+    isProductionModel: true
+  },
+  
   // Replicate Models
   {
     id: 'replicate-sdxl',
-    name: 'Replicate SDXL',
+    name: 'Replicate SDXL (Backup)',
     provider: 'replicate',
     model: 'stability-ai/sdxl',
-    description: 'Cloud-based SDXL with refiner - High quality, reliable',
+    description: 'Cloud-based SDXL with refiner - Automatic fallback when local unavailable',
     cost: '$0.02/image',
     estimatedTime: '20-30s',
     minVram: 0
@@ -119,7 +134,7 @@ const TEST_IMAGE = '/test-images/test_portrait.jpg'
 export default function AdminModelsPage() {
   const [modelStatuses, setModelStatuses] = useState<ModelStatus[]>([])
   const [selectedModels, setSelectedModels] = useState<string[]>([])
-  const [productionModel, setProductionModel] = useState<string>('comfyui-sd15')
+  const [productionModel, setProductionModel] = useState<string>('local_sdxl_optimized')
   const [isTestingModels, setIsTestingModels] = useState(false)
   const [testResults, setTestResults] = useState<TestResult[]>([])
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
