@@ -68,29 +68,34 @@ export const authOptions: NextAuthOptions = {
   
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Admin always allowed
+      // Admin always allowed with special privileges
       if (user.email === 'thetangstr@gmail.com') {
         // Set admin flag
         const dbUser = await FirestoreUsers.findByEmail(user.email);
         if (dbUser) {
-          await FirestoreUsers.update(dbUser.id, { isAdmin: true, isWhitelisted: true });
+          await FirestoreUsers.update(dbUser.id, { 
+            isAdmin: true, 
+            isWhitelisted: true,
+            isBetaTester: true 
+          });
         }
         return true;
       }
 
-      // Check if email is whitelisted
-      const { FirestoreWhitelist } = await import('@/app/lib/firestore');
-      const isWhitelisted = await FirestoreWhitelist.isWhitelisted(user.email!);
+      // Public access - all users are welcome!
+      // No whitelist required for PetCanvas public launch
       
-      if (!isWhitelisted) {
-        // Redirect to not authorized page
-        return '/auth/not-authorized';
-      }
-
-      // Update user whitelist status
+      // Update/create user in database
       const dbUser = await FirestoreUsers.findByEmail(user.email!);
       if (dbUser) {
-        await FirestoreUsers.update(dbUser.id, { isWhitelisted: true });
+        // Update existing user
+        await FirestoreUsers.update(dbUser.id, { 
+          isWhitelisted: true, // Everyone gets access
+          lastLoginAt: new Date().toISOString()
+        });
+      } else {
+        // Create new user (handled by FirestoreAdapter)
+        // Set default permissions for new users
       }
 
       return true;

@@ -13,9 +13,7 @@ export default function Navigation() {
 
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/upload', label: 'Convert', icon: Upload },
-    { href: '/upload-enhanced', label: 'Compare AI', icon: GitCompare },
-    { href: '/comfyui-evaluation', label: 'ComfyUI Eval', icon: Star },
+    { href: '/upload', label: 'Create', icon: Upload },
     { href: '/gallery', label: 'Gallery', icon: ImageIcon },
   ]
 
@@ -33,7 +31,7 @@ export default function Navigation() {
               <Palette className="h-6 w-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-              Oil Painter
+              PetCanvas
             </span>
           </Link>
 

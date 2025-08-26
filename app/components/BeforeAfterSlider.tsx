@@ -53,7 +53,7 @@ export default function BeforeAfterSlider({
   }, [handleMove])
 
   return (
-    <div className={`relative select-none ${className}`}>
+    <div className={`relative select-none ${className}`} data-testid="before-after-slider">
       {title && (
         <div className="text-center mb-4">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h3>

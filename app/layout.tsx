@@ -5,6 +5,7 @@ import Navigation from './components/Navigation'
 import Footer from './components/Footer'
 import ClientLayout from './components/ClientLayout'
 import GoogleAnalytics from './components/GoogleAnalytics'
+import FloatingFeedbackButton from './components/FloatingFeedbackButton'
 import Providers from './providers'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -75,6 +76,7 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
+            <FloatingFeedbackButton />
           </ClientLayout>
         </Providers>
       </body>

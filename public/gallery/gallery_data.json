@@ -1,47 +1,47 @@
 [
   {
     "id": "demo_1",
-    "title": "Oil Painting Cat #1",
-    "description": "Professional oil painting conversion of a cat portrait",
+    "title": "Tabby Cat Portrait",
+    "description": "Beautiful tabby cat transformed into a classic oil painting with rich textures and warm tones",
     "originalImage": "/gallery/demo_1_original.jpg",
     "paintingImage": "/gallery/demo_1_painting.jpg",
     "category": "cat",
-    "timestamp": "2025-08-16 10:22:35"
+    "timestamp": "2024-08-26 10:05:00"
   },
   {
     "id": "demo_2",
-    "title": "Oil Painting Cat #2",
-    "description": "Professional oil painting conversion of a cat portrait",
+    "title": "British Shorthair",
+    "description": "Majestic British Shorthair cat captured in stunning oil painting style with visible brushstrokes",
     "originalImage": "/gallery/demo_2_original.jpg",
     "paintingImage": "/gallery/demo_2_painting.jpg",
     "category": "cat",
-    "timestamp": "2025-08-16 10:23:20"
+    "timestamp": "2024-08-26 10:06:00"
   },
   {
     "id": "demo_3",
-    "title": "Oil Painting Cat #3",
-    "description": "Professional oil painting conversion of a cat portrait",
+    "title": "Persian Cat Portrait",
+    "description": "Elegant Persian cat transformed into a timeless oil painting masterpiece",
     "originalImage": "/gallery/demo_3_original.jpg",
     "paintingImage": "/gallery/demo_3_painting.jpg",
     "category": "cat",
-    "timestamp": "2025-08-16 10:24:21"
+    "timestamp": "2024-08-26 10:07:00"
   },
   {
     "id": "demo_5",
-    "title": "Oil Painting Dog #5",
-    "description": "Professional oil painting conversion of a dog portrait",
+    "title": "Beagle Portrait",
+    "description": "Friendly beagle captured in classic oil painting style with expressive brushwork",
     "originalImage": "/gallery/demo_5_original.jpg",
     "paintingImage": "/gallery/demo_5_painting.jpg",
     "category": "dog",
-    "timestamp": "2025-08-16 10:25:23"
+    "timestamp": "2024-08-26 10:08:00"
   },
   {
     "id": "demo_6",
-    "title": "Oil Painting Dog #6",
-    "description": "Professional oil painting conversion of a dog portrait",
+    "title": "Labrador Portrait",
+    "description": "Noble labrador transformed into stunning oil artwork with rich color palette",
     "originalImage": "/gallery/demo_6_original.jpg",
     "paintingImage": "/gallery/demo_6_painting.jpg",
     "category": "dog",
-    "timestamp": "2025-08-16 10:26:22"
+    "timestamp": "2024-08-26 10:09:00"
   }
 ]

@@ -61,10 +61,10 @@ export default function HomePage() {
       <section className="py-16 bg-gradient-to-b from-white to-amber-50/30">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <BeforeAfterSlider
-            beforeImage="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&q=80"
-            afterImage="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&q=80&blur=2&sat=-100"
-            title="Oil Painting Dog #5"
-            subtitle="Drag the slider to compare before and after"
+            beforeImage="/gallery/demo_5_original.jpg"
+            afterImage="/gallery/demo_5_painting.jpg"
+            title="Beautiful Dog Portrait - Oil Painting Transformation"
+            subtitle="Drag the slider to compare original photo with AI oil painting conversion"
             height={600}
           />
         </div>
@@ -228,6 +228,83 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Showcase Gallery */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Recent Oil Painting Conversions
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              See the stunning transformations our AI creates from real pet photos
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Dog Portrait 1 */}
+            <div className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300">
+              <div className="aspect-square relative">
+                <img 
+                  src="/gallery/demo_5_painting.jpg" 
+                  alt="Dog Oil Painting"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 className="text-lg font-bold mb-1">Beagle Portrait</h3>
+                    <p className="text-sm opacity-90">Classic Oil Style</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Cat Portrait 1 */}
+            <div className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300">
+              <div className="aspect-square relative">
+                <img 
+                  src="/gallery/demo_1_painting.jpg" 
+                  alt="Cat Oil Painting"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 className="text-lg font-bold mb-1">Tabby Cat</h3>
+                    <p className="text-sm opacity-90">Classic Oil Style</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Dog Portrait 2 */}
+            <div className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300">
+              <div className="aspect-square relative">
+                <img 
+                  src="/gallery/demo_6_painting.jpg" 
+                  alt="Labrador Oil Painting"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 className="text-lg font-bold mb-1">Labrador</h3>
+                    <p className="text-sm opacity-90">Classic Oil Style</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center mt-12">
+            <Link
+              href="/gallery"
+              className="inline-flex items-center px-8 py-3 bg-white text-amber-600 font-semibold rounded-full border-2 border-amber-600 hover:bg-amber-50 transform hover:scale-105 transition-all duration-200"
+            >
+              View Full Gallery
+              <ArrowRight className="h-5 w-5 ml-2" />
+            </Link>
           </div>
         </div>
       </section>

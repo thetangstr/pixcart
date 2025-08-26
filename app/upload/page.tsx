@@ -1,12 +1,16 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import Image from 'next/image'
-import { Upload, X, Download, Loader2, ImageIcon, Sparkles, ArrowRight, CheckCircle } from 'lucide-react'
+import { Upload, X, Download, Loader2, ImageIcon, Sparkles, ArrowRight, CheckCircle, AlertCircle, Info } from 'lucide-react'
 import { getAllComfyUIStyles } from '../lib/comfyui-styles'
 import { oilPaintingStyles, type OilPaintingStyle } from '../lib/oilPaintingStyles'
 import StyleSelector from '../components/StyleSelector'
 import VideoTutorial from '../components/VideoTutorial'
+import OilPaintingFeedback from '../components/OilPaintingFeedback'
+import AppFeatureFeedback from '../components/AppFeatureFeedback'
+import ConversionLoader from '../components/ConversionLoader'
+import { validateImageFile, getImageDataUrl, analyzePetPortrait } from '../lib/imageValidation'
 
 interface ConvertedImage {
   original: string
@@ -26,7 +30,18 @@ export default function UploadPage() {
   const [triedStyles, setTriedStyles] = useState<Set<string>>(new Set())
   const [useReplicate, setUseReplicate] = useState(true) // Default to Replicate for better quality
   const [preservationMode, setPreservationMode] = useState<'low' | 'medium' | 'high' | 'extreme'>('high')
+  const [showOilFeedback, setShowOilFeedback] = useState(false)
+  const [lastConversionTime, setLastConversionTime] = useState<number>(0)
+  const [sessionId, setSessionId] = useState<string>('')
+  const [validationError, setValidationError] = useState<string | null>(null)
+  const [validationWarning, setValidationWarning] = useState<string | null>(null)
+  const [isValidating, setIsValidating] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  
+  // Generate session ID for tracking feedback
+  useEffect(() => {
+    setSessionId(`session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`)
+  }, [])
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -48,12 +63,46 @@ export default function UploadPage() {
     }
   }, [])
 
-  const handleFileSelect = (file: File) => {
-    if (file && file.type.startsWith('image/')) {
+  const handleFileSelect = async (file: File) => {
+    // Reset previous errors/warnings
+    setValidationError(null)
+    setValidationWarning(null)
+    setIsValidating(true)
+    
+    try {
+      // Validate the image file
+      const validation = await validateImageFile(file)
+      
+      if (!validation.isValid) {
+        setValidationError(validation.error || 'Invalid image')
+        setIsValidating(false)
+        return
+      }
+      
+      // Set warning if any
+      if (validation.warning) {
+        setValidationWarning(validation.warning)
+      }
+      
+      // Get image data URL and analyze for pet content
+      const dataUrl = await getImageDataUrl(file)
+      const petAnalysis = await analyzePetPortrait(dataUrl)
+      
+      // Show suggestions as warnings
+      if (petAnalysis.suggestions.length > 0) {
+        setValidationWarning(petAnalysis.suggestions[0])
+      }
+      
+      // If all validations pass, set the file
       setSelectedFile(file)
-      const url = URL.createObjectURL(file)
-      setPreviewUrl(url)
+      setPreviewUrl(dataUrl)
       setConversionProgress(0)
+      
+    } catch (error) {
+      console.error('Validation error:', error)
+      setValidationError('Failed to validate image. Please try another file.')
+    } finally {
+      setIsValidating(false)
     }
   }
 
@@ -81,6 +130,7 @@ export default function UploadPage() {
     if (!selectedFile) return
 
     setIsConverting(true)
+    const startTime = Date.now()
     const progressInterval = simulateProgress()
     
     try {
@@ -120,6 +170,16 @@ export default function UploadPage() {
           newSet.add(selectedStyle.id)
           return newSet
         })
+        
+        // Track conversion time for feedback
+        setLastConversionTime(Date.now() - startTime)
+        
+        // Show feedback prompt after first conversion
+        if (convertedImages.length === 0) {
+          setTimeout(() => {
+            setShowOilFeedback(true)
+          }, 3000) // Show after 3 seconds
+        }
         
         // Don't clear the selection - allow user to try another style
       } else {
@@ -217,7 +277,9 @@ export default function UploadPage() {
           <div className="mt-6 pt-6 border-t border-gray-200">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-medium text-gray-900">AI Model</h3>
+                <h3 className="text-sm font-medium text-gray-900">
+                  AI Model <span className="text-xs text-amber-600 font-normal">(Internal Testing Only)</span>
+                </h3>
                 <p className="text-xs text-gray-500 mt-1">
                   {useReplicate ? 'Premium quality with SDXL (Replicate)' : 'Local processing with ComfyUI'}
                 </p>
@@ -273,6 +335,7 @@ export default function UploadPage() {
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden mb-8">
           {!selectedFile ? (
             <div
+              data-testid="upload-dropzone"
               className={`relative p-12 border-2 border-dashed rounded-2xl transition-all duration-300 ${
                 dragActive
                   ? 'border-amber-500 bg-amber-50'
@@ -334,30 +397,12 @@ export default function UploadPage() {
                     />
                   )}
                   
-                  {/* Progress Overlay */}
+                  {/* Progress Overlay with Enhanced Loader */}
                   {isConverting && (
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                      <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4">
-                        <div className="flex items-center justify-center mb-4">
-                          <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
-                        </div>
-                        <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">
-                          Creating Your Masterpiece
-                        </h3>
-                        <p className="text-sm text-gray-600 text-center mb-4">
-                          Applying {selectedStyle.name} style...
-                        </p>
-                        <div className="relative bg-gray-200 rounded-full h-2 overflow-hidden">
-                          <div 
-                            className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-orange-600 transition-all duration-500"
-                            style={{ width: `${conversionProgress}%` }}
-                          />
-                        </div>
-                        <p className="text-xs text-gray-500 text-center mt-2">
-                          {conversionProgress.toFixed(0)}% Complete
-                        </p>
-                      </div>
-                    </div>
+                    <ConversionLoader 
+                      styleName={selectedStyle.name}
+                      progress={conversionProgress}
+                    />
                   )}
                 </div>
                 
@@ -457,6 +502,20 @@ export default function UploadPage() {
         )}
 
       </div>
+      
+      {/* Feedback Components */}
+      {showOilFeedback && (
+        <OilPaintingFeedback
+          imageId={convertedImages[0]?.converted}
+          style={convertedImages[0]?.style.name}
+          processingTime={lastConversionTime}
+          sessionId={sessionId}
+          onClose={() => setShowOilFeedback(false)}
+        />
+      )}
+      
+      {/* App Feature Feedback - Always Available */}
+      <AppFeatureFeedback sessionId={sessionId} />
     </div>
   )
 }

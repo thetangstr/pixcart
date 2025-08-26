@@ -1,618 +1,135 @@
 [
   {
     "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T04:56:13.954Z",
+    "page": "/",
+    "timestamp": "2025-08-26T18:18:52.526Z",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T04:57:41.458Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T04:57:43.590Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T04:57:43.792Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/test-models/",
-    "timestamp": "2025-08-25T04:57:44.242Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/test-models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T04:57:45.503Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T04:58:30.709Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T04:58:30.863Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T04:58:32.668Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/test-models/",
-    "timestamp": "2025-08-25T04:58:33.193Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/test-models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T04:58:34.450Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T04:59:17.219Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T04:59:17.246Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T05:18:21.070Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T05:18:21.170Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T05:48:34.550Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T05:48:34.651Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T05:50:44.157Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T05:50:45.378Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T05:56:02.096Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T05:56:02.141Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T06:20:56.436Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T07:00:40.037Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T07:00:43.253Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T07:01:10.325Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T07:01:10.476Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T14:51:41.284Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T15:18:52.005Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T15:36:31.818Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T15:42:03.753Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T15:42:05.586Z",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T16:45:46.523Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T16:45:48.788Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T17:15:04.231Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T17:18:37.420Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T17:18:37.448Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/upload-enhanced/",
-    "timestamp": "2025-08-25T17:18:51.047Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/upload-enhanced/"
-  },
-  {
-    "type": "pageview",
-    "page": "/upload-enhanced/",
-    "timestamp": "2025-08-25T17:18:52.373Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/upload-enhanced/"
-  },
-  {
-    "type": "pageview",
-    "page": "/comfyui-evaluation/",
-    "timestamp": "2025-08-25T17:18:58.860Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/comfyui-evaluation/"
+    "referrer": "http://localhost:5174/"
   },
   {
     "type": "pageview",
     "page": "/upload/",
-    "timestamp": "2025-08-25T17:19:08.333Z",
+    "timestamp": "2025-08-26T18:18:52.687Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-26T18:18:53.330Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-26T18:18:53.494Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-26T18:19:07.471Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-26T18:19:17.809Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-26T18:19:18.401Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-26T18:19:19.261Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-26T18:19:21.081Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-26T18:19:34.768Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-26T18:19:35.071Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-26T18:19:36.861Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-26T18:19:37.103Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-26T18:19:38.055Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.7258.5 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-26T18:27:00.337Z",
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
     "referrer": "http://localhost:5174/upload/"
   },
   {
     "type": "pageview",
-    "page": "/test-models/",
-    "timestamp": "2025-08-25T17:19:23.879Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/test-models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/test-models/",
-    "timestamp": "2025-08-25T17:19:23.930Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/test-models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T17:53:21.070Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T17:53:21.110Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T17:54:59.614Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T17:55:01.676Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T17:56:15.616Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T17:56:15.727Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/test-models/",
-    "timestamp": "2025-08-25T17:58:34.548Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/test-models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/test-models/",
-    "timestamp": "2025-08-25T18:04:59.926Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/test-models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/test-models/",
-    "timestamp": "2025-08-25T18:05:07.645Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/test-models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T18:09:47.497Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T18:14:13.726Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T18:14:13.894Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T18:57:25.560Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-25T18:57:26.635Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T00:09:09.754Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T00:09:13.928Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
     "page": "/",
-    "timestamp": "2025-08-26T00:34:44.085Z",
+    "timestamp": "2025-08-26T18:27:26.239Z",
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
     "referrer": "http://localhost:5174/"
   },
   {
     "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T00:34:50.297Z",
+    "page": "/auth/signin/",
+    "timestamp": "2025-08-26T18:36:16.579Z",
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T00:34:50.395Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T00:53:08.411Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T00:53:08.515Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T01:56:02.271Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T01:56:02.376Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T03:45:44.022Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T05:34:30.061Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T05:36:03.120Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T05:36:41.340Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T05:36:42.373Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
+    "referrer": "http://localhost:5174/auth/signin/"
   },
   {
     "type": "pageview",
     "page": "/",
-    "timestamp": "2025-08-26T05:36:43.147Z",
+    "timestamp": "2025-08-26T19:07:09.260Z",
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
     "referrer": "http://localhost:5174/"
   },
   {
     "type": "pageview",
-    "page": "/",
-    "timestamp": "2025-08-26T06:04:58.876Z",
+    "page": "/auth/signin/",
+    "timestamp": "2025-08-26T19:07:10.645Z",
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T06:05:00.245Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T06:05:00.532Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T06:15:50.403Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T06:15:50.642Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T06:15:53.226Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T06:15:53.398Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T06:56:25.109Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T06:56:25.318Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T07:01:23.889Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T07:01:24.167Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T07:11:57.083Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T07:11:57.190Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T07:13:13.810Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T07:13:13.890Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T07:13:45.341Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
-  },
-  {
-    "type": "pageview",
-    "page": "/admin/models/",
-    "timestamp": "2025-08-26T07:13:45.418Z",
-    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
-    "referrer": "http://localhost:5174/admin/models/"
+    "referrer": "http://localhost:5174/auth/signin/"
   }
 ]

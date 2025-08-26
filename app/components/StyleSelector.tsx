@@ -101,13 +101,19 @@ export default function StyleSelector({
                 {/* Left: Style Preview */}
                 <div className="flex-shrink-0">
                   <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden shadow-md">
-                    <Image
-                      src={`/icons/${style.id}_icon.png`}
-                      alt={`${style.name} style preview`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 80px, 96px"
-                    />
+                    {style.icon.startsWith('/') ? (
+                      <Image
+                        src={style.icon}
+                        alt={`${style.name} style preview`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 80px, 96px"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-100 to-orange-100 text-3xl">
+                        {style.icon}
+                      </div>
+                    )}
                     {/* Overlay with color palette preview */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                     <div className="absolute bottom-1 left-1 flex gap-0.5">

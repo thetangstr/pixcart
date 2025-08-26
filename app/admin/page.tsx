@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Shield, Users, MessageCircle, Bug, Lightbulb, Trash2, Edit2, X, Check, Server, Activity, BarChart3 } from 'lucide-react'
+import { Shield, Users, MessageCircle, Bug, Lightbulb, Trash2, Edit2, X, Check, Server, Activity, BarChart3, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 
 interface User {

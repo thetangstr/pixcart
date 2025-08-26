@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Style Icons Preview</title>
+    <style>
+        body {
+            font-family: system-ui;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f3f4f6;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .icon {
+            width: 100%;
+            height: 200px;
+            border-radius: 0.5rem;
+            object-fit: cover;
+        }
+        h2 {
+            margin: 1rem 0 0.5rem;
+            color: #1f2937;
+        }
+        p {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Style Icons Preview</h1>
+    <div class="grid">
+
+        <div class="card">
+            <img src="classic.jpg" alt="Classic Portrait" class="icon">
+            <h2>Classic Portrait</h2>
+            <p>Icon ID: classic</p>
+        </div>
+
+        <div class="card">
+            <img src="vangogh.jpg" alt="Van Gogh Style" class="icon">
+            <h2>Van Gogh Style</h2>
+            <p>Icon ID: vangogh</p>
+        </div>
+
+        <div class="card">
+            <img src="monet.jpg" alt="Monet Impressionist" class="icon">
+            <h2>Monet Impressionist</h2>
+            <p>Icon ID: monet</p>
+        </div>
+
+        <div class="card">
+            <img src="modern.jpg" alt="Modern Abstract" class="icon">
+            <h2>Modern Abstract</h2>
+            <p>Icon ID: modern</p>
+        </div>
+
+    </div>
+</body>
+</html>
