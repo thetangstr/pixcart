@@ -17,7 +17,6 @@
     }
   },
   "env": {
-    "NEXT_TELEMETRY_DISABLED": "1",
-    "SKIP_FIREBASE_INIT": "true"
+    "NEXT_TELEMETRY_DISABLED": "1"
   }
 }

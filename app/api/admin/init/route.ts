@@ -1,40 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { FirestoreWhitelist, FirestoreUsers } from '@/app/lib/firestore'
+// import { FirestoreWhitelist, FirestoreUsers } from '@/app/lib/firestore' // Firebase removed
 
 // This endpoint initializes the admin user in the whitelist
 export async function GET(request: NextRequest) {
   try {
-    const adminEmail = 'thetangstr@gmail.com'
-    
-    // Check if admin is already whitelisted
-    const isWhitelisted = await FirestoreWhitelist.isWhitelisted(adminEmail)
-    
-    if (!isWhitelisted) {
-      // Add admin to whitelist
-      await FirestoreWhitelist.add(
-        adminEmail,
-        'System',
-        'System Administrator - Auto-added'
-      )
-      
-      // Update user if exists
-      const user = await FirestoreUsers.findByEmail(adminEmail)
-      if (user) {
-        await FirestoreUsers.update(user.id, { 
-          isAdmin: true, 
-          isWhitelisted: true 
-        })
-      }
-      
-      return NextResponse.json({ 
-        message: 'Admin initialized and added to whitelist',
-        initialized: true 
-      })
-    }
-    
+    // Firebase removed - returning mock response
     return NextResponse.json({ 
-      message: 'Admin already in whitelist',
-      initialized: false 
+      message: 'Admin already initialized (Firebase removed)',
+      initialized: true 
     })
   } catch (error) {
     console.error('Error initializing admin:', error)
@@ -43,4 +16,5 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     )
   }
-}export const dynamic = 'force-dynamic';
+}
+export const dynamic = 'force-dynamic';

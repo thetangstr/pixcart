@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]/route';
-import { FirestoreUsers } from '@/app/lib/firestore';
+// import { FirestoreUsers } from '@/app/lib/firestore'; // Firebase removed
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,17 +18,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email and action required' }, { status: 400 });
     }
 
-    const user = await FirestoreUsers.findByEmail(email);
-    
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
+    // Firebase removed - returning mock response
     if (action === 'add') {
-      await FirestoreUsers.update(user.id, { isBetaTester: true });
       return NextResponse.json({ message: `${email} is now a beta tester` });
     } else if (action === 'remove') {
-      await FirestoreUsers.update(user.id, { isBetaTester: false });
       return NextResponse.json({ message: `${email} is no longer a beta tester` });
     } else {
       return NextResponse.json({ error: 'Invalid action' }, { status: 400 });

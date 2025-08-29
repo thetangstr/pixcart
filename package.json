@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev -p 5174",
-    "build": "SKIP_FIREBASE_INIT=true next build",
+    "build": "next build",
     "start": "next start -p 5174",
     "lint": "next lint --fix",
     "lint:check": "next lint",
@@ -20,15 +20,11 @@
     "build:production": "npm run build",
     "build:beta": "npm run build",
     "ci:test": "npm run lint:check && npm run type-check && npm run test",
-    "firebase:deploy": "firebase deploy --only hosting:production",
-    "firebase:deploy:beta": "firebase deploy --only hosting:beta",
-    "firebase:deploy:preview": "firebase hosting:channel:deploy preview --expires 7d",
     "clean": "rm -rf .next out node_modules/.cache",
     "postinstall": "echo 'No additional postinstall steps needed'"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
-    "@firebase/firestore": "^4.9.0",
     "@google/generative-ai": "^0.24.1",
     "@stripe/stripe-js": "^7.8.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
@@ -38,8 +34,6 @@
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^3.0.2",
     "canvas": "^3.1.2",
-    "firebase": "^12.1.0",
-    "firebase-admin": "^13.4.0",
     "form-data": "^4.0.4",
     "lucide-react": "^0.379.0",
     "next": "^14.2.31",

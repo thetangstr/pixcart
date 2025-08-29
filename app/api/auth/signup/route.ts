@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
-import { FirestoreUsers } from '@/app/lib/firestore'
+// import { FirestoreUsers } from '@/app/lib/firestore' // Firebase removed
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,34 +13,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if user already exists
-    const existingUser = await FirestoreUsers.findByEmail(email)
-
-    if (existingUser) {
-      return NextResponse.json(
-        { message: 'User already exists with this email' },
-        { status: 409 }
-      )
-    }
-
-    // Hash the password - Note: We're not storing passwords in this simplified version
-    // In a full implementation, you'd need to add a password field to the User model
+    // Firebase removed - returning mock response
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 12)
-
-    // Create the user (without password storage for now)
-    const user = await FirestoreUsers.create({
-      name,
-      email,
-      // password: hashedPassword, // Would need to add this field to User model
-    })
 
     return NextResponse.json(
       { 
         message: 'User created successfully',
         user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
+          id: 'mock-id',
+          email: email,
+          name: name,
         }
       },
       { status: 201 }
@@ -52,4 +35,5 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
-}export const dynamic = 'force-dynamic';
+}
+export const dynamic = 'force-dynamic';
