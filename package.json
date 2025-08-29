@@ -2,6 +2,9 @@
   "name": "oil-painting-app",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "next dev -p 5174",
     "build": "SKIP_FIREBASE_INIT=true next build",
