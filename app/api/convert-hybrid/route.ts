@@ -236,12 +236,12 @@ export async function POST(req: NextRequest) {
       // Provide detailed error information
       const errorMessage = fallbackUsed ? 
         `Both models failed. Primary: SDXL (${result.error}), Fallback: Gemini also failed.` :
-        `Primary model failed: ${result.error}. ${!shouldUseGemini ? 'SDXL not available, trying Gemini...' : 'Gemini not available.'}`;
+        `Primary model failed: ${result.error}. Gemini is primary model.`;
       
       return NextResponse.json({
         error: errorMessage,
         details: {
-          primaryModel: !shouldUseGemini ? 'sdxl' : 'gemini',
+          primaryModel: 'gemini',
           fallbackAttempted: fallbackUsed,
           sdxlAvailable: false,
           geminiAvailable: process.env.GEMINI_API_KEY ? true : false,
@@ -282,7 +282,7 @@ export async function POST(req: NextRequest) {
       },
       style,
       subject,
-      settings: result.settings || result.metadata
+      settings: (result as any).settings || (result as any).metadata
     };
 
     // Special message if user just unlocked Gemini
