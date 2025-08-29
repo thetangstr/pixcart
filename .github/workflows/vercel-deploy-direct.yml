@@ -1,9 +1,6 @@
-name: Simple Vercel Deploy
+name: Direct Vercel Deploy
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -20,14 +17,15 @@ jobs:
       
       - name: Install dependencies
         run: npm ci
-        working-directory: ./oil-painting-app
-      
+        
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       
       - name: Deploy to Vercel
-        run: vercel --token=${{ secrets.VERCEL_TOKEN }} --prod --yes
-        working-directory: ./oil-painting-app
+        run: |
+          cd oil-painting-app
+          echo "Building and deploying to Vercel..."
+          vercel --token=${{ secrets.VERCEL_TOKEN }} --prod --yes --confirm
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
