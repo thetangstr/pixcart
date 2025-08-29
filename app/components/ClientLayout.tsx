@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import FeedbackWidget from '@/components/FeedbackWidget'
 import AnalyticsTracker from './AnalyticsTracker'
 import Link from 'next/link'
 import { Shield } from 'lucide-react'
@@ -63,9 +62,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       )}
       
       {children}
-      
-      {/* Feedback Widget for logged-in users */}
-      {!loading && <FeedbackWidget user={user} />}
     </>
   )
 }

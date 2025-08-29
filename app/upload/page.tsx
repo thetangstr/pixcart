@@ -6,7 +6,6 @@ import { Upload, X, Download, Loader2, ImageIcon, Sparkles, ArrowRight, CheckCir
 import { getAllComfyUIStyles } from '../lib/comfyui-styles'
 import { oilPaintingStyles, type OilPaintingStyle } from '../lib/oilPaintingStyles'
 import StyleSelector from '../components/StyleSelector'
-import VideoTutorial from '../components/VideoTutorial'
 import OilPaintingFeedback from '../components/OilPaintingFeedback'
 import AppFeatureFeedback from '../components/AppFeatureFeedback'
 import ConversionLoader from '../components/ConversionLoader'
@@ -282,7 +281,6 @@ export default function UploadPage() {
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <VideoTutorial />
       <div className="max-w-6xl mx-auto">
         {/* Development Tools */}
         {process.env.NODE_ENV === 'development' && (
