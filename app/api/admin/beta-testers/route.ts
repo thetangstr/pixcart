@@ -54,4 +54,4 @@ export async function GET(req: NextRequest) {
     console.error('Error fetching beta testers:', error);
     return NextResponse.json({ error: 'Failed to fetch beta testers' }, { status: 500 });
   }
-}
+}export const dynamic = 'force-dynamic';

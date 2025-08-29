@@ -187,4 +187,4 @@ export async function GET() {
       error: error instanceof Error ? error.message : 'Health check failed'
     }, { status: 500 });
   }
-}
+}export const dynamic = 'force-dynamic';

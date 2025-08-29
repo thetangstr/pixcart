@@ -243,4 +243,4 @@ export async function PUT() {
       error: error instanceof Error ? error.message : 'Failed to reset settings'
     }, { status: 500 });
   }
-}
+}export const dynamic = 'force-dynamic';

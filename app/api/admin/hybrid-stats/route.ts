@@ -257,4 +257,4 @@ export async function DELETE() {
       error: error instanceof Error ? error.message : 'Failed to reset statistics'
     }, { status: 500 });
   }
-}
+}export const dynamic = 'force-dynamic';

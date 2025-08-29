@@ -1,5 +1,5 @@
 import { adminDb } from './firebaseAdmin';
-import { db } from './firebase';
+import { db as getDb } from './firebase';
 import { 
   collection, 
   doc, 
@@ -104,7 +104,7 @@ export class FirestoreUsers {
   static collection = 'users';
 
   static async create(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> {
-    const userRef = doc(collection(db, this.collection));
+    const userRef = doc(collection(getDb(), this.collection));
     const now = new Date();
     
     const user: User = {
@@ -124,7 +124,7 @@ export class FirestoreUsers {
   }
 
   static async findById(id: string): Promise<User | null> {
-    const userRef = doc(db, this.collection, id);
+    const userRef = doc(getDb(), this.collection, id);
     const userSnap = await getDoc(userRef);
     
     if (userSnap.exists()) {
@@ -140,7 +140,7 @@ export class FirestoreUsers {
   }
 
   static async findByEmail(email: string): Promise<User | null> {
-    const q = query(collection(db, this.collection), where("email", "==", email));
+    const q = query(collection(getDb(), this.collection), where("email", "==", email));
     const querySnapshot = await getDocs(q);
     
     if (!querySnapshot.empty) {
@@ -157,7 +157,7 @@ export class FirestoreUsers {
   }
 
   static async update(id: string, updates: Partial<Omit<User, 'id' | 'createdAt'>>): Promise<void> {
-    const userRef = doc(db, this.collection, id);
+    const userRef = doc(getDb(), this.collection, id);
     await updateDoc(userRef, {
       ...updates,
       updatedAt: dateToTimestamp(new Date()),
@@ -165,7 +165,7 @@ export class FirestoreUsers {
   }
 
   static async delete(id: string): Promise<void> {
-    const userRef = doc(db, this.collection, id);
+    const userRef = doc(getDb(), this.collection, id);
     await deleteDoc(userRef);
   }
 }
@@ -175,7 +175,7 @@ export class FirestoreSessions {
   static collection = 'sessions';
 
   static async create(sessionData: Omit<Session, 'id'>): Promise<Session> {
-    const sessionRef = doc(collection(db, this.collection));
+    const sessionRef = doc(collection(getDb(), this.collection));
     
     const session: Session = {
       id: sessionRef.id,
@@ -191,7 +191,7 @@ export class FirestoreSessions {
   }
 
   static async findByToken(sessionToken: string): Promise<Session | null> {
-    const q = query(collection(db, this.collection), where("sessionToken", "==", sessionToken));
+    const q = query(collection(getDb(), this.collection), where("sessionToken", "==", sessionToken));
     const querySnapshot = await getDocs(q);
     
     if (!querySnapshot.empty) {
@@ -207,7 +207,7 @@ export class FirestoreSessions {
   }
 
   static async update(sessionToken: string, updates: Partial<Omit<Session, 'id' | 'sessionToken'>>): Promise<void> {
-    const q = query(collection(db, this.collection), where("sessionToken", "==", sessionToken));
+    const q = query(collection(getDb(), this.collection), where("sessionToken", "==", sessionToken));
     const querySnapshot = await getDocs(q);
     
     if (!querySnapshot.empty) {
@@ -220,7 +220,7 @@ export class FirestoreSessions {
   }
 
   static async delete(sessionToken: string): Promise<void> {
-    const q = query(collection(db, this.collection), where("sessionToken", "==", sessionToken));
+    const q = query(collection(getDb(), this.collection), where("sessionToken", "==", sessionToken));
     const querySnapshot = await getDocs(q);
     
     if (!querySnapshot.empty) {
@@ -230,7 +230,7 @@ export class FirestoreSessions {
 
   static async deleteExpired(): Promise<void> {
     const now = new Date();
-    const q = query(collection(db, this.collection), where("expires", "<", dateToTimestamp(now)));
+    const q = query(collection(getDb(), this.collection), where("expires", "<", dateToTimestamp(now)));
     const querySnapshot = await getDocs(q);
     
     const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
@@ -243,7 +243,7 @@ export class FirestoreAccounts {
   static collection = 'accounts';
 
   static async create(accountData: Omit<Account, 'id'>): Promise<Account> {
-    const accountRef = doc(collection(db, this.collection));
+    const accountRef = doc(collection(getDb(), this.collection));
     
     const account: Account = {
       id: accountRef.id,
@@ -256,7 +256,7 @@ export class FirestoreAccounts {
 
   static async findByProviderAccount(provider: string, providerAccountId: string): Promise<Account | null> {
     const q = query(
-      collection(db, this.collection), 
+      collection(getDb(), this.collection), 
       where("provider", "==", provider),
       where("providerAccountId", "==", providerAccountId)
     );
@@ -273,7 +273,7 @@ export class FirestoreAccounts {
   }
 
   static async deleteByUserId(userId: string): Promise<void> {
-    const q = query(collection(db, this.collection), where("userId", "==", userId));
+    const q = query(collection(getDb(), this.collection), where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
     
     const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
@@ -286,7 +286,7 @@ export class FirestoreConversions {
   static collection = 'conversions';
 
   static async create(conversionData: Omit<Conversion, 'id' | 'createdAt' | 'updatedAt'>): Promise<Conversion> {
-    const conversionRef = doc(collection(db, this.collection));
+    const conversionRef = doc(collection(getDb(), this.collection));
     const now = new Date();
     
     const conversion: Conversion = {
@@ -306,7 +306,7 @@ export class FirestoreConversions {
   }
 
   static async findById(id: string): Promise<Conversion | null> {
-    const conversionRef = doc(db, this.collection, id);
+    const conversionRef = doc(getDb(), this.collection, id);
     const conversionSnap = await getDoc(conversionRef);
     
     if (conversionSnap.exists()) {
@@ -322,7 +322,7 @@ export class FirestoreConversions {
   }
 
   static async findByUserId(userId: string): Promise<Conversion[]> {
-    const q = query(collection(db, this.collection), where("userId", "==", userId));
+    const q = query(collection(getDb(), this.collection), where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
     
     return querySnapshot.docs.map(doc => {
@@ -337,7 +337,7 @@ export class FirestoreConversions {
   }
 
   static async update(id: string, updates: Partial<Omit<Conversion, 'id' | 'createdAt'>>): Promise<void> {
-    const conversionRef = doc(db, this.collection, id);
+    const conversionRef = doc(getDb(), this.collection, id);
     await updateDoc(conversionRef, {
       ...updates,
       updatedAt: dateToTimestamp(new Date()),
@@ -345,7 +345,7 @@ export class FirestoreConversions {
   }
 
   static async delete(id: string): Promise<void> {
-    const conversionRef = doc(db, this.collection, id);
+    const conversionRef = doc(getDb(), this.collection, id);
     await deleteDoc(conversionRef);
   }
 }
@@ -355,7 +355,7 @@ export class FirestoreFeedback {
   static collection = 'feedback';
 
   static async create(feedbackData: Omit<Feedback, 'id' | 'createdAt' | 'updatedAt'>): Promise<Feedback> {
-    const feedbackRef = doc(collection(db, this.collection));
+    const feedbackRef = doc(collection(getDb(), this.collection));
     const now = new Date();
     
     const feedback: Feedback = {
@@ -375,7 +375,7 @@ export class FirestoreFeedback {
   }
 
   static async getAll(): Promise<Feedback[]> {
-    const querySnapshot = await getDocs(collection(db, this.collection));
+    const querySnapshot = await getDocs(collection(getDb(), this.collection));
     
     return querySnapshot.docs.map(doc => {
       const data = doc.data();
@@ -389,7 +389,7 @@ export class FirestoreFeedback {
   }
 
   static async update(id: string, updates: Partial<Omit<Feedback, 'id' | 'createdAt'>>): Promise<void> {
-    const feedbackRef = doc(db, this.collection, id);
+    const feedbackRef = doc(getDb(), this.collection, id);
     await updateDoc(feedbackRef, {
       ...updates,
       updatedAt: dateToTimestamp(new Date()),
@@ -402,7 +402,7 @@ export class FirestoreWhitelist {
   static collection = 'whitelist';
 
   static async add(email: string, addedBy: string, notes?: string): Promise<Whitelist> {
-    const whitelistRef = doc(collection(db, this.collection));
+    const whitelistRef = doc(collection(getDb(), this.collection));
     const now = new Date();
     
     const entry: Whitelist = {
@@ -428,7 +428,7 @@ export class FirestoreWhitelist {
   }
 
   static async remove(email: string): Promise<void> {
-    const q = query(collection(db, this.collection), where("email", "==", email.toLowerCase()));
+    const q = query(collection(getDb(), this.collection), where("email", "==", email.toLowerCase()));
     const querySnapshot = await getDocs(q);
     
     const deletePromises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
@@ -442,13 +442,13 @@ export class FirestoreWhitelist {
   }
 
   static async isWhitelisted(email: string): Promise<boolean> {
-    const q = query(collection(db, this.collection), where("email", "==", email.toLowerCase()));
+    const q = query(collection(getDb(), this.collection), where("email", "==", email.toLowerCase()));
     const querySnapshot = await getDocs(q);
     return !querySnapshot.empty;
   }
 
   static async getAll(): Promise<Whitelist[]> {
-    const querySnapshot = await getDocs(collection(db, this.collection));
+    const querySnapshot = await getDocs(collection(getDb(), this.collection));
     
     return querySnapshot.docs.map(doc => {
       const data = doc.data();

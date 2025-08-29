@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 5174",
-    "build": "next build",
+    "build": "SKIP_FIREBASE_INIT=true next build",
     "start": "next start -p 5174",
     "lint": "next lint --fix",
     "lint:check": "next lint",

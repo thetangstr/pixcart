@@ -34,4 +34,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
-}
+}export const dynamic = 'force-dynamic';
