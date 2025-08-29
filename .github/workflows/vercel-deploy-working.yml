@@ -1,0 +1,38 @@
+name: Vercel Deploy (Working)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+        
+      - name: Deploy to Vercel
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Contents: $(ls -la)"
+          echo "Changing to oil-painting-app directory..."
+          cd oil-painting-app
+          echo "Now in: $(pwd)"
+          echo "Contents: $(ls -la)"
+          
+          echo "Deploying with Vercel..."
+          vercel --token $VERCEL_TOKEN --prod --yes --confirm
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
