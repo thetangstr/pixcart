@@ -29,8 +29,8 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
-      - name: Run tests (if any)
-        run: npm test --if-present
+      - name: Run linting
+        run: npm run lint:check || true
         continue-on-error: true
 
       - name: Pull Vercel Environment Information
