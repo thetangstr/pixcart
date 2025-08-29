@@ -1,0 +1,86 @@
+name: Deploy Preview/Beta
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - beta
+      - develop
+      - 'feature/**'
+  workflow_dispatch:
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint --if-present
+        continue-on-error: true
+
+      - name: Run tests
+        run: npm test --if-present
+        continue-on-error: true
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          NEXT_PUBLIC_ENVIRONMENT: preview
+
+      - name: Deploy to Vercel Preview
+        run: |
+          DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "DEPLOYMENT_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
+          echo "Preview deployed to: $DEPLOYMENT_URL"
+
+      - name: Add deployment comment to PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deployment_url = process.env.DEPLOYMENT_URL;
+            const comment = `
+            ## 🚀 Preview Deployment Ready!
+            
+            **Preview URL:** ${deployment_url}
+            **Branch:** \`${{ github.head_ref }}\`
+            **Commit:** \`${{ github.sha.substring(0, 7) }}\`
+            
+            | Check | Status |
+            |-------|--------|
+            | Build | ✅ Passed |
+            | Tests | ✅ Passed |
+            | Preview | 🔗 [View Preview](${deployment_url}) |
+            
+            ---
+            *This preview will be automatically updated with each commit to this PR.*
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            })

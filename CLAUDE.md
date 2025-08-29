@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an AI-powered oil painting converter web application that transforms photos into hand-painted oil paintings. The business model is: AI preview → order → human artist paints by hand. The app uses Stable Diffusion for AI previews and includes authentication, analytics, and evaluation systems.
+This is an AI-powered oil painting converter web application that transforms photos into hand-painted oil paintings. The business model is: AI preview → order → human artist paints by hand. The app now uses **Google Gemini 2.5 Flash Image Preview** for AI image generation (migrated from Stable Diffusion) and includes authentication, analytics, and evaluation systems.
 
 ## Development Commands
 

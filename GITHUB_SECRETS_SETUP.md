@@ -28,8 +28,9 @@ Go to your GitHub repository → Settings → Secrets and variables → Actions 
 |-------------|---------------|-------------|
 | `GA_MEASUREMENT_ID` | `G-XXXXXXXXXX` | Google Analytics 4 Measurement ID |
 | `SITE_URL` | `https://petcanvas.vercel.app` | Your production domain URL |
-| `A1111_BASE_URL` | `https://your-tunnel.ngrok.io` | Stable Diffusion WebUI tunnel URL |
-| `COMFYUI_BASE_URL` | `https://comfyui-tunnel.ngrok.io` | ComfyUI tunnel URL |
+| `GEMINI_API_KEY` | `AIza...` | Google Gemini 2.5 Flash API key (Primary) |
+| `A1111_BASE_URL` | `https://your-tunnel.ngrok.io` | Stable Diffusion WebUI tunnel URL (Legacy) |
+| `COMFYUI_BASE_URL` | `https://comfyui-tunnel.ngrok.io` | ComfyUI tunnel URL (Legacy) |
 
 ### OAuth Secrets (for production)
 

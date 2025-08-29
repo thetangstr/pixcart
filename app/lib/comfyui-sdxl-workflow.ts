@@ -9,7 +9,9 @@ export function createSDXLWorkflow(
   prompt: string,
   negativePrompt: string = "photograph, photo, realistic",
   denoise: number = 0.5,
-  steps: number = 30
+  steps: number = 30,
+  cfg: number = 7.5,
+  sampler: string = "dpmpp_2m"
 ) {
   const seed = Math.floor(Math.random() * 1000000)
   
@@ -67,8 +69,8 @@ export function createSDXLWorkflow(
       "inputs": {
         "seed": seed,
         "steps": steps,
-        "cfg": 7.5,
-        "sampler_name": "dpmpp_2m",
+        "cfg": cfg,
+        "sampler_name": sampler,
         "scheduler": "karras",
         "denoise": denoise,
         "model": ["1", 0],
@@ -113,27 +115,38 @@ export function createSDXLOilPaintingWorkflow(
   preservationStrength: number = 0.7
 ) {
   const stylePrompts = {
-    classic: "masterpiece, best quality, oil painting on canvas, classical painting style, Rembrandt lighting, baroque art, dramatic chiaroscuro, thick impasto texture, visible brushstrokes, museum quality artwork",
-    impressionist: "masterpiece, impressionist oil painting, Claude Monet style, soft atmospheric light, broken color technique, plein air painting, thick paint application, French impressionism, visible brushwork",
-    vangogh: "masterpiece, oil painting by Vincent Van Gogh, expressive brushstrokes, swirling paint texture, post-impressionist style, vibrant colors, heavy impasto technique, dynamic composition",
-    modern: "masterpiece, contemporary oil painting, bold abstract brushstrokes, palette knife texture, modern art style, expressive color, dynamic composition, thick paint layers"
+    classic: "Masterpiece oil painting, Rembrandt style, baroque portrait, golden age dutch masters, dramatic chiaroscuro lighting, deep shadows and bright highlights, thick impasto oil paint texture, visible brushstrokes, warm earth tones, umber and sienna, rich glazing layers, museum quality, painterly realism, traditional oil on canvas, heavy paint application with palette knife texture, sophisticated classical composition",
+    impressionist: "Claude Monet impressionist oil painting, loose broken brushstrokes, pure unmixed colors, plein air lighting, soft edges, atmospheric perspective, dappled light effects, visible canvas texture, spontaneous paint application, color vibration, optical color mixing, french impressionism, water lilies style, haystack series technique, garden at giverny palette, shimmering light reflections, feathery brushwork",
+    vangogh: "Vincent van Gogh expressionist oil painting, thick swirling brushstrokes, intense vibrant colors, dynamic spiral patterns, heavy impasto texture, emotional intensity, starry night style, sunflower series palette, ultramarine blue and chrome yellow, aggressive paint application, visible canvas weave, post-impressionist technique, dramatic movement, turbulent energy, psychological depth through color",
+    modern: "Contemporary abstract oil painting, bold geometric shapes, vibrant neon colors, palette knife texture, thick paint layers, mixed media elements, urban art influence, graffiti style energy, fluorescent pigments, high contrast, experimental techniques, dripping paint effects, collage elements, street art aesthetic, neo-expressionist approach, raw emotional power"
   }
 
   const negativePrompts = {
-    classic: "photograph, photo, digital art, 3d render, smooth surface, flat colors, anime, cartoon",
-    impressionist: "photograph, sharp edges, photorealistic, smooth, digital, hyperrealistic",
-    vangogh: "photograph, thin paint, minimalist, flat, digital art, smooth texture",
-    modern: "photograph, classical, old style, smooth, photorealistic, digital art"
+    classic: "photograph, photo, digital art, 3d render, smooth surface, flat colors, anime, cartoon, watercolor, airbrushed, photorealistic, plastic, blurry, low quality, digital painting",
+    impressionist: "photograph, photo, digital art, 3d render, smooth surface, flat colors, anime, cartoon, watercolor, airbrushed, photorealistic, plastic, blurry, low quality, digital painting",
+    vangogh: "photograph, photo, digital art, 3d render, smooth surface, flat colors, anime, cartoon, watercolor, airbrushed, photorealistic, plastic, blurry, low quality, digital painting",
+    modern: "photograph, photo, digital art, 3d render, smooth surface, flat colors, anime, cartoon, watercolor, airbrushed, photorealistic, plastic, blurry, low quality, digital painting"
   }
 
-  // Higher preservation = lower denoise
-  const denoise = 0.3 + (1.0 - preservationStrength) * 0.4 // Range: 0.3-0.7
+  // Much stronger parameters for dramatic oil painting transformation
+  const styleParams = {
+    classic: { denoise: 0.65, steps: 60, cfg: 12.0, sampler: 'dpmpp_2m' },
+    impressionist: { denoise: 0.70, steps: 55, cfg: 10.0, sampler: 'dpmpp_sde' },
+    vangogh: { denoise: 0.75, steps: 65, cfg: 13.0, sampler: 'dpmpp_2m' },
+    modern: { denoise: 0.80, steps: 50, cfg: 11.0, sampler: 'euler' }
+  }
+  
+  const params = styleParams[style]
+  // Less preservation adjustment for more dramatic transformation
+  const adjustedDenoise = params.denoise - (preservationStrength * 0.15) // Minimal preservation impact
   
   return createSDXLWorkflow(
     imagePath,
     stylePrompts[style],
     negativePrompts[style],
-    denoise,
-    30 // SDXL needs more steps
+    Math.max(adjustedDenoise, 0.5), // Keep minimum at 0.5 for strong transformation
+    params.steps,
+    params.cfg,
+    params.sampler
   )
 }

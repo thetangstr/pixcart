@@ -131,5 +131,124 @@
     "timestamp": "2025-08-26T19:07:10.645Z",
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
     "referrer": "http://localhost:5174/auth/signin/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-28T06:29:17.320Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-28T06:55:22.354Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-28T06:55:23.265Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-28T06:55:28.038Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-28T07:04:24.307Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-28T18:51:16.231Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-28T19:07:09.046Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-29T00:22:26.501Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/auth/signin/",
+    "timestamp": "2025-08-29T00:26:52.465Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/auth/signin/"
+  },
+  {
+    "type": "pageview",
+    "page": "/auth/signin/",
+    "timestamp": "2025-08-29T00:26:58.028Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/auth/signin/"
+  },
+  {
+    "type": "pageview",
+    "page": "/auth/signin/",
+    "timestamp": "2025-08-29T00:26:58.480Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/auth/signin/"
+  },
+  {
+    "type": "pageview",
+    "page": "/auth/signin/",
+    "timestamp": "2025-08-29T00:37:12.802Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/auth/signin/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-29T05:00:05.531Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-29T05:02:36.225Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/"
+  },
+  {
+    "type": "pageview",
+    "page": "/gallery/",
+    "timestamp": "2025-08-29T05:02:42.109Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/gallery/"
+  },
+  {
+    "type": "pageview",
+    "page": "/",
+    "timestamp": "2025-08-29T05:02:46.541Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/"
+  },
+  {
+    "type": "pageview",
+    "page": "/upload/",
+    "timestamp": "2025-08-29T05:02:50.437Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:5174/upload/"
   }
 ]

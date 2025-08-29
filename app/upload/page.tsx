@@ -11,12 +11,20 @@ import OilPaintingFeedback from '../components/OilPaintingFeedback'
 import AppFeatureFeedback from '../components/AppFeatureFeedback'
 import ConversionLoader from '../components/ConversionLoader'
 import { validateImageFile, getImageDataUrl, analyzePetPortrait } from '../lib/imageValidation'
+import UsageTracker from '../lib/usage-tracker'
 
 interface ConvertedImage {
   original: string
   converted: string
   originalName: string
   style: OilPaintingStyle
+  modelInfo?: {
+    provider: string
+    primary: 'sdxl' | 'gemini'
+    fallbackUsed: boolean
+    processingTime: number
+    cost?: number
+  }
 }
 
 export default function UploadPage() {
@@ -36,11 +44,22 @@ export default function UploadPage() {
   const [validationError, setValidationError] = useState<string | null>(null)
   const [validationWarning, setValidationWarning] = useState<string | null>(null)
   const [isValidating, setIsValidating] = useState(false)
+  const [userProgress, setUserProgress] = useState({ current: 0, required: 3, remaining: 3, eligible: false, percentage: 0 })
+  const [currentModel, setCurrentModel] = useState<'sdxl' | 'gemini'>('sdxl')
+  const [justUpgraded, setJustUpgraded] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   
   // Generate session ID for tracking feedback
   useEffect(() => {
-    setSessionId(`session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`)
+    const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    setSessionId(newSessionId)
+    
+    // Load user progress
+    const progress = UsageTracker.getUpgradeProgress(newSessionId)
+    const recommendedModel = UsageTracker.getRecommendedModel(newSessionId)
+    
+    setUserProgress(progress)
+    setCurrentModel(recommendedModel)
   }, [])
 
   const handleDrag = useCallback((e: React.DragEvent) => {
@@ -139,14 +158,16 @@ export default function UploadPage() {
       
       let response
       
-      // Use optimized production pipeline (local SDXL with expert settings)
+      // Use hybrid model system: SDXL primary, Gemini backup after 3+ images
       formData.append('style', selectedStyle.id === 'impressionist' ? 'impressionist' : 
                                selectedStyle.id === 'van_gogh' ? 'vangogh' : 
                                selectedStyle.id === 'modern' ? 'modern' : 'classic')
       formData.append('subject', 'general') // Auto-detect or let user specify
-      formData.append('mode', 'local') // Use optimized local SDXL
+      formData.append('mode', 'hybrid') // Use hybrid model system
+      formData.append('preservationMode', preservationMode)
+      formData.append('sessionId', sessionId) // Track user progress 
       
-      response = await fetch('/api/convert-production-optimized', {
+      response = await fetch('/api/convert-hybrid', {
         method: 'POST',
         body: formData,
       })
@@ -159,9 +180,16 @@ export default function UploadPage() {
         
         const newConvertedImage: ConvertedImage = {
           original: previewUrl!,
-          converted: data.bestResult?.image || data.image, // Use best result from production pipeline
+          converted: data.bestResult?.image || data.image, // Support both SDXL and Gemini response formats
           originalName: selectedFile.name,
-          style: selectedStyle
+          style: selectedStyle,
+          modelInfo: data.modelInfo ? {
+            provider: data.modelInfo.provider || 'unknown',
+            primary: data.modelInfo.primary || 'unknown',
+            fallbackUsed: data.modelInfo.fallbackUsed || false,
+            processingTime: data.modelInfo.processingTime || 0,
+            cost: data.modelInfo.cost || 0
+          } : undefined
         }
         
         setConvertedImages(prev => [newConvertedImage, ...prev])
@@ -170,6 +198,20 @@ export default function UploadPage() {
           newSet.add(selectedStyle.id)
           return newSet
         })
+        
+        // Update user progress if provided in response
+        if (data.userProgress) {
+          setUserProgress(data.userProgress)
+          if (data.userProgress.justUpgraded) {
+            setJustUpgraded(true)
+            setTimeout(() => setJustUpgraded(false), 5000) // Hide upgrade message after 5s
+          }
+        }
+        
+        // Update current model
+        if (data.modelInfo?.primary) {
+          setCurrentModel(data.modelInfo.primary)
+        }
         
         // Track conversion time for feedback
         setLastConversionTime(Date.now() - startTime)
@@ -263,6 +305,55 @@ export default function UploadPage() {
             Upload an image and select an oil painting style
           </p>
         </div>
+
+        {/* Model Progress Indicator */}
+        <div className="mb-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-gray-200">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <div className={`w-3 h-3 rounded-full ${currentModel === 'gemini' ? 'bg-purple-500' : 'bg-blue-500'}`} />
+              <span className="font-semibold text-gray-900">
+                {currentModel === 'gemini' ? '💎 Premium Model (Gemini 2.5 Flash)' : '🚀 Standard Model (SDXL Optimized)'}
+              </span>
+            </div>
+            {!userProgress.eligible && (
+              <span className="text-sm text-gray-600">
+                {userProgress.remaining} more to unlock Premium
+              </span>
+            )}
+          </div>
+          
+          {/* Progress Bar */}
+          {!userProgress.eligible && (
+            <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${userProgress.percentage}%` }}
+              />
+            </div>
+          )}
+          
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-700">
+              {userProgress.eligible 
+                ? '🎉 Premium Unlocked! Enjoy enhanced quality and advanced features.'
+                : `${userProgress.current}/${userProgress.required} generations completed`}
+            </span>
+            {currentModel === 'gemini' && (
+              <span className="text-purple-600 font-medium">$0.039 per image</span>
+            )}
+          </div>
+        </div>
+
+        {/* Upgrade Celebration */}
+        {justUpgraded && (
+          <div className="mb-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl p-6 text-center animate-pulse">
+            <h3 className="text-xl font-bold mb-2">🎉 Congratulations!</h3>
+            <p className="text-purple-100">
+              You've unlocked <strong>Gemini 2.5 Flash Premium</strong>! 
+              Enjoy enhanced quality, better subject preservation, and advanced AI reasoning.
+            </p>
+          </div>
+        )}
 
         {/* Enhanced Style Selector with Integrated Tips */}
         <div className="mb-6 bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
@@ -490,6 +581,61 @@ export default function UploadPage() {
                       sizes="(max-width: 1280px) 100vw, 1280px"
                     />
                   </div>
+                  
+                  {/* Model Information (Beta Testing) */}
+                  {image.modelInfo && process.env.NODE_ENV === 'development' && (
+                    <div className="mt-4 p-4 bg-gray-50 border border-gray-300 rounded-lg">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="text-sm font-semibold text-gray-900 flex items-center">
+                          <Info className="h-4 w-4 mr-1.5 text-gray-700" />
+                          Beta Testing - Model Information
+                        </h4>
+                        <span className={`px-3 py-1 text-xs font-bold rounded-full ${
+                          image.modelInfo.primary === 'gemini' 
+                            ? 'bg-purple-100 text-purple-800 border border-purple-200' 
+                            : 'bg-blue-100 text-blue-800 border border-blue-200'
+                        }`}>
+                          {image.modelInfo.primary === 'gemini' ? '💎 Gemini 2.5 Flash' : '🚀 SDXL Optimized'}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-gray-700 font-medium block mb-1">Provider:</span>
+                          <div className="font-mono text-xs bg-white px-2 py-1 rounded border border-gray-200 text-gray-900">
+                            {image.modelInfo.provider}
+                          </div>
+                        </div>
+                        <div>
+                          <span className="text-gray-700 font-medium block mb-1">Processing Time:</span>
+                          <div className="font-bold text-gray-900 bg-white px-2 py-1 rounded border border-gray-200">
+                            {(image.modelInfo.processingTime / 1000).toFixed(1)}s
+                          </div>
+                        </div>
+                        <div>
+                          <span className="text-gray-700 font-medium block mb-1">Fallback Used:</span>
+                          <div className={`font-bold px-2 py-1 rounded border ${
+                            image.modelInfo.fallbackUsed 
+                              ? 'bg-amber-50 text-amber-700 border-amber-300' 
+                              : 'bg-green-50 text-green-700 border-green-300'
+                          }`}>
+                            {image.modelInfo.fallbackUsed ? '⚠️ Yes' : '✅ No'}
+                          </div>
+                        </div>
+                        <div>
+                          <span className="text-gray-700 font-medium block mb-1">Estimated Cost:</span>
+                          <div className="font-bold text-gray-900 bg-white px-2 py-1 rounded border border-gray-200">
+                            ${(image.modelInfo.cost || 0).toFixed(3)}
+                          </div>
+                        </div>
+                      </div>
+                      {image.modelInfo.fallbackUsed && (
+                        <div className="mt-3 p-2 bg-amber-50 border border-amber-300 rounded text-xs text-amber-800 font-medium">
+                          <strong>Fallback Notice:</strong> Primary model ({image.modelInfo.primary === 'gemini' ? 'SDXL' : 'Gemini'}) failed, 
+                          automatically switched to {image.modelInfo.primary === 'gemini' ? 'Gemini' : 'SDXL'} backup.
+                        </div>
+                      )}
+                    </div>
+                  )}
                   
                   {/* Small original reference */}
                   <div className="mt-4 flex items-center space-x-2 text-sm text-gray-500">

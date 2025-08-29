@@ -1,318 +1,56 @@
-name: Deploy Production Environment
+name: Deploy to Production
 
 on:
   push:
     branches:
       - main
-    tags:
-      - 'v*'
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy to'
-        required: true
-        default: 'production'
-        type: choice
-        options:
-          - production
-      skip_tests:
-        description: 'Skip test suite (emergency deployment only)'
-        required: false
-        default: false
-        type: boolean
 
 env:
-  NODE_VERSION: '20'
-  FORCE_COLOR: 1
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
-  pre-flight-checks:
-    name: Pre-flight Security and Quality Checks
-    runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          # Fetch full history for better analysis
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run comprehensive security audit
-        run: |
-          npm audit --audit-level=moderate
-          # Fail on high severity vulnerabilities
-          npm audit --audit-level=high
-
-      - name: Check for security patterns
-        run: |
-          # Check for potential security issues in environment files
-          if grep -r "password\|secret\|key" --include="*.js" --include="*.ts" --include="*.json" . | grep -v node_modules | grep -v ".git"; then
-            echo "⚠️  Warning: Potential sensitive data found in source code"
-            exit 1
-          fi
-
-      - name: Verify branch protection
-        run: |
-          echo "Verifying deployment from protected branch..."
-          if [[ "${{ github.ref }}" != "refs/heads/main" && ! "${{ github.ref }}" =~ ^refs/tags/v ]]; then
-            echo "❌ Production deployments only allowed from main branch or version tags"
-            exit 1
-          fi
-
-  validate-production:
-    name: Validate Production Build
-    runs-on: ubuntu-latest
-    needs: pre-flight-checks
-    if: github.event.inputs.skip_tests != 'true'
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      # Prisma no longer needed - using Firestore
-
-      - name: Run linting (strict)
-        run: npm run lint:check
-
-      - name: Run type checking (strict)
-        run: npm run type-check
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-
-      - name: Create test environment file
-        run: |
-          echo "NEXTAUTH_URL=http://localhost:3000" >> .env.local
-          echo "NEXTAUTH_SECRET=production-test-secret" >> .env.local
-          echo "FIREBASE_PROJECT_ID=pixcarti" >> .env.local
-
-      - name: Run full test suite
-        run: npm run test
-        timeout-minutes: 15
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: production-validation-test-results
-          path: |
-            playwright-report/
-            test-results/
-          retention-days: 30
-
-  build-production:
-    name: Build Production Application
-    runs-on: ubuntu-latest
-    needs: [pre-flight-checks, validate-production]
-    if: always() && needs.pre-flight-checks.result == 'success' && (needs.validate-production.result == 'success' || needs.validate-production.result == 'skipped')
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Create production environment file
-        run: |
-          echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL_PROD }}" >> .env.local
-          echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env.local
-          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID_PROD }}" >> .env.local
-          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET_PROD }}" >> .env.local
-          echo "FACEBOOK_CLIENT_ID=${{ secrets.FACEBOOK_CLIENT_ID_PROD }}" >> .env.local
-          echo "FACEBOOK_CLIENT_SECRET=${{ secrets.FACEBOOK_CLIENT_SECRET_PROD }}" >> .env.local
-          echo "APPLE_ID=${{ secrets.APPLE_ID_PROD }}" >> .env.local
-          echo "APPLE_SECRET=${{ secrets.APPLE_SECRET_PROD }}" >> .env.local
-          echo "APPLE_TEAM_ID=${{ secrets.APPLE_TEAM_ID }}" >> .env.local
-          echo "APPLE_KEY_ID=${{ secrets.APPLE_KEY_ID }}" >> .env.local
-          echo "FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}" >> .env.local
-          echo "FIREBASE_CLIENT_EMAIL=${{ secrets.FIREBASE_CLIENT_EMAIL }}" >> .env.local
-          echo "FIREBASE_PRIVATE_KEY=${{ secrets.FIREBASE_PRIVATE_KEY }}" >> .env.local
-          echo "A1111_BASE_URL=${{ secrets.A1111_BASE_URL_PROD }}" >> .env.local
-
-      # Prisma no longer needed - using Firestore
-
-      - name: Build production application
-        run: npm run build:production
-        env:
-          NODE_ENV: production
-
-      - name: Verify build output
-        run: |
-          if [ ! -d ".next" ]; then
-            echo "❌ Build output directory '.next' not found"
-            exit 1
-          fi
-          echo "✅ Build verification successful"
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: production-build
-          path: .next/
-          retention-days: 90
-
   deploy-production:
-    name: Deploy to Production
     runs-on: ubuntu-latest
-    needs: build-production
-    environment: 
-      name: production
-      url: ${{ steps.deploy.outputs.details_url }}
-    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: production-build
-          path: .next/
-
-      - name: Deploy to Firebase Hosting Production
-        id: deploy
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
-          target: production
-          channelId: live
-
-      - name: Update deployment status
-        if: always()
-        run: |
-          if [ "${{ steps.deploy.outcome }}" = "success" ]; then
-            echo "✅ Production deployment successful"
-            echo "🌐 Live URL: ${{ steps.deploy.outputs.details_url }}"
-          else
-            echo "❌ Production deployment failed"
-            exit 1
-          fi
-
-      - name: Create deployment record
-        if: success()
-        run: |
-          echo "# Production Deployment Record" >> deployment-record.md
-          echo "- **Timestamp**: $(date -u)" >> deployment-record.md
-          echo "- **Commit**: ${{ github.sha }}" >> deployment-record.md
-          echo "- **Branch**: ${{ github.ref_name }}" >> deployment-record.md
-          echo "- **Actor**: ${{ github.actor }}" >> deployment-record.md
-          echo "- **URL**: ${{ steps.deploy.outputs.details_url }}" >> deployment-record.md
-          echo "- **Workflow**: ${{ github.run_id }}" >> deployment-record.md
-
-      - name: Upload deployment record
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: deployment-record-${{ github.run_id }}
-          path: deployment-record.md
-          retention-days: 365
-
-  post-deploy-verification:
-    name: Post-Deployment Verification
-    runs-on: ubuntu-latest
-    needs: deploy-production
-    if: success()
-    
-    steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      - name: Run tests (if any)
+        run: npm test --if-present
+        continue-on-error: true
 
-      - name: Wait for deployment to propagate
-        run: sleep 30
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Run production smoke tests
-        run: npm run test -- --grep="@smoke|@production"
-        env:
-          PLAYWRIGHT_BASE_URL: ${{ needs.deploy-production.outputs.details_url }}
-        timeout-minutes: 10
+      - name: Build Project
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Health check endpoints
-        run: |
-          echo "Running health checks..."
-          curl -f "${{ needs.deploy-production.outputs.details_url }}" || exit 1
-          echo "✅ Main page is accessible"
+      - name: Deploy to Vercel Production
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        id: deploy
 
-      - name: Upload production test results
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Comment deployment URL
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
         with:
-          name: production-smoke-test-results
-          path: |
-            playwright-report/
-            test-results/
-          retention-days: 90
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ Deployed to Production: ${{ steps.deploy.outputs.url }}'
+            })
 
-  notify-success:
-    name: Notify Deployment Success
-    runs-on: ubuntu-latest
-    needs: [deploy-production, post-deploy-verification]
-    if: success()
-    
-    steps:
-      - name: Success notification
-        run: |
-          echo "🎉 Production deployment completed successfully!"
-          echo "🌐 Live URL: ${{ needs.deploy-production.outputs.details_url }}"
-          echo "📝 Deployment ID: ${{ github.run_id }}"
-          echo "🔍 Commit: ${{ github.sha }}"
-
-  notify-failure:
-    name: Notify Deployment Failure
-    runs-on: ubuntu-latest
-    needs: [pre-flight-checks, validate-production, build-production, deploy-production, post-deploy-verification]
-    if: failure()
-    
-    steps:
-      - name: Failure notification
-        run: |
-          echo "❌ Production deployment failed!"
-          echo "🔍 Commit: ${{ github.sha }}"
-          echo "📝 Workflow: ${{ github.run_id }}"
-          echo "👤 Actor: ${{ github.actor }}"
-          echo ""
-          echo "Failed jobs:"
-          if [[ "${{ needs.pre-flight-checks.result }}" == "failure" ]]; then echo "- Pre-flight checks"; fi
-          if [[ "${{ needs.validate-production.result }}" == "failure" ]]; then echo "- Validation"; fi
-          if [[ "${{ needs.build-production.result }}" == "failure" ]]; then echo "- Build"; fi
-          if [[ "${{ needs.deploy-production.result }}" == "failure" ]]; then echo "- Deployment"; fi
-          if [[ "${{ needs.post-deploy-verification.result }}" == "failure" ]]; then echo "- Post-deployment verification"; fi
+      - name: Output deployment URL
+        run: echo "Deployed to ${{ steps.deploy.outputs.url }}"

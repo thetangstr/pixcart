@@ -837,7 +837,7 @@ export class ComfyUIClient {
     return fallbackConfig
   }
 
-  async convertImageWithSDXL(imageBase64: string, config: ComfyUIStyleConfig): Promise<string> {
+  async convertImageWithSDXL(imageBase64: string, config: ComfyUIStyleConfig & { explicitStyle?: string }): Promise<string> {
     // Import SDXL workflow
     const { createSDXLOilPaintingWorkflow } = await import('./comfyui-sdxl-workflow')
     
@@ -845,16 +845,24 @@ export class ComfyUIClient {
     const uploadedImageName = await this.uploadImage(imageBase64)
     console.log(`SDXL: Image uploaded as: ${uploadedImageName}`)
     
-    // Map style from config to SDXL style
+    // Use explicit style if provided, otherwise fallback to prompt detection
     let sdxlStyle: 'classic' | 'impressionist' | 'vangogh' | 'modern' = 'classic'
-    const prompt = (config.prompt || config.positive_prompt || '').toLowerCase()
     
-    if (prompt.includes('monet') || prompt.includes('impressionist')) {
-      sdxlStyle = 'impressionist'
-    } else if (prompt.includes('van gogh') || prompt.includes('vangogh')) {
-      sdxlStyle = 'vangogh'
-    } else if (prompt.includes('modern') || prompt.includes('contemporary')) {
-      sdxlStyle = 'modern'
+    if (config.explicitStyle && ['classic', 'impressionist', 'vangogh', 'modern'].includes(config.explicitStyle)) {
+      sdxlStyle = config.explicitStyle as 'classic' | 'impressionist' | 'vangogh' | 'modern'
+      console.log(`SDXL: Using explicit style: ${sdxlStyle}`)
+    } else {
+      // Fallback to prompt detection
+      const prompt = (config.prompt || config.positive_prompt || '').toLowerCase()
+      
+      if (prompt.includes('monet') || prompt.includes('impressionist')) {
+        sdxlStyle = 'impressionist'
+      } else if (prompt.includes('van gogh') || prompt.includes('vangogh')) {
+        sdxlStyle = 'vangogh'
+      } else if (prompt.includes('modern') || prompt.includes('contemporary')) {
+        sdxlStyle = 'modern'
+      }
+      console.log(`SDXL: Detected style from prompt: ${sdxlStyle}`)
     }
     
     // Calculate preservation strength based on denoise value

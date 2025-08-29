@@ -1,23 +1,34 @@
 'use client'
 
-import { signIn } from 'next-auth/react'
+import { createClient } from '@/app/lib/supabase/client'
 import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
-export default function SignInPage() {
+export default function SupabaseSignIn() {
   const [isLoading, setIsLoading] = useState<string | null>(null)
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/upload'
-  const error = searchParams.get('error')
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
+  const supabase = createClient()
 
-  const handleSignIn = async (provider: string) => {
+  const handleSignIn = async (provider: 'google' | 'facebook' | 'apple') => {
     setIsLoading(provider)
-    try {
-      await signIn(provider, { callbackUrl })
-    } catch (error) {
-      console.error('Sign in error:', error)
+    setError(null)
+    
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+
+    if (error) {
+      setError(error.message)
       setIsLoading(null)
     }
+  }
+
+  const handleGuestMode = () => {
+    router.push('/upload')
   }
 
   return (
@@ -28,15 +39,13 @@ export default function SignInPage() {
             Welcome to Oil Painting App
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Sign in to transform your photos into beautiful oil paintings
+            Transform your photos into beautiful oil paintings with AI
           </p>
         </div>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            {error === 'OAuthAccountNotLinked' 
-              ? 'This email is already associated with another account. Please sign in using your original method.'
-              : 'An error occurred during sign in. Please try again.'}
+            {error}
           </div>
         )}
 
@@ -127,7 +136,7 @@ export default function SignInPage() {
 
           {/* Continue as Guest */}
           <button
-            onClick={() => window.location.href = '/upload'}
+            onClick={handleGuestMode}
             disabled={isLoading !== null}
             className="w-full flex items-center justify-center px-4 py-3 border-2 border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
@@ -135,16 +144,18 @@ export default function SignInPage() {
           </button>
         </div>
 
-        <p className="mt-8 text-center text-xs text-gray-500">
-          By signing in, you agree to our{' '}
-          <a href="/terms" className="text-indigo-600 hover:text-indigo-500">
-            Terms of Service
-          </a>{' '}
-          and{' '}
-          <a href="/privacy" className="text-indigo-600 hover:text-indigo-500">
-            Privacy Policy
-          </a>
-        </p>
+        <div className="text-center">
+          <p className="text-xs text-gray-500">
+            Powered by{' '}
+            <a href="https://supabase.com" className="text-indigo-600 hover:text-indigo-500">
+              Supabase
+            </a>{' '}
+            +{' '}
+            <a href="https://vercel.com" className="text-indigo-600 hover:text-indigo-500">
+              Vercel
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   )
