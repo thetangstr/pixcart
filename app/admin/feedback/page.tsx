@@ -1,53 +1,89 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { MessageSquare, Bug, Lightbulb, CheckCircle, Clock, XCircle, AlertCircle } from 'lucide-react'
+import { MessageSquare, Bug, Lightbulb, CheckCircle, Clock, XCircle, AlertCircle, Send, Heart, Star } from 'lucide-react'
 import Link from 'next/link'
 
 interface Feedback {
   id: string
-  userId: string
-  userEmail: string
-  type: 'bug' | 'feature' | 'improvement' | 'other'
+  type: 'bug' | 'feature' | 'improvement' | 'general'
   title: string
   description: string
+  rating?: number
+  email?: string
+  source?: string
+  page?: string
+  timestamp?: string
   status: 'new' | 'in_progress' | 'resolved' | 'wont_fix'
   priority: 'low' | 'medium' | 'high' | 'critical'
-  createdAt: string
-  updatedAt: string
+  adminNotes?: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 export default function FeedbackManagement() {
-  const { data: session, status } = useSession()
   const router = useRouter()
   const [feedback, setFeedback] = useState<Feedback[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'new' | 'in_progress' | 'resolved'>('all')
 
   useEffect(() => {
-    if (status === 'loading') return
-    
-    if (!session || !session.user?.isAdmin) {
-      router.push('/auth/not-authorized')
-    } else {
-      fetchFeedback()
+    checkAuth()
+    fetchFeedback()
+  }, [])
+
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/auth/current')
+      if (!response.ok) {
+        router.push('/login')
+        return
+      }
+      const data = await response.json()
+      if (data.user?.role !== 'admin') {
+        router.push('/')
+      }
+    } catch (error) {
+      router.push('/login')
     }
-  }, [session, status, router])
+  }
 
   const fetchFeedback = async () => {
     try {
       const response = await fetch('/api/feedback')
       if (response.ok) {
         const data = await response.json()
-        setFeedback(data)
+        setFeedback(data.feedback || data || [])
       }
     } catch (err) {
       console.error('Error loading feedback:', err)
     } finally {
       setLoading(false)
     }
+  }
+
+  const exportForClaude = () => {
+    const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 }
+    const exportData = feedback
+      .filter(item => item.status !== 'resolved' && item.status !== 'wont_fix')
+      .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
+      .map(item => ({
+        id: item.id,
+        type: item.type,
+        priority: item.priority,
+        title: item.title,
+        description: item.description,
+        userRating: item.rating,
+        source: item.page || item.source
+      }))
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `feedback_tasks_${new Date().toISOString().split('T')[0]}.json`
+    a.click()
   }
 
   const updateStatus = async (id: string, status: string) => {
@@ -70,7 +106,8 @@ export default function FeedbackManagement() {
     switch (type) {
       case 'bug': return <Bug className="h-4 w-4 text-red-500" />
       case 'feature': return <Lightbulb className="h-4 w-4 text-blue-500" />
-      case 'improvement': return <MessageSquare className="h-4 w-4 text-green-500" />
+      case 'improvement': return <Star className="h-4 w-4 text-amber-500" />
+      case 'general': return <Heart className="h-4 w-4 text-purple-500" />
       default: return <AlertCircle className="h-4 w-4 text-gray-500" />
     }
   }
@@ -114,7 +151,14 @@ export default function FeedbackManagement() {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-bold text-gray-900">Feedback Management</h1>
             <div className="flex space-x-4">
-              <Link href="/admin" className="text-amber-600 hover:text-amber-700">
+              <button
+                onClick={exportForClaude}
+                className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                <Send className="h-4 w-4" />
+                <span>Export for Claude</span>
+              </button>
+              <Link href="/admin" className="px-4 py-2 text-amber-600 hover:text-amber-700">
                 ← Back to Admin
               </Link>
             </div>
@@ -158,9 +202,28 @@ export default function FeedbackManagement() {
                       <p className="text-gray-600 mb-3">{item.description}</p>
                       
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
-                        <span>From: {item.userEmail}</span>
-                        <span>•</span>
-                        <span>{new Date(item.createdAt).toLocaleDateString()}</span>
+                        {item.email && (
+                          <>
+                            <span>From: {item.email}</span>
+                            <span>•</span>
+                          </>
+                        )}
+                        {item.rating && (
+                          <>
+                            <div className="flex items-center space-x-1">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`h-3 w-3 ${
+                                    i < item.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <span>•</span>
+                          </>
+                        )}
+                        <span>{new Date(item.timestamp || item.createdAt || Date.now()).toLocaleDateString()}</span>
                       </div>
                     </div>
 

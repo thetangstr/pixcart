@@ -386,6 +386,22 @@ export default function AdminConsole() {
 
         {activeTab === 'feedback' && (
           <div className="space-y-4">
+            {/* Link to advanced feedback dashboard */}
+            <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Advanced Feedback Dashboard</h3>
+                  <p className="text-purple-100">Manage feedback with priority marking and Claude integration</p>
+                </div>
+                <Link 
+                  href="/admin/feedback"
+                  className="px-6 py-3 bg-white text-purple-600 rounded-lg font-semibold hover:bg-purple-50 transition-colors"
+                >
+                  Open Dashboard →
+                </Link>
+              </div>
+            </div>
+            
             {feedbackItems.length === 0 ? (
               <div className="bg-white rounded-xl shadow-lg p-8 text-center">
                 <MessageCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
