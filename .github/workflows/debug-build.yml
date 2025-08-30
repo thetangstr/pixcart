@@ -1,0 +1,38 @@
+name: Debug Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  debug-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Navigate to oil-painting-app
+        run: |
+          cd oil-painting-app
+          echo "Contents of oil-painting-app:"
+          ls -la
+          
+      - name: Install dependencies
+        run: |
+          cd oil-painting-app
+          npm install
+          
+      - name: Check package.json
+        run: |
+          cd oil-painting-app
+          echo "=== package.json dependencies ==="
+          cat package.json | grep -A 50 '"dependencies"'
+          
+      - name: Try build
+        run: |
+          cd oil-painting-app
+          npm run build
