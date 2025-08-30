@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
 
+export const dynamic = 'force-dynamic';
+
 // Get real task from filesystem
 export async function GET(request: NextRequest) {
   try {

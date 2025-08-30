@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     // Use real tasks directory
@@ -10,7 +12,14 @@ export async function GET(request: NextRequest) {
     const humanScoresFile = path.join(process.cwd(), 'evaluation_dataset', 'evaluation_results.jsonl')
     
     // Load all tasks
-    const taskFiles = await fs.readdir(tasksDir)
+    let taskFiles = []
+    try {
+      taskFiles = await fs.readdir(tasksDir)
+    } catch (error) {
+      console.log('Error loading tasks:', error)
+      // Return empty array if directory doesn't exist
+      return NextResponse.json({ tasks: [], stats: {} })
+    }
     const tasks = []
     
     for (const file of taskFiles.slice(0, 100)) { // Limit to 100
