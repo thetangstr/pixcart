@@ -16,12 +16,13 @@
     "clean": "rm -rf .next out node_modules/.cache"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.1.0",
+    "@supabase/supabase-js": "^2.39.3",
+    "lucide-react": "^0.379.0",
     "next": "14.2.31",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "lucide-react": "^0.379.0",
-    "@supabase/supabase-js": "^2.39.3",
-    "@supabase/ssr": "^0.1.0"
+    "stripe": "^18.5.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",
