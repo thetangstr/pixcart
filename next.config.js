@@ -24,6 +24,8 @@ const nextConfig = {
   experimental: {
     workerThreads: false,
     cpus: 1,
+    // Disable static optimization for all pages  
+    isrMemoryCacheSize: 0,
   },
   // Force dynamic rendering for pages using Supabase
   generateBuildId: async () => {

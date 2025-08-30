@@ -4,6 +4,9 @@ import Link from 'next/link'
 import { Palette } from 'lucide-react'
 import AuthButton from './components/AuthButton'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export const metadata: Metadata = {
   title: 'Oil Painting Converter - Transform Photos into Art',
   description: 'Convert your photos into stunning oil paintings using AI technology.',
