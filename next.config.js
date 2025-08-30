@@ -25,6 +25,10 @@ const nextConfig = {
     workerThreads: false,
     cpus: 1,
   },
+  // Force dynamic rendering for pages using Supabase
+  generateBuildId: async () => {
+    return 'build-' + Date.now()
+  },
   // Reduce memory usage and timeout issues
   staticPageGenerationTimeout: 10,
   swcMinify: true,
