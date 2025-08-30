@@ -1,4 +1,4 @@
-import './globals.css'
+// import './globals.css' // Temporarily disabled
 
 export default function RootLayout({
   children,
@@ -7,7 +7,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-gray-50">
+      <body>
         {children}
       </body>
     </html>
