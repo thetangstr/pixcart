@@ -1,4 +1,4 @@
-name: Deploy PetCanvas
+name: Deploy to Vercel
 
 on:
   push:
