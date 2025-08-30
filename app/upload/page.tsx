@@ -166,10 +166,10 @@ export default function UploadPage() {
       formData.append('preservationMode', preservationMode)
       formData.append('sessionId', sessionId) // Track user progress 
       
-      response = await fetch('/api/convert-hybrid', {
-        method: 'POST',
-        body: formData,
-      })
+      // API temporarily disabled for deployment
+      response = new Response(JSON.stringify({
+        error: 'API temporarily unavailable during deployment. Please try again later.'
+      }), { status: 503 })
 
       clearInterval(progressInterval)
       setConversionProgress(100)
