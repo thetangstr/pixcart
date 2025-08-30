@@ -223,4 +223,4 @@ For support, email support@yourdomain.com or open an issue on GitHub.
 
 ---
 
-Made with ❤️ using Next.js and AI
+Made with ❤️ using Next.js and AI# Deploy trigger
