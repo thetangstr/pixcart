@@ -1,13 +1,32 @@
 'use client'
 
-import { signIn } from 'next-auth/react'
-import { useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/app/lib/supabase'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
 export default function SignInPage() {
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
+  const router = useRouter()
+  const supabase = createClient()
+
+  useEffect(() => {
+    // Check if already signed in
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        router.push('/')
+      }
+    })
+  }, [router, supabase.auth])
+
+  const handleSignIn = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -25,7 +44,7 @@ export default function SignInPage() {
 
           {/* Sign In Button */}
           <button
-            onClick={() => signIn('google', { callbackUrl })}
+            onClick={handleSignIn}
             className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
           >
             {/* Google Icon */}
