@@ -1,6 +1,6 @@
 'use client'
 
-import { SessionProvider } from 'next-auth/react'
+// import { SessionProvider } from 'next-auth/react' // NextAuth removed
 
 export default function Providers({
   children,
@@ -8,8 +8,8 @@ export default function Providers({
   children: React.ReactNode
 }) {
   return (
-    <SessionProvider>
+    <>
       {children}
-    </SessionProvider>
+    </>
   )
 }

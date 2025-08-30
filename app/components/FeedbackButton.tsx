@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react'; // NextAuth removed
 import { X, MessageSquare, Send } from 'lucide-react';
 
 export default function FeedbackButton() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession(); // NextAuth removed
+  const session = null; // Mock session
   const [isOpen, setIsOpen] = useState(false);
   const [type, setType] = useState<'bug' | 'feature' | 'improvement' | 'other'>('improvement');
   const [title, setTitle] = useState('');

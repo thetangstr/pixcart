@@ -1,6 +1,6 @@
 'use client'
 
-import { signIn } from 'next-auth/react'
+// import { signIn } from 'next-auth/react' // NextAuth removed
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
@@ -13,7 +13,7 @@ export default function SignInPage() {
   const handleSignIn = async (provider: string) => {
     setIsLoading(provider)
     try {
-      await signIn(provider, { callbackUrl })
+      // await signIn(provider, { callbackUrl }) // NextAuth removed
     } catch (error) {
       console.error('Sign in error:', error)
       setIsLoading(null)

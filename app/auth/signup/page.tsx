@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { signIn } from 'next-auth/react'
+// import { signIn } from 'next-auth/react' // NextAuth removed
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Palette, Mail, Lock, User, Loader2, AlertCircle, CheckCircle } from 'lucide-react'
@@ -58,7 +58,8 @@ export default function SignUp() {
       
       // Auto sign in after successful registration
       setTimeout(async () => {
-        const result = await signIn('credentials', {
+        // const result = await signIn('credentials', { // NextAuth removed
+        const result = { error: 'Auth disabled' }; if (false) {
           email: formData.email,
           password: formData.password,
           redirect: false,
@@ -80,7 +81,7 @@ export default function SignUp() {
     setError('')
     
     try {
-      await signIn(provider, { callbackUrl: '/upload' })
+      // await signIn(provider, { callbackUrl: '/upload' }) // NextAuth removed
     } catch (error) {
       setError(`Failed to sign up with ${provider}`)
       setIsLoading(false)

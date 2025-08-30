@@ -1,6 +1,6 @@
 'use client'
 
-import { signOut } from 'next-auth/react'
+// import { signOut } from 'next-auth/react' // NextAuth removed
 import { AlertCircle, LogOut, Mail } from 'lucide-react'
 import Link from 'next/link'
 
@@ -46,7 +46,7 @@ export default function NotAuthorized() {
           {/* Action Buttons */}
           <div className="space-y-3">
             <button
-              onClick={() => signOut({ callbackUrl: '/auth/signin' })}
+              onClick={() => window.location.href = '/auth/signin'} // signOut removed
               className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-semibold rounded-lg hover:from-amber-600 hover:to-orange-700 transition-all duration-200"
             >
               <LogOut className="h-5 w-5 mr-2" />

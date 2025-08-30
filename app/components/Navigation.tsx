@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useSession, signOut } from 'next-auth/react'
+// import { useSession, signOut } from 'next-auth/react' // NextAuth removed
 import { Palette, Upload, Image as ImageIcon, Home, User, LogOut, LogIn, BarChart, GitCompare, Star } from 'lucide-react'
 import { useState } from 'react'
 
 export default function Navigation() {
   const pathname = usePathname()
-  const { data: session, status } = useSession()
+  // const { data: session, status } = useSession() // NextAuth removed
+  const session = null; const status = 'unauthenticated';
   const [showUserMenu, setShowUserMenu] = useState(false)
 
   const navItems = [
@@ -18,7 +19,8 @@ export default function Navigation() {
   ]
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/' })
+    // await signOut({ callbackUrl: '/' }) // NextAuth removed
+    window.location.href = '/'
   }
 
   return (
