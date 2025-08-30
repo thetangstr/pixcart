@@ -9,8 +9,11 @@
     "dev": "next dev -p 5174",
     "build": "next build",
     "start": "next start -p 5174",
-    "ci:test": "npm run build",
-    "clean": "rm -rf .next"
+    "lint": "next lint --fix",
+    "lint:check": "next lint",
+    "type-check": "tsc --noEmit",
+    "ci:test": "npm run lint:check && npm run type-check && npm run build",
+    "clean": "rm -rf .next out node_modules/.cache"
   },
   "dependencies": {
     "next": "14.2.31",
