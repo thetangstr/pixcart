@@ -1,8 +1,10 @@
 import { type NextRequest } from 'next/server'
-import { updateSession } from '@/app/lib/supabase/middleware'
+// import { updateSession } from '@/app/lib/supabase/middleware' // Supabase removed
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request)
+  // return await updateSession(request) // Supabase removed
+  // No middleware needed without auth
+  return
 }
 
 export const config = {

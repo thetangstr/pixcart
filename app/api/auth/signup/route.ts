@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import bcrypt from 'bcryptjs'
+// import bcrypt from 'bcryptjs' // Package removed
 // import { FirestoreUsers } from '@/app/lib/firestore' // Firebase removed
 
 export async function POST(request: NextRequest) {
@@ -14,8 +14,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Firebase removed - returning mock response
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 12)
+    // Hash the password - bcrypt removed
+    // const hashedPassword = await bcrypt.hash(password, 12)
 
     return NextResponse.json(
       { 
