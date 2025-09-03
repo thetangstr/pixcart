@@ -57,7 +57,7 @@ npm run dev
 
 ## Deployment
 
-The app is configured for automatic deployment to Vercel via GitHub Actions.
+The app is configured for automatic deployment to Vercel via GitHub Actions with Supabase integration.
 
 ### Required GitHub Secrets:
 - `VERCEL_TOKEN`
