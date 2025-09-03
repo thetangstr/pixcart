@@ -33,8 +33,9 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 # Gemini AI
 GEMINI_API_KEY=your_gemini_api_key
 
-# Database
-DATABASE_URL=your_database_url
+# Database (Supabase PostgreSQL)
+# Format: postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
+DATABASE_URL=postgresql://postgres:your-password@db.mqkqyigujbamrvebrhsd.supabase.co:5432/postgres
 ```
 
 ## Local Development
