@@ -59,17 +59,15 @@ npm run dev
 
 ## Deployment
 
-The app is configured for automatic deployment to Vercel via GitHub Actions with Supabase integration.
+The app is automatically deployed to Vercel through direct GitHub integration. Every push to `main` triggers a production deployment, and pull requests get preview deployments.
 
-### Required GitHub Secrets:
-- `VERCEL_TOKEN`
-- `VERCEL_ORG_ID`
-- `VERCEL_PROJECT_ID`
-- `DATABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `GEMINI_API_KEY`
+### Required Vercel Environment Variables:
+Configure these in your Vercel project settings:
+- `DATABASE_URL` - Supabase PostgreSQL connection string
+- `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
+- `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key
+- `GEMINI_API_KEY` - Google Gemini API key
 
 ## Admin Access
 
