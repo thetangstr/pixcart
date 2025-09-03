@@ -34,8 +34,9 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 GEMINI_API_KEY=your_gemini_api_key
 
 # Database (Supabase PostgreSQL)
-# Format: postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
-DATABASE_URL=postgresql://postgres:your-password@db.mqkqyigujbamrvebrhsd.supabase.co:5432/postgres
+# Format: postgresql://username:password@db.[PROJECT-REF].supabase.co:5432/postgres
+# Note: If your password contains special characters (#, @, etc.), they should be URL-encoded
+DATABASE_URL=postgresql://username:password@db.mqkqyigujbamrvebrhsd.supabase.co:5432/postgres
 ```
 
 ## Local Development
