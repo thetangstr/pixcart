@@ -29,12 +29,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Check if user is beta tester
-    if (!dbUser.isBetaTester) {
-      return NextResponse.json({ error: "Not a beta tester" }, { status: 403 });
-    }
-
-    const { type, message, rating, page } = await request.json();
+    const { type, message, expectedBehavior, actualBehavior, rating, page } = await request.json();
 
     // Create feedback
     const feedback = await prisma.feedback.create({
@@ -42,8 +37,12 @@ export async function POST(request: NextRequest) {
         userId: dbUser.id,
         type,
         message,
+        expectedBehavior,
+        actualBehavior,
         rating,
-        page
+        page,
+        status: 'open',
+        priority: 'medium'
       }
     });
 

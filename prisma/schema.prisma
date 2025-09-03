@@ -219,17 +219,37 @@ model TicketReply {
 }
 
 model Feedback {
-  id        String   @id @default(cuid())
-  userId    String
-  page      String   // The page where feedback was submitted
-  type      String   // bug, feature, improvement, other
-  message   String
-  rating    Int?     // Optional 1-5 rating
-  status    FeedbackStatus @default(NEW)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  userId          String
+  page            String   // The page where feedback was submitted
+  type            String   // bug, feature, improvement, other
+  message         String
+  expectedBehavior String? // What the user expected to happen
+  actualBehavior  String?  // What actually happened
+  rating          Int?     // Optional 1-5 rating
+  status          FeedbackStatus @default(NEW)
+  priority        FeedbackPriority @default(MEDIUM)
+  adminNotes      String?  // Admin comments and notes
+  sprintId        String?  // If assigned to a sprint
+  resolution      String?  // How the issue was resolved
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sprint Sprint? @relation(fields: [sprintId], references: [id])
+}
+
+model Sprint {
+  id          String   @id @default(cuid())
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  status      SprintStatus @default(PLANNING)
+  goals       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  feedbacks   Feedback[]
 }
 
 enum FeedbackStatus {
@@ -238,4 +258,19 @@ enum FeedbackStatus {
   IN_PROGRESS
   RESOLVED
   ARCHIVED
+  SCHEDULED  // Added for sprint planning
+}
+
+enum FeedbackPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum SprintStatus {
+  PLANNING
+  ACTIVE
+  COMPLETED
+  CANCELLED
 }

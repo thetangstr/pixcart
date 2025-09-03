@@ -26,12 +26,35 @@ export async function PATCH(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const { status } = await request.json();
+    const { status, priority, adminNotes, sprintId } = await request.json();
+
+    // Prepare update data
+    const updateData: any = {};
+    if (status !== undefined) updateData.status = status;
+    if (priority !== undefined) updateData.priority = priority;
+    if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
+    if (sprintId !== undefined) updateData.sprintId = sprintId || null;
 
     // Update feedback
     const updatedFeedback = await prisma.feedback.update({
       where: { id: params.feedbackId },
-      data: { status }
+      data: updateData,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        },
+        sprint: {
+          select: {
+            id: true,
+            name: true,
+            status: true
+          }
+        }
+      }
     });
 
     return NextResponse.json({ feedback: updatedFeedback });

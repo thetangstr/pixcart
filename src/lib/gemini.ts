@@ -1,6 +1,13 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+// Initialize Gemini AI with API key
+function getGeminiClient() {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error("GEMINI_API_KEY is not configured");
+  }
+  return new GoogleGenerativeAI(apiKey);
+}
 
 export type PaintingStyle = "classic" | "van_gogh" | "monet";
 
@@ -31,9 +38,12 @@ export async function generateOilPaintingPreview(
   try {
     console.log(`Starting Gemini API call for ${style} style...`);
     
-    // Using Gemini 2.5 Flash Image Preview model for image-to-image transformation
+    // Get Gemini client with runtime API key
+    const genAI = getGeminiClient();
+    
+    // Using Gemini 2.0 Flash Experimental model (latest available)
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.5-flash-image-preview"
+      model: "gemini-2.0-flash-exp"
     });
 
     // Prepare the image and text prompt for transformation

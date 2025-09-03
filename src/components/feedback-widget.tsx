@@ -21,35 +21,25 @@ export default function FeedbackWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [type, setType] = useState("improvement");
   const [message, setMessage] = useState("");
+  const [expectedBehavior, setExpectedBehavior] = useState("");
+  const [actualBehavior, setActualBehavior] = useState("");
   const [rating, setRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isBetaTester, setIsBetaTester] = useState(false);
   const pathname = usePathname();
   const { user } = useAuth();
 
-  useEffect(() => {
-    // Check if user is a beta tester
-    const checkBetaStatus = async () => {
-      if (user?.email) {
-        try {
-          const response = await fetch('/api/user/beta-status');
-          const data = await response.json();
-          setIsBetaTester(data.isBetaTester);
-        } catch (error) {
-          console.error('Error checking beta status:', error);
-        }
-      }
-    };
-    
-    checkBetaStatus();
-  }, [user]);
-
-  // Only render if user is a beta tester
-  if (!isBetaTester) return null;
+  // Show feedback widget to all logged in users
+  if (!user) return null;
 
   const handleSubmit = async () => {
     if (!message.trim()) {
       toast.error("Please enter your feedback");
+      return;
+    }
+
+    // For bug reports, require expected and actual behavior
+    if (type === "bug" && (!expectedBehavior.trim() || !actualBehavior.trim())) {
+      toast.error("Please describe both expected and actual behavior for bug reports");
       return;
     }
 
@@ -61,6 +51,8 @@ export default function FeedbackWidget() {
         body: JSON.stringify({
           type,
           message,
+          expectedBehavior: expectedBehavior.trim() || undefined,
+          actualBehavior: actualBehavior.trim() || undefined,
           rating: rating || undefined,
           page: pathname,
         }),
@@ -69,6 +61,8 @@ export default function FeedbackWidget() {
       if (response.ok) {
         toast.success("Thank you for your feedback! 🎨");
         setMessage("");
+        setExpectedBehavior("");
+        setActualBehavior("");
         setRating(0);
         setIsOpen(false);
       } else {
@@ -93,7 +87,7 @@ export default function FeedbackWidget() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 z-40 w-14 h-14 bg-gradient-to-r from-amber-600 to-orange-700 rounded-full shadow-lg flex items-center justify-center text-white hover:shadow-xl transition-shadow"
+            className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full shadow-lg flex items-center justify-center text-white hover:shadow-xl transition-all hover:from-orange-600 hover:to-orange-700"
           >
             <MessageSquarePlus className="w-6 h-6" />
           </motion.button>
@@ -108,13 +102,13 @@ export default function FeedbackWidget() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 400, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-6 right-6 z-50 w-96 bg-white rounded-xl shadow-2xl border border-amber-200"
+            className="fixed bottom-6 right-6 z-50 w-96 bg-white rounded-xl shadow-2xl border border-orange-200"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-amber-600 to-orange-700 p-4 rounded-t-xl">
+            <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-4 rounded-t-xl">
               <div className="flex items-center justify-between">
                 <div className="text-white">
-                  <h3 className="font-semibold text-lg">Beta Feedback</h3>
+                  <h3 className="font-semibold text-lg">Feedback</h3>
                   <p className="text-xs opacity-90">Help us improve PixCart</p>
                 </div>
                 <button
@@ -177,16 +171,50 @@ export default function FeedbackWidget() {
                 </div>
               </div>
 
+              {/* Expected Behavior (only for bugs) */}
+              {type === "bug" && (
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">
+                    Expected Behavior
+                  </label>
+                  <Textarea
+                    value={expectedBehavior}
+                    onChange={(e) => setExpectedBehavior(e.target.value)}
+                    placeholder="What did you expect to happen?"
+                    className="min-h-[80px] resize-none border-orange-200 focus:border-orange-400"
+                  />
+                </div>
+              )}
+
+              {/* Actual Behavior (only for bugs) */}
+              {type === "bug" && (
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">
+                    Actual Behavior
+                  </label>
+                  <Textarea
+                    value={actualBehavior}
+                    onChange={(e) => setActualBehavior(e.target.value)}
+                    placeholder="What actually happened?"
+                    className="min-h-[80px] resize-none border-orange-200 focus:border-orange-400"
+                  />
+                </div>
+              )}
+
               {/* Message */}
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">
-                  Your Feedback
+                  {type === "bug" ? "Additional Details" : "Your Feedback"}
                 </label>
                 <Textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Share your thoughts, report bugs, or suggest improvements..."
-                  className="min-h-[100px] resize-none border-amber-200 focus:border-amber-400"
+                  placeholder={
+                    type === "bug" 
+                      ? "Any additional context, steps to reproduce, or other relevant information..."
+                      : "Share your thoughts, report bugs, or suggest improvements..."
+                  }
+                  className="min-h-[100px] resize-none border-orange-200 focus:border-orange-400"
                 />
               </div>
 
@@ -199,7 +227,7 @@ export default function FeedbackWidget() {
               <Button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !message.trim()}
-                className="w-full bg-gradient-to-r from-amber-600 to-orange-700 hover:from-amber-700 hover:to-orange-800 text-white"
+                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
               >
                 {isSubmitting ? (
                   <div className="flex items-center">
