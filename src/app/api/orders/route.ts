@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
@@ -32,8 +31,9 @@ const createOrderSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     // Create order in database
     const order = await prisma.order.create({
       data: {
-        userId: session.user.id,
+        userId: user.id,
         status: "PENDING",
         totalAmount: orderData.totalAmount,
         
@@ -125,8 +125,9 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -141,7 +142,7 @@ export async function GET(request: NextRequest) {
     // Get user's orders
     const orders = await prisma.order.findMany({
       where: {
-        userId: session.user.id
+        userId: user.id
       },
       include: {
         orderHistory: {
@@ -157,7 +158,7 @@ export async function GET(request: NextRequest) {
     // Get total count for pagination
     const totalCount = await prisma.order.count({
       where: {
-        userId: session.user.id
+        userId: user.id
       }
     });
 

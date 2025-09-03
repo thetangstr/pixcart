@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
@@ -14,8 +13,9 @@ export async function GET(
 ) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -28,7 +28,7 @@ export async function GET(
     const ticket = await prisma.supportTicket.findFirst({
       where: {
         id: ticketId,
-        userId: session.user.id // Ensure user can only access their own tickets
+        userId: user.id // Ensure user can only access their own tickets
       },
       include: {
         replies: {
@@ -83,8 +83,9 @@ export async function POST(
 ) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -97,7 +98,7 @@ export async function POST(
     const ticket = await prisma.supportTicket.findFirst({
       where: {
         id: ticketId,
-        userId: session.user.id
+        userId: user.id
       }
     });
 
@@ -168,8 +169,9 @@ export async function PUT(
 ) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -183,7 +185,7 @@ export async function PUT(
     const ticket = await prisma.supportTicket.findFirst({
       where: {
         id: ticketId,
-        userId: session.user.id
+        userId: user.id
       }
     });
 

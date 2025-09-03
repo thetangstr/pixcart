@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
@@ -17,8 +16,9 @@ const updateProfileSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     // Get user with profile
     const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
+      where: { id: user.id },
       include: {
         profile: true
       }
@@ -70,8 +70,9 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -85,14 +86,14 @@ export async function PUT(request: NextRequest) {
     // Update user name if provided
     if (profileData.name) {
       await prisma.user.update({
-        where: { id: session.user.id },
+        where: { id: user.id },
         data: { name: profileData.name }
       });
     }
 
     // Create or update profile
     const profile = await prisma.profile.upsert({
-      where: { userId: session.user.id },
+      where: { userId: user.id },
       update: {
         phone: profileData.phone,
         address: profileData.address,
@@ -102,7 +103,7 @@ export async function PUT(request: NextRequest) {
         country: profileData.country,
       },
       create: {
-        userId: session.user.id,
+        userId: user.id,
         phone: profileData.phone,
         address: profileData.address,
         city: profileData.city,
