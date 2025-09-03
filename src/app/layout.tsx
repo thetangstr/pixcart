@@ -4,15 +4,11 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/sonner";
-import dynamic from "next/dynamic";
+import FeedbackWidgetClient from "@/components/FeedbackWidgetClient";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
 
-// Dynamically import FeedbackWidget to avoid SSR issues
-const FeedbackWidget = dynamic(() => import("@/components/feedback-widget"), {
-  ssr: false,
-});
 
 export const metadata: Metadata = {
   title: "PixCart - Transform Your Pet Photos into Oil Paintings",
@@ -32,7 +28,7 @@ export default function RootLayout({
           <main className="min-h-screen">
             {children}
           </main>
-          <FeedbackWidget />
+          <FeedbackWidgetClient />
           <Toaster />
         </Providers>
       </body>

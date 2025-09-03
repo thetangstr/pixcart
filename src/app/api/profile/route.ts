@@ -26,14 +26,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Get user with profile
-    const user = await prisma.user.findUnique({
+    const dbUser = await prisma.user.findUnique({
       where: { id: user.id },
       include: {
         profile: true
       }
     });
 
-    if (!user) {
+    if (!dbUser) {
       return NextResponse.json(
         { error: "User not found" },
         { status: 404 }
@@ -41,20 +41,20 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      image: user.image,
-      emailVerified: user.emailVerified,
-      createdAt: user.createdAt,
-      profile: user.profile ? {
-        phone: user.profile.phone,
-        address: user.profile.address,
-        city: user.profile.city,
-        state: user.profile.state,
-        zipCode: user.profile.zipCode,
-        country: user.profile.country,
-        updatedAt: user.profile.updatedAt
+      id: dbUser.id,
+      name: dbUser.name,
+      email: dbUser.email,
+      image: dbUser.image,
+      emailVerified: dbUser.emailVerified,
+      createdAt: dbUser.createdAt,
+      profile: dbUser.profile ? {
+        phone: dbUser.profile.phone,
+        address: dbUser.profile.address,
+        city: dbUser.profile.city,
+        state: dbUser.profile.state,
+        zipCode: dbUser.profile.zipCode,
+        country: dbUser.profile.country,
+        updatedAt: dbUser.profile.updatedAt
       } : null
     });
 
