@@ -1,102 +1,252 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { motion } from "framer-motion";
+import { 
+  Palette, 
+  Sparkles, 
+  Users, 
+  Shield, 
+  ChevronRight,
+  Star,
+  Clock,
+  Heart
+} from "lucide-react";
+import { useAuth } from "@/app/providers";
+import { useRouter } from "next/navigation";
+
+const styles = [
+  {
+    name: "Classic Renaissance",
+    description: "Timeless elegance with rich colors and dramatic lighting",
+    example: "🎨",
+  },
+  {
+    name: "Van Gogh Style",
+    description: "Bold, swirling brushstrokes with vibrant colors",
+    example: "🌌",
+  },
+  {
+    name: "Monet Impressionist",
+    description: "Soft, dreamy atmosphere with gentle pastels",
+    example: "🌸",
+  },
+];
+
+const features = [
+  {
+    icon: <Sparkles className="h-6 w-6" />,
+    title: "AI-Powered Preview",
+    description: "See your pet transformed instantly with advanced AI technology",
+  },
+  {
+    icon: <Users className="h-6 w-6" />,
+    title: "Professional Artists",
+    description: "Real artists create physical paintings based on AI previews",
+  },
+  {
+    icon: <Shield className="h-6 w-6" />,
+    title: "Satisfaction Guaranteed",
+    description: "100% satisfaction guarantee on all custom paintings",
+  },
+  {
+    icon: <Clock className="h-6 w-6" />,
+    title: "Fast Turnaround",
+    description: "Receive your custom painting within 2-3 weeks",
+  },
+];
+
+const testimonials = [
+  {
+    name: "Sarah Johnson",
+    rating: 5,
+    comment: "The painting of my golden retriever is absolutely stunning! It captures his personality perfectly.",
+  },
+  {
+    name: "Michael Chen",
+    rating: 5,
+    comment: "Amazing quality and fast service. My cat looks like royalty in the Renaissance style!",
+  },
+  {
+    name: "Emma Williams",
+    rating: 5,
+    comment: "Best gift I've ever given. My mom cried when she saw the painting of her beloved poodle.",
+  },
+];
 
 export default function Home() {
+  const { user } = useAuth();
+  const router = useRouter();
+
   return (
-    <div className="min-h-screen">
+    <div className="container mx-auto px-4 py-12">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-6">Transform Your Photos into Beautiful Hand-Painted Art</h1>
-            <p className="text-xl mb-8 text-gray-600 dark:text-gray-300">
-              Upload your favorite photo and our AI will show you a preview of your painting. Our skilled artists will then create a stunning hand-painted masterpiece just for you.
-            </p>
-            <Link 
-              href="/upload"
-              className="bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors"
-            >
-              Start Your Painting
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center mb-20"
+      >
+        <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          Transform Your Pet Photos into Timeless Art
+        </h1>
+        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          Turn your beloved pet photos into stunning oil paintings with AI-powered previews 
+          and professional artist creation
+        </p>
+        <div className="flex gap-4 justify-center">
+          {user ? (
+            <Link href="/create">
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
+                Start Creating <ChevronRight className="ml-2 h-5 w-5" />
+              </Button>
             </Link>
+          ) : (
+            <Button 
+              size="lg" 
+              className="bg-purple-600 hover:bg-purple-700"
+              onClick={() => router.push("/auth/signin")}
+            >
+              Get Started <ChevronRight className="ml-2 h-5 w-5" />
+            </Button>
+          )}
+          <Link href="#how-it-works">
+            <Button size="lg" variant="outline">
+              Learn More
+            </Button>
+          </Link>
+        </div>
+      </motion.section>
+
+      {/* Style Showcase */}
+      <section className="mb-20">
+        <h2 className="text-3xl font-bold text-center mb-12">Choose Your Art Style</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {styles.map((style, index) => (
+            <motion.div
+              key={style.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="p-6 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-6xl mb-4 text-center">{style.example}</div>
+                <h3 className="text-xl font-semibold mb-2">{style.name}</h3>
+                <p className="text-gray-600">{style.description}</p>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="mb-20">
+        <h2 className="text-3xl font-bold text-center mb-12">Why Choose PixCart?</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="text-center"
+            >
+              <div className="inline-flex p-3 rounded-full bg-purple-100 text-purple-600 mb-4">
+                {feature.icon}
+              </div>
+              <h3 className="font-semibold mb-2">{feature.title}</h3>
+              <p className="text-gray-600 text-sm">{feature.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section id="how-it-works" className="mb-20 bg-gray-50 -mx-4 px-4 py-16">
+        <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
+        <div className="max-w-4xl mx-auto">
+          <div className="space-y-8">
+            {[
+              { step: 1, title: "Upload Your Photo", desc: "Choose your favorite pet photo" },
+              { step: 2, title: "Select Art Style", desc: "Pick from Classic, Van Gogh, or Monet styles" },
+              { step: 3, title: "AI Preview", desc: "See your AI-generated oil painting preview instantly" },
+              { step: 4, title: "Place Order", desc: "Order a physical painting created by professional artists" },
+              { step: 5, title: "Receive Your Art", desc: "Get your custom oil painting delivered to your door" },
+            ].map((item, index) => (
+              <motion.div
+                key={item.step}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="flex items-center gap-4"
+              >
+                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">
+                  {item.step}
+                </div>
+                <div>
+                  <h3 className="font-semibold">{item.title}</h3>
+                  <p className="text-gray-600">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="text-center p-6">
-              <div className="bg-blue-100 dark:bg-gray-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">1. Upload Your Photo</h3>
-              <p className="text-gray-600 dark:text-gray-300">Choose your favorite photo to be transformed into a painting</p>
-            </div>
-            <div className="text-center p-6">
-              <div className="bg-blue-100 dark:bg-gray-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">2. Preview AI Generation</h3>
-              <p className="text-gray-600 dark:text-gray-300">See an instant AI-generated preview of your painting</p>
-            </div>
-            <div className="text-center p-6">
-              <div className="bg-blue-100 dark:bg-gray-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">3. Order & Receive</h3>
-              <p className="text-gray-600 dark:text-gray-300">Place your order and receive your hand-painted masterpiece</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="bg-gray-50 dark:bg-gray-800 py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-8">Why Choose Us</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">Professional Artists</h3>
-                <p className="text-gray-600 dark:text-gray-300">Our skilled artists bring years of experience to create your perfect painting</p>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">AI-Powered Preview</h3>
-                <p className="text-gray-600 dark:text-gray-300">See how your painting will look before placing an order</p>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">Quality Materials</h3>
-                <p className="text-gray-600 dark:text-gray-300">Premium canvas and oil paints for lasting beauty</p>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">100% Satisfaction</h3>
-                <p className="text-gray-600 dark:text-gray-300">Love your painting or get your money back</p>
-              </div>
-            </div>
-          </div>
+      {/* Testimonials */}
+      <section className="mb-20">
+        <h2 className="text-3xl font-bold text-center mb-12">What Our Customers Say</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={testimonial.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="p-6">
+                <div className="flex mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">"{testimonial.comment}"</p>
+                <p className="font-semibold">- {testimonial.name}</p>
+              </Card>
+            </motion.div>
+          ))}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to Transform Your Photo?</h2>
-          <Link 
-            href="/upload"
-            className="bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors inline-block"
-          >
-            Start Your Painting Now
+      <motion.section 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="text-center bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl p-12"
+      >
+        <h2 className="text-3xl font-bold mb-4">Ready to Create Your Masterpiece?</h2>
+        <p className="text-xl mb-8 opacity-90">
+          Join thousands of pet lovers who've transformed their photos into art
+        </p>
+        {user ? (
+          <Link href="/create">
+            <Button size="lg" variant="secondary">
+              Create Your Portrait Now <Heart className="ml-2 h-5 w-5" />
+            </Button>
           </Link>
-        </div>
-      </section>
+        ) : (
+          <Button 
+            size="lg" 
+            variant="secondary"
+            onClick={() => router.push("/auth/signin")}
+          >
+            Get Started Free <Heart className="ml-2 h-5 w-5" />
+          </Button>
+        )}
+      </motion.section>
     </div>
   );
 }

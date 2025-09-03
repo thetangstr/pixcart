@@ -1,40 +1,80 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PixCart - AI-Powered Pet Portrait Platform
 
-## Getting Started
+Transform your pet photos into stunning oil painting masterpieces using Google Gemini AI.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 🎨 AI-powered pet photo transformation using Gemini 2.5 Flash Image Preview
+- 🖼️ Three artistic styles: Classic Renaissance, Van Gogh, and Monet
+- 🔐 Secure authentication with Supabase (Google OAuth)
+- 💬 Beta tester feedback system
+- 👤 Admin panel for managing users and feedback
+- 📱 Fully responsive design
+
+## Tech Stack
+
+- **Frontend**: Next.js 15.5, React 19, TypeScript
+- **Styling**: Tailwind CSS, Framer Motion
+- **Authentication**: Supabase Auth
+- **Database**: Prisma ORM with SQLite (development) / PostgreSQL (production)
+- **AI**: Google Gemini 2.5 Flash Image Preview API
+- **Deployment**: Vercel
+
+## Environment Variables
+
+Create a `.env.local` file with:
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Gemini AI
+GEMINI_API_KEY=your_gemini_api_key
+
+# Database
+DATABASE_URL=your_database_url
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Local Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Install dependencies:
+```bash
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Set up database:
+```bash
+npx prisma migrate dev
+npx prisma db seed
+```
 
-## Learn More
+3. Run development server:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The app is configured for automatic deployment to Vercel via GitHub Actions.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Required GitHub Secrets:
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+- `DATABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `GEMINI_API_KEY`
 
-## Deploy on Vercel
+## Admin Access
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+To grant admin access:
+1. Run the admin script: `npx tsx scripts/make-admin.ts`
+2. Or use the admin panel at `/admin` (requires existing admin)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# pixcart
->>>>>>> a0a9fc5a0933cb548f3719a5b10143e9c61b23f0
+## License
+
+Private - All rights reserved

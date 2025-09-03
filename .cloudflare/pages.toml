@@ -1,8 +1,0 @@
-[build]
-command = "npm run build:cloudflare"
-output_directory = ".next/standalone"
-node_version = "20"
-
-[build.environment]
-NODE_VERSION = "20"
-NPM_VERSION = "10"

@@ -1,65 +1,66 @@
-import { NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import { headers } from 'next/headers';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // Check authentication
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
     if (!file) {
       return NextResponse.json(
-        { error: 'No file uploaded' },
+        { error: "No file uploaded" },
         { status: 400 }
       );
     }
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: 'File must be an image' },
+        { error: "Invalid file type. Please upload JPG, PNG, or WebP images." },
         { status: 400 }
       );
     }
 
     // Validate file size (10MB limit)
-    if (file.size > 10 * 1024 * 1024) {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
       return NextResponse.json(
-        { error: 'File size must be less than 10MB' },
+        { error: "File too large. Maximum size is 10MB." },
         { status: 400 }
       );
     }
 
-    // Create unique filename
+    // Convert file to base64
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const uniqueId = uuidv4();
-    const extension = file.name.split('.').pop();
-    const filename = `${uniqueId}.${extension}`;
+    const base64 = buffer.toString('base64');
+    const dataUrl = `data:${file.type};base64,${base64}`;
 
-    // Save file to public directory
-    const publicDir = join(process.cwd(), 'public', 'uploads');
-    const filepath = join(publicDir, filename);
-    await writeFile(filepath, buffer);
+    return NextResponse.json({
+      success: true,
+      imageData: base64,
+      dataUrl,
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type
+    });
 
-    // Get the host from headers
-    const headersList = await headers();
-    const host = headersList.get('host') || 'localhost:3001';
-    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
-
-    // Construct the URL directly
-    const imageUrl = `${protocol}://${host}/uploads/${filename}`;
-    
-    console.log('Generated image URL:', imageUrl);
-    
-    return NextResponse.json({ imageUrl });
   } catch (error) {
-    console.error('Error uploading file:', error);
+    console.error("Upload API Error:", error);
     return NextResponse.json(
-      { error: 'Failed to upload file' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
-} 
+}

@@ -1,1 +1,0 @@
-{"private":true,"name":"pixcart-worker","version":"1.0.0","description":"Cloudflare worker for Pixcart Next.js application","engines":{"node":">=20.0.0"}}
