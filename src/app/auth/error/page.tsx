@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { motion } from "framer-motion";
 import { AlertTriangle, Home, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
 const errorMessages: Record<string, { title: string; description: string }> = {
   Configuration: {
@@ -62,7 +63,7 @@ const errorMessages: Record<string, { title: string; description: string }> = {
   }
 };
 
-export default function AuthErrorPage() {
+function AuthErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error") || "Default";
   
@@ -157,5 +158,17 @@ export default function AuthErrorPage() {
         </motion.div>
       </motion.div>
     </div>
+  );
+}
+
+export default function AuthErrorPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      </div>
+    }>
+      <AuthErrorContent />
+    </Suspense>
   );
 }
