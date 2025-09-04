@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { UsageTracker } from '@/lib/usage-tracking';
-
-const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   try {

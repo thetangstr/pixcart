@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateOilPaintingPreview, styleFilters, PaintingStyle } from "@/lib/gemini";
 import { createClient } from "@/lib/supabase/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { checkImageGenerationLimit, checkIPRateLimit, incrementIPUsage } from "@/lib/rate-limit";
-
-const prisma = new PrismaClient();
 
 function getClientIP(request: NextRequest): string {
   const forwarded = request.headers.get('x-forwarded-for');

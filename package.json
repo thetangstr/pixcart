@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "node scripts/prepare-production.js && next build",
     "build:with-prisma": "node scripts/prepare-production.js && prisma generate && next build",
-    "vercel-build": "prisma generate --schema ./prisma/schema.prisma && next build",
+    "vercel-build": "npx prisma generate && next build",
     "start": "next start",
     "lint": "eslint . --max-warnings=100",
     "prisma:seed": "tsx prisma/seed.ts",

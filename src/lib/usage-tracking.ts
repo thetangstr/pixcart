@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from './prisma';
 
 // Gemini pricing as of 2025 (these should be updated based on actual pricing)
 const GEMINI_PRICING = {
