@@ -121,21 +121,22 @@ export default function CreatePage() {
           <p className="text-gray-600 mb-6">
             Transform your pet into a stunning oil painting in three simple steps
           </p>
-          
-          {/* Usage indicator */}
-          {remainingGens !== null && (
-            <motion.div 
-              className="inline-flex items-center space-x-2 glass rounded-full px-4 py-2 text-sm"
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-            >
-              <Zap className="w-4 h-4 text-purple-600" />
-              <span className="font-medium text-gray-700">
-                {user ? `${remainingGens}/5 generations today` : "1 free generation"}
-              </span>
-            </motion.div>
-          )}
-        </div>
+        </motion.div>
+        
+        {/* Usage indicator */}
+        {remainingGens !== null && (
+          <motion.div 
+            className="inline-flex items-center space-x-2 glass rounded-full px-4 py-2 text-sm mx-auto mt-4"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            style={{ display: 'table' }}
+          >
+            <Zap className="w-4 h-4 text-purple-600" />
+            <span className="font-medium text-gray-700">
+              {user ? `${remainingGens}/5 generations today` : "1 free generation"}
+            </span>
+          </motion.div>
+        )}
       </div>
 
       <div className="container-mobile mx-auto pb-12">
