@@ -1,0 +1,16 @@
+
+> pixcart@0.1.3 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.5.2 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.31.175:3000
+   - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Compiled middleware in 112ms
+ ✓ Ready in 828ms
+ ○ Compiling /simple ...
+ ✓ Compiled /simple in 1764ms
+ GET /simple 200 in 2007ms
+[?25h

@@ -1,0 +1,21 @@
+PixCart Deployment Monitor - Results
+====================================
+
+❌ Status: FAILED (0% success rate)
+Branch: main (7e47f080)
+Message: Fix JavaScript runtime error: incorrect FileUpload prop usage
+Author: Kailor
+Completed: Thu Sep  4 09:14:14 PDT 2025
+
+Phase Results:
+✓ Deployment: FAILED
+✓ Health Check: FAILED
+✓ Analysis: FAILED
+
+❌ Deployment encountered issues.
+🔧 Please review and fix problems.
+🚨 Application may not be working properly.
+
+Full logs: deployment-monitoring.log
+Test results: ./test-results/
+Session: autopush-1757002435-7e47f080
