@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -16,6 +16,11 @@ model User {
   emailVerified DateTime?
   isBetaTester  Boolean   @default(false)
   isAdmin       Boolean   @default(false)
+  isAllowlisted Boolean   @default(false)  // User is approved to use the platform
+  isWaitlisted  Boolean   @default(true)   // User is on waitlist
+  joinedWaitlistAt DateTime @default(now())
+  approvedAt    DateTime?                   // When they were allowlisted
+  dailyImageLimit Int     @default(5)      // Daily image generation limit
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -26,6 +31,7 @@ model User {
   passwordResetTokens PasswordResetToken[]
   profile       Profile?
   feedback      Feedback[]
+  apiUsage      ApiUsage[]
 }
 
 model Account {
@@ -273,4 +279,39 @@ enum SprintStatus {
   ACTIVE
   COMPLETED
   CANCELLED
+}
+
+model ApiUsage {
+  id          String   @id @default(cuid())
+  userId      String?
+  apiType     String   // "gemini", "supabase", etc.
+  endpoint    String   // Specific endpoint or model used
+  model       String?  // For Gemini: model name
+  operation   String   // "image_generation", "text_generation", etc.
+  inputTokens Int?     // For text models
+  outputTokens Int?    // For text models
+  imageCount  Int?     // For image operations
+  cost        Float?   // Estimated cost if available
+  success     Boolean
+  error       String?
+  metadata    Json?    // Additional data
+  duration    Int?     // Processing time in ms
+  createdAt   DateTime @default(now())
+  
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId, createdAt])
+  @@index([apiType, createdAt])
+}
+
+model IpUsage {
+  id       String   @id @default(cuid())
+  ip       String
+  date     DateTime // Date for daily tracking (set to midnight UTC)
+  count    Int      @default(0) // Number of generations for this IP on this date
+  lastUsed DateTime @default(now()) // Last time this IP was used
+  
+  @@unique([ip, date], name: "ip_date")
+  @@index([ip])
+  @@index([date])
 }

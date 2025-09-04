@@ -1,21 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { db } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const { data: { user }, error } = await supabase.auth.getUser();
-    
-    if (error || !user) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
-    const adminUser = await prisma.user.findUnique({
-      where: { email: user.email! },
+    const adminUser = await db.user.findUnique({
+      where: { email: session.user.email! },
       select: { isAdmin: true }
     });
 
@@ -24,13 +21,18 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all users
-    const users = await prisma.user.findMany({
+    const users = await db.user.findMany({
       select: {
         id: true,
         email: true,
         name: true,
         isBetaTester: true,
         isAdmin: true,
+        isAllowlisted: true,
+        isWaitlisted: true,
+        approvedAt: true,
+        joinedWaitlistAt: true,
+        dailyImageLimit: true,
         createdAt: true
       },
       orderBy: { createdAt: 'desc' }

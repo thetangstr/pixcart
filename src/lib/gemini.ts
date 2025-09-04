@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { UsageTracker } from "./usage-tracking";
 
 // Initialize Gemini AI with API key
 function getGeminiClient() {
@@ -33,83 +34,130 @@ const stylePrompts: Record<PaintingStyle, string> = {
 
 export async function generateOilPaintingPreview(
   imageBase64: string,
-  style: PaintingStyle
+  style: PaintingStyle,
+  userId?: string
 ): Promise<{ generatedImage: string; description: string }> {
-  try {
-    console.log(`Starting Gemini API call for ${style} style...`);
-    
-    // Get Gemini client with runtime API key
-    const genAI = getGeminiClient();
-    
-    // Using Gemini 2.0 Flash Experimental model (latest available)
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.0-flash-exp"
-    });
-
-    // Prepare the image and text prompt for transformation
-    const prompt = stylePrompts[style];
-    
-    // Prepare the image data - ensure we're sending clean base64
-    const cleanBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
-    const imagePart = {
-      inlineData: {
-        data: cleanBase64,
-        mimeType: "image/jpeg",
-      },
-    };
-
-    console.log("Calling Gemini generateContent with image and prompt...");
-    
-    // Generate the styled image by providing both image and text
-    const result = await model.generateContent([imagePart, prompt]);
-    const response = await result.response;
-    
-    console.log("Gemini response received:", {
-      hasResponse: !!response,
-      hasCandidates: !!response.candidates,
-      candidatesLength: response.candidates?.length || 0
-    });
-    
-    let generatedImageBase64 = '';
-    let description = '';
-    
-    // Extract the generated image and any text description
-    if (response.candidates && response.candidates[0]) {
-      const parts = response.candidates[0].content.parts;
-      console.log("Response parts:", parts.length, "Parts types:", parts.map(p => Object.keys(p)));
+  const modelName = "gemini-2.0-flash-exp";
+  
+  return UsageTracker.trackApiCall(
+    async () => {
+      console.log(`Starting Gemini API call for ${style} style...`);
       
-      for (const part of parts) {
-        console.log("Part keys:", Object.keys(part));
-        if (part.text) {
-          console.log("Found text in response:", part.text.substring(0, 100));
-          description = part.text;
-        } else if (part.inlineData) {
-          console.log("Found image data in response, size:", part.inlineData.data.length);
-          // The generated image is returned as base64
-          generatedImageBase64 = `data:image/png;base64,${part.inlineData.data}`;
-        }
+      // Get Gemini client with runtime API key
+      const genAI = getGeminiClient();
+      
+      // Using Gemini 2.0 Flash Experimental model (latest available)
+      const model = genAI.getGenerativeModel({ 
+        model: modelName
+      });
+
+      // Prepare the image and text prompt for transformation
+      const prompt = stylePrompts[style];
+      
+      // Prepare the image data - ensure we're sending clean base64
+      const cleanBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
+      const imagePart = {
+        inlineData: {
+          data: cleanBase64,
+          mimeType: "image/jpeg",
+        },
+      };
+
+      console.log("Calling Gemini generateContent with image and prompt...");
+      
+      // Generate the styled image by providing both image and text
+      const result = await model.generateContent([imagePart, prompt]);
+      const response = await result.response;
+      
+      console.log("Gemini response received:", {
+        hasResponse: !!response,
+        hasCandidates: !!response.candidates,
+        candidatesLength: response.candidates?.length || 0
+      });
+      
+      let generatedImageBase64 = '';
+      let description = '';
+      let inputTokens = 0;
+      let outputTokens = 0;
+      
+      // Count tokens from response usage metadata if available
+      if (response.usageMetadata) {
+        inputTokens = response.usageMetadata.promptTokenCount || 0;
+        outputTokens = response.usageMetadata.candidatesTokenCount || 0;
       }
-    } else {
-      console.log("No candidates in response");
+      
+      // Extract the generated image and any text description
+      if (response.candidates && response.candidates[0]) {
+        const parts = response.candidates[0].content.parts;
+        console.log("Response parts:", parts.length, "Parts types:", parts.map(p => Object.keys(p)));
+        
+        for (const part of parts) {
+          console.log("Part keys:", Object.keys(part));
+          if (part.text) {
+            console.log("Found text in response:", part.text.substring(0, 100));
+            description = part.text;
+            // Estimate output tokens from text length (rough approximation)
+            if (!outputTokens) {
+              outputTokens = Math.ceil(part.text.length / 4); // ~4 chars per token
+            }
+          } else if (part.inlineData) {
+            console.log("Found image data in response, size:", part.inlineData.data.length);
+            // The generated image is returned as base64
+            generatedImageBase64 = `data:image/png;base64,${part.inlineData.data}`;
+          }
+        }
+      } else {
+        console.log("No candidates in response");
+      }
+      
+      console.log("Generation result:", {
+        hasGeneratedImage: !!generatedImageBase64,
+        hasDescription: !!description,
+        inputTokens,
+        outputTokens
+      });
+      
+      // If no description was provided, create one
+      if (!description) {
+        description = `Your pet has been transformed into a beautiful ${style.replace('_', ' ')} style oil painting. 
+          The portrait captures the essence and personality of your beloved pet while applying the distinctive 
+          artistic techniques of this classical style.`;
+      }
+      
+      // Log additional usage info in metadata
+      const metadata = {
+        style,
+        imageSize: cleanBase64.length,
+        promptLength: prompt.length,
+        hasGeneratedImage: !!generatedImageBase64,
+        usageMetadata: response.usageMetadata
+      };
+      
+      // Add metadata for usage tracking (this will be logged automatically by trackApiCall)
+      (generateOilPaintingPreview as any)._trackingMetadata = {
+        inputTokens,
+        outputTokens,
+        imageCount: 1, // One input image
+        metadata
+      };
+      
+      return {
+        generatedImage: generatedImageBase64 || imageBase64, // Fallback to original if generation fails
+        description
+      };
+    },
+    {
+      userId,
+      apiType: 'gemini',
+      endpoint: 'generateContent',
+      model: modelName,
+      operation: 'image_generation',
+      inputTokens: (generateOilPaintingPreview as any)._trackingMetadata?.inputTokens || 0,
+      outputTokens: (generateOilPaintingPreview as any)._trackingMetadata?.outputTokens || 0,
+      imageCount: 1,
+      metadata: (generateOilPaintingPreview as any)._trackingMetadata?.metadata
     }
-    
-    console.log("Generation result:", {
-      hasGeneratedImage: !!generatedImageBase64,
-      hasDescription: !!description
-    });
-    
-    // If no description was provided, create one
-    if (!description) {
-      description = `Your pet has been transformed into a beautiful ${style.replace('_', ' ')} style oil painting. 
-        The portrait captures the essence and personality of your beloved pet while applying the distinctive 
-        artistic techniques of this classical style.`;
-    }
-    
-    return {
-      generatedImage: generatedImageBase64 || imageBase64, // Fallback to original if generation fails
-      description
-    };
-  } catch (error: any) {
+  ).catch((error: any) => {
     console.error("Error generating oil painting preview:", error);
     console.error("Error details:", {
       message: error.message,
@@ -122,7 +170,7 @@ export async function generateOilPaintingPreview(
       generatedImage: imageBase64,
       description: `Preview generation is temporarily unavailable. Your portrait will be created in the ${style.replace('_', ' ')} style with professional artistic techniques.`
     };
-  }
+  });
 }
 
 // CSS filters as fallback for preview enhancement
