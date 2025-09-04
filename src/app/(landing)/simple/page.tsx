@@ -50,7 +50,12 @@ export default function SimpleLandingPage() {
           className="mb-12"
         >
           <FileUpload 
-            onImageSelect={handleImageSelect}
+            onFileUpload={(data, file) => {
+              if (data && file.name) {
+                const imageUrl = `data:${file.type};base64,${data}`;
+                handleImageSelect(imageUrl);
+              }
+            }}
             className="max-w-md mx-auto"
           />
         </motion.div>

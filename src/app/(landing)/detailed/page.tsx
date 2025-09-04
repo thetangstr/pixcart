@@ -92,7 +92,12 @@ export default function DetailedLandingPage() {
             className="max-w-2xl mx-auto mb-12"
           >
             <FileUpload 
-              onImageSelect={(image) => setUploadedImage(image)}
+              onFileUpload={(data, file) => {
+                if (data && file.name) {
+                  const imageUrl = `data:${file.type};base64,${data}`;
+                  setUploadedImage(imageUrl);
+                }
+              }}
               className="glass-card p-8"
             />
             {uploadedImage && (
