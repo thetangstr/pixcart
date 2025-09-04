@@ -4,19 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "prisma generate && next build",
+    "build": "node scripts/prepare-production.js && prisma generate && next build",
+    "vercel-build": "prisma generate --schema ./prisma/schema.prisma && next build",
     "start": "next start",
     "lint": "eslint . --max-warnings=100",
-    "postinstall": "prisma generate",
     "prisma:seed": "tsx prisma/seed.ts",
     "prisma:push": "prisma db push",
+    "prisma:migrate": "prisma migrate deploy",
     "monitor:deployment": "node scripts/deployment-monitor.js",
     "monitor:health": "node scripts/api-health-check.js",
     "monitor:comprehensive": "node scripts/comprehensive-monitor.js",
     "monitor": "npm run monitor:comprehensive"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

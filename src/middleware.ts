@@ -7,22 +7,50 @@ const COOKIE_MAX_AGE = 30 * 24 * 60 * 60; // 30 days
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  let response = NextResponse.next();
   
-  // Protect admin routes - just check authentication here
-  // The admin check will be done client-side
-  if (pathname.startsWith('/admin')) {
-    const response = NextResponse.next();
+  // Handle Supabase authentication for all protected routes
+  try {
     const supabase = createClient(request, response);
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session }, error } = await supabase.auth.getSession();
     
-    if (!user) {
-      // Redirect to login if not authenticated
+    // Refresh session if needed
+    if (error || !session) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // User exists but session might be stale, refresh it
+        await supabase.auth.refreshSession();
+      }
+    }
+    
+    // Update response with any session changes
+    response = NextResponse.next({
+      request: {
+        headers: request.headers,
+      },
+    });
+    
+    const updatedSupabase = createClient(request, response);
+    const { data: { user } } = await updatedSupabase.auth.getUser();
+    
+    // Protect admin routes
+    if (pathname.startsWith('/admin')) {
+      if (!user) {
+        // Redirect to login if not authenticated
+        const loginUrl = new URL('/auth/signin', request.url);
+        loginUrl.searchParams.set('callbackUrl', pathname);
+        return NextResponse.redirect(loginUrl);
+      }
+    }
+  } catch (error) {
+    console.error('Middleware auth error:', error);
+    
+    // If authentication fails on admin routes, redirect to login
+    if (pathname.startsWith('/admin')) {
       const loginUrl = new URL('/auth/signin', request.url);
       loginUrl.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(loginUrl);
     }
-    // Let the page component check for admin status
-    return response;
   }
   
   // A/B testing for home page
@@ -48,5 +76,14 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/admin/:path*']
+  matcher: [
+    '/',
+    '/admin/:path*',
+    '/api/user/:path*',
+    '/api/admin/:path*',
+    '/api/generate',
+    '/create',
+    '/dashboard',
+    '/profile'
+  ]
 };
