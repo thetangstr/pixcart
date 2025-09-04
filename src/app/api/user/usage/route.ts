@@ -11,19 +11,48 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user from database
-    const user = await prisma.user.findUnique({
-      where: { email: authUser.email! },
+    // Get user from database - first try by ID, then by email
+    let user = await prisma.user.findUnique({
+      where: { id: authUser.id },
       select: {
         id: true,
         email: true,
         dailyImageLimit: true,
-        createdAt: true
+        createdAt: true,
+        isAdmin: true
       }
     });
 
+    // If not found by ID, try by email (for backwards compatibility)
+    if (!user && authUser.email) {
+      user = await prisma.user.findUnique({
+        where: { email: authUser.email },
+        select: {
+          id: true,
+          email: true,
+          dailyImageLimit: true,
+          createdAt: true,
+          isAdmin: true
+        }
+      });
+    }
+
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      // Create user if they don't exist
+      user = await prisma.user.create({
+        data: {
+          id: authUser.id,
+          email: authUser.email || `user_${authUser.id}@pixcart.com`,
+          dailyImageLimit: 10, // Default limit for new users
+        },
+        select: {
+          id: true,
+          email: true,
+          dailyImageLimit: true,
+          createdAt: true,
+          isAdmin: true
+        }
+      });
     }
 
     // Get today's usage

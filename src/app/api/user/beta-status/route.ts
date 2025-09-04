@@ -10,14 +10,39 @@ export async function GET(request: NextRequest) {
     const { data: { user }, error } = await supabase.auth.getUser();
     
     if (error || !user) {
-      return NextResponse.json({ isBetaTester: false });
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
     }
 
-    // Check if user is beta tester in database
-    const dbUser = await prisma.user.findUnique({
-      where: { email: user.email! },
+    // Check if user is beta tester in database - first try by ID, then by email
+    let dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
       select: { isBetaTester: true, isAdmin: true }
     });
+
+    // If not found by ID, try by email (for backwards compatibility)
+    if (!dbUser && user.email) {
+      dbUser = await prisma.user.findUnique({
+        where: { email: user.email },
+        select: { isBetaTester: true, isAdmin: true }
+      });
+    }
+
+    // Create user if they don't exist (with default beta tester status)
+    if (!dbUser) {
+      dbUser = await prisma.user.create({
+        data: {
+          id: user.id,
+          email: user.email || `user_${user.id}@pixcart.com`,
+          dailyImageLimit: 10,
+          isBetaTester: true, // Default to beta tester for new users
+          isAllowlisted: true
+        },
+        select: { isBetaTester: true, isAdmin: true }
+      });
+    }
 
     return NextResponse.json({ 
       isBetaTester: dbUser?.isBetaTester || false,

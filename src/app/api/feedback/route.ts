@@ -13,18 +13,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user from database
+    // Get user from database - first try by ID, then by email
     let dbUser = await prisma.user.findUnique({
-      where: { email: user.email! }
+      where: { id: user.id }
     });
+
+    // If not found by ID, try by email (for backwards compatibility)
+    if (!dbUser && user.email) {
+      dbUser = await prisma.user.findUnique({
+        where: { email: user.email }
+      });
+    }
 
     // Create user if doesn't exist
     if (!dbUser) {
       dbUser = await prisma.user.create({
         data: {
-          email: user.email!,
-          name: user.user_metadata?.name || user.email!.split('@')[0],
-          image: user.user_metadata?.avatar_url
+          id: user.id,
+          email: user.email || `user_${user.id}@pixcart.com`,
+          name: user.user_metadata?.name || user.user_metadata?.full_name || (user.email ? user.email.split('@')[0] : `user_${user.id}`),
+          image: user.user_metadata?.avatar_url,
+          dailyImageLimit: 10,
+          isBetaTester: true,
+          isAllowlisted: true
         }
       });
     }

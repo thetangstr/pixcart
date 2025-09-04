@@ -27,6 +27,15 @@ function getClientIP(request: NextRequest): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check request size (limit to 2MB)
+    const contentLength = request.headers.get('content-length');
+    if (contentLength && parseInt(contentLength) > 2 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: "Request payload too large. Maximum size is 2MB." },
+        { status: 413 }
+      );
+    }
+    
     // Check authentication (optional now)
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -38,11 +47,33 @@ export async function POST(request: NextRequest) {
       // Authenticated user flow
       isAuthenticated = true;
       
-      // Check if user is allowlisted
-      const dbUser = await prisma.user.findUnique({
+      // Check if user is allowlisted - first try by ID, then by email
+      let dbUser = await prisma.user.findUnique({
         where: { id: user.id },
         select: { isAllowlisted: true, isAdmin: true }
       });
+
+      // If not found by ID, try by email
+      if (!dbUser && user.email) {
+        dbUser = await prisma.user.findUnique({
+          where: { email: user.email },
+          select: { isAllowlisted: true, isAdmin: true }
+        });
+      }
+
+      // Create user if they don't exist (with default allowlisted status)
+      if (!dbUser) {
+        dbUser = await prisma.user.create({
+          data: {
+            id: user.id,
+            email: user.email || `user_${user.id}@pixcart.com`,
+            dailyImageLimit: 10,
+            isAllowlisted: true, // Allow new users by default for beta
+            isBetaTester: true
+          },
+          select: { isAllowlisted: true, isAdmin: true }
+        });
+      }
 
       if (!dbUser?.isAllowlisted && !dbUser?.isAdmin) {
         return NextResponse.json(
@@ -93,6 +124,14 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+    
+    // Validate image data size (base64 string shouldn't exceed 2MB)
+    if (imageData.length > 2 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: "Image data too large. Please use a smaller image (max 2MB)." },
+        { status: 413 }
+      );
+    }
 
     // Validate style
     if (!["renaissance", "van_gogh", "monet"].includes(style)) {
@@ -107,20 +146,29 @@ export async function POST(request: NextRequest) {
     let dbUserId: string;
 
     if (isAuthenticated && user) {
-      // Get user from database for tracking
+      // Get user from database for tracking - first try by ID, then by email
       let dbUser = await prisma.user.findUnique({
-        where: { email: user.email! },
+        where: { id: user.id },
         select: { id: true }
       });
+
+      // If not found by ID, try by email (for backwards compatibility)
+      if (!dbUser && user.email) {
+        dbUser = await prisma.user.findUnique({
+          where: { email: user.email },
+          select: { id: true }
+        });
+      }
 
       // Create user if they don't exist
       if (!dbUser) {
         dbUser = await prisma.user.create({
           data: {
             id: user.id,
-            email: user.email!,
+            email: user.email || `user_${user.id}@pixcart.com`,
             name: user.user_metadata?.full_name || null,
             image: user.user_metadata?.avatar_url || null,
+            dailyImageLimit: 10, // Default limit for new users
           },
           select: { id: true }
         });
