@@ -13,18 +13,8 @@ export async function getVariant(): Promise<Variant> {
     return existingVariant.value as Variant;
   }
   
-  // Randomly assign variant (50/50 split)
-  const variant: Variant = Math.random() < 0.5 ? 'simple' : 'detailed';
-  
-  // Set cookie to maintain consistency
-  cookieStore.set(COOKIE_NAME, variant, {
-    maxAge: COOKIE_MAX_AGE,
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production'
-  });
-  
-  return variant;
+  // If no variant is set (shouldn't happen with middleware), default to 'simple'
+  return 'simple';
 }
 
 export async function trackEvent(event: string, variant: Variant, metadata?: any) {

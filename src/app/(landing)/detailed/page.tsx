@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Upload, Palette, Sparkles, Star, Clock, Shield, ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { FileUpload } from "@/components/ui/file-upload";
+import FileUpload from "@/components/ui/file-upload";
 import Image from "next/image";
 
 const testimonials = [

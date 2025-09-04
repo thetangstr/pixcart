@@ -43,10 +43,13 @@ export class UsageTracker {
   static async logUsage(data: ApiUsageData): Promise<void> {
     try {
       const cost = this.calculateCost(data);
+      
+      // Only log if we have a real user ID (not IP-based placeholders)
+      const isRealUser = data.userId && !data.userId.startsWith('ip_');
 
       await prisma.apiUsage.create({
         data: {
-          userId: data.userId,
+          userId: isRealUser ? data.userId : null,
           apiType: data.apiType,
           endpoint: data.endpoint,
           model: data.model,

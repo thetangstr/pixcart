@@ -15,10 +15,14 @@ export async function checkIPRateLimit(ip: string): Promise<{
   tomorrow.setDate(tomorrow.getDate() + 1);
 
   // Find or create IP usage record
+  // Use date range to handle potential timezone issues
   let ipUsage = await prisma.ipUsage.findFirst({
     where: {
       ip,
-      date: today
+      date: {
+        gte: today,
+        lt: tomorrow
+      }
     }
   });
 

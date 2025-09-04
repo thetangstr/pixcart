@@ -20,7 +20,7 @@ model User {
   isWaitlisted  Boolean   @default(true)   // User is on waitlist
   joinedWaitlistAt DateTime @default(now())
   approvedAt    DateTime?                   // When they were allowlisted
-  dailyImageLimit Int     @default(5)      // Daily image generation limit
+  dailyImageLimit Int     @default(10)     // Daily image generation limit (10 for beta users)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

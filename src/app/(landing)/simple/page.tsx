@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Upload, Sparkles } from "lucide-react";
-import { FileUpload } from "@/components/ui/file-upload";
+import FileUpload from "@/components/ui/file-upload";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -11,7 +12,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Palette, User, Package, HelpCircle, LogOut, Settings } from "lucide-react";
+import { Palette, User, Package, HelpCircle, LogOut, Settings, Shield } from "lucide-react";
 import { useAuth } from "@/app/providers";
 import { createClient } from "@/lib/supabase/client";
 
@@ -19,6 +20,24 @@ export function Navbar() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const supabase = createClient();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (user) {
+        try {
+          const response = await fetch('/api/user/beta-status');
+          if (response.ok) {
+            const data = await response.json();
+            setIsAdmin(data.isAdmin);
+          }
+        } catch (error) {
+          console.error('Error checking admin status:', error);
+        }
+      }
+    };
+    checkAdminStatus();
+  }, [user]);
 
   const handleSignIn = () => {
     router.push("/auth/signin");
@@ -58,6 +77,17 @@ export function Navbar() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end" forceMount>
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <Link href="/admin" className="flex items-center gap-2 text-purple-600 font-medium">
+                          <Shield className="h-4 w-4" />
+                          <span>Admin Console</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard" className="flex items-center gap-2">
                       <User className="h-4 w-4" />

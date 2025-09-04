@@ -1,0 +1,47 @@
+import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function requireAuth(request: NextRequest) {
+  const supabase = await createClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
+  
+  if (error || !user) {
+    // Redirect to login page
+    const loginUrl = new URL('/auth/signin', request.url);
+    loginUrl.searchParams.set('from', request.nextUrl.pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+  
+  return { user };
+}
+
+export async function requireAdmin(request: NextRequest) {
+  const authResult = await requireAuth(request);
+  
+  // If it's a redirect response, return it
+  if (authResult instanceof NextResponse) {
+    return authResult;
+  }
+  
+  const { user } = authResult;
+  
+  // Check if user is admin using Prisma
+  const { PrismaClient } = await import('@prisma/client');
+  const prisma = new PrismaClient();
+  
+  try {
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { isAdmin: true }
+    });
+    
+    if (!dbUser?.isAdmin) {
+      // Not an admin, redirect to home
+      return NextResponse.redirect(new URL('/', request.url));
+    }
+    
+    return { user, isAdmin: true };
+  } finally {
+    await prisma.$disconnect();
+  }
+}

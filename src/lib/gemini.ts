@@ -10,26 +10,32 @@ function getGeminiClient() {
   return new GoogleGenerativeAI(apiKey);
 }
 
-export type PaintingStyle = "classic" | "van_gogh" | "monet";
+export type PaintingStyle = "renaissance" | "van_gogh" | "monet";
 
 const stylePrompts: Record<PaintingStyle, string> = {
-  classic: `Transform this pet photo into a classic Renaissance-style oil painting portrait. 
-    Use rich, deep colors with dramatic chiaroscuro lighting reminiscent of Rembrandt. 
-    Add visible brush strokes texture, golden-brown undertones, and a formal, dignified composition. 
-    The pet should appear noble and majestic with careful attention to fur texture and eyes.
-    Background should be dark and sophisticated with subtle gradients.`,
+  renaissance: `Analyze this pet photo and provide detailed artistic instructions for creating a Renaissance-style oil painting portrait.
+    Describe: the ideal color palette (rich browns, deep reds, golden undertones), 
+    lighting approach (dramatic chiaroscuro, single light source), 
+    composition (formal, dignified pose, 3/4 view preferred),
+    background elements (dark, sophisticated gradients, perhaps draped fabric),
+    and specific brushwork techniques for rendering the pet's fur texture.
+    Focus on making the pet appear noble and majestic, as if painted by a Renaissance master.`,
   
-  van_gogh: `Transform this pet photo into a vibrant Van Gogh-style oil painting. 
-    Use bold, swirling brushstrokes with thick impasto texture. Apply bright, contrasting colors 
-    with vibrant yellows, deep blues, and vivid oranges. Create dynamic swirling movement in the background. 
-    The pet's fur should have visible, energetic brushstrokes following the natural flow.
-    Make it emotionally expressive with dramatic color contrasts and post-impressionist style.`,
+  van_gogh: `Analyze this pet photo and provide detailed artistic instructions for creating a Van Gogh-style oil painting.
+    Describe: the vibrant color palette (bold yellows, deep blues, vivid oranges),
+    distinctive brushstroke patterns (swirling, energetic, thick impasto),
+    how to capture the pet's personality with expressive, emotional strokes,
+    background treatment (dynamic swirls, perhaps starry night elements or sunflowers),
+    and how to apply post-impressionist techniques to convey movement and energy.
+    The result should be emotionally charged and visually dynamic.`,
   
-  monet: `Transform this pet photo into a soft, impressionist Monet-style oil painting. 
-    Use gentle, dappled brushstrokes with soft focus on details. Apply pastel tones with 
-    hints of lavender, soft pink, and light blue. Create a dreamy, atmospheric quality with 
-    soft edges and luminous colors. The overall effect should be peaceful and ethereal, 
-    like viewing the pet through morning light in a garden with impressionist techniques.`
+  monet: `Analyze this pet photo and provide detailed artistic instructions for creating a Monet-style impressionist oil painting.
+    Describe: the soft color palette (pastels, lavenders, soft pinks, light blues),
+    brushstroke technique (gentle, dappled, broken color),
+    how to create atmospheric effects (soft focus, luminous quality),
+    garden or outdoor setting suggestions,
+    and how to capture light and shadow with impressionist methods.
+    The overall effect should be dreamy and peaceful, as if painted en plein air.`
 };
 
 export async function generateOilPaintingPreview(
@@ -37,19 +43,27 @@ export async function generateOilPaintingPreview(
   style: PaintingStyle,
   userId?: string
 ): Promise<{ generatedImage: string; description: string }> {
-  const modelName = "gemini-2.0-flash-exp";
+  const modelName = "gemini-1.5-flash";
   
   return UsageTracker.trackApiCall(
     async () => {
       console.log(`Starting Gemini API call for ${style} style...`);
       
       // Get Gemini client with runtime API key
-      const genAI = getGeminiClient();
+      let genAI;
+      try {
+        genAI = getGeminiClient();
+        console.log("Gemini client initialized successfully");
+      } catch (error) {
+        console.error("Failed to initialize Gemini client:", error);
+        throw error;
+      }
       
-      // Using Gemini 2.0 Flash Experimental model (latest available)
+      // Using Gemini Flash model
       const model = genAI.getGenerativeModel({ 
         model: modelName
       });
+      console.log(`Using Gemini model: ${modelName}`);
 
       // Prepare the image and text prompt for transformation
       const prompt = stylePrompts[style];
@@ -65,7 +79,7 @@ export async function generateOilPaintingPreview(
 
       console.log("Calling Gemini generateContent with image and prompt...");
       
-      // Generate the styled image by providing both image and text
+      // Get artistic instructions from Gemini
       const result = await model.generateContent([imagePart, prompt]);
       const response = await result.response;
       
@@ -75,7 +89,6 @@ export async function generateOilPaintingPreview(
         candidatesLength: response.candidates?.length || 0
       });
       
-      let generatedImageBase64 = '';
       let description = '';
       let inputTokens = 0;
       let outputTokens = 0;
@@ -86,42 +99,33 @@ export async function generateOilPaintingPreview(
         outputTokens = response.usageMetadata.candidatesTokenCount || 0;
       }
       
-      // Extract the generated image and any text description
+      // Extract the artistic instructions
       if (response.candidates && response.candidates[0]) {
-        const parts = response.candidates[0].content.parts;
-        console.log("Response parts:", parts.length, "Parts types:", parts.map(p => Object.keys(p)));
+        const text = response.text();
+        console.log("Artistic instructions received, length:", text.length);
+        description = text;
         
-        for (const part of parts) {
-          console.log("Part keys:", Object.keys(part));
-          if (part.text) {
-            console.log("Found text in response:", part.text.substring(0, 100));
-            description = part.text;
-            // Estimate output tokens from text length (rough approximation)
-            if (!outputTokens) {
-              outputTokens = Math.ceil(part.text.length / 4); // ~4 chars per token
-            }
-          } else if (part.inlineData) {
-            console.log("Found image data in response, size:", part.inlineData.data.length);
-            // The generated image is returned as base64
-            generatedImageBase64 = `data:image/png;base64,${part.inlineData.data}`;
-          }
+        // Estimate tokens if not provided
+        if (!outputTokens) {
+          outputTokens = Math.ceil(text.length / 4); // ~4 chars per token
         }
       } else {
-        console.log("No candidates in response");
+        console.log("No response from Gemini");
+        throw new Error("Failed to get artistic instructions from Gemini");
       }
       
-      console.log("Generation result:", {
-        hasGeneratedImage: !!generatedImageBase64,
+      console.log("Analysis result:", {
         hasDescription: !!description,
+        descriptionLength: description.length,
         inputTokens,
         outputTokens
       });
       
-      // If no description was provided, create one
+      // If no description was provided, create a fallback
       if (!description) {
-        description = `Your pet has been transformed into a beautiful ${style.replace('_', ' ')} style oil painting. 
-          The portrait captures the essence and personality of your beloved pet while applying the distinctive 
-          artistic techniques of this classical style.`;
+        description = `Your pet portrait will be created in the ${style.replace('_', ' ')} style. 
+          Our artists will capture your pet's unique personality using authentic oil painting techniques 
+          and the distinctive artistic approach of this classical style.`;
       }
       
       // Log additional usage info in metadata
@@ -129,7 +133,7 @@ export async function generateOilPaintingPreview(
         style,
         imageSize: cleanBase64.length,
         promptLength: prompt.length,
-        hasGeneratedImage: !!generatedImageBase64,
+        hasDescription: !!description,
         usageMetadata: response.usageMetadata
       };
       
@@ -141,8 +145,10 @@ export async function generateOilPaintingPreview(
         metadata
       };
       
+      // Apply CSS filter to give a preview effect
+      // Since Gemini doesn't generate images, we'll use the original with filters
       return {
-        generatedImage: generatedImageBase64 || imageBase64, // Fallback to original if generation fails
+        generatedImage: imageBase64, // Return original image (will be enhanced with CSS)
         description
       };
     },
@@ -175,7 +181,7 @@ export async function generateOilPaintingPreview(
 
 // CSS filters as fallback for preview enhancement
 export const styleFilters: Record<PaintingStyle, string> = {
-  classic: "sepia(30%) contrast(1.2) brightness(1.1) saturate(1.3)",
+  renaissance: "sepia(30%) contrast(1.2) brightness(1.1) saturate(1.3)",
   van_gogh: "contrast(1.5) saturate(1.8) hue-rotate(10deg) brightness(1.1)",
   monet: "blur(0.5px) brightness(1.2) saturate(0.8) contrast(0.9)"
 };
