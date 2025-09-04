@@ -32,6 +32,7 @@ model User {
   profile       Profile?
   feedback      Feedback[]
   apiUsage      ApiUsage[]
+  abTestParticipants ABTestParticipant[]
 }
 
 model Account {
@@ -314,4 +315,55 @@ model IpUsage {
   @@unique([ip, date], name: "ip_date")
   @@index([ip])
   @@index([date])
+}
+
+// A/B Testing Models
+model ABTestParticipant {
+  id          String   @id @default(cuid())
+  userId      String?  // Optional - for logged in users
+  sessionId   String?  // For anonymous users
+  testName    String   // Name of the A/B test
+  variant     String   // Which variant they're seeing
+  assignedAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  events      ABTestEvent[]
+  
+  @@unique([userId, testName], name: "user_test")
+  @@unique([sessionId, testName], name: "session_test")
+  @@index([testName, variant])
+  @@index([assignedAt])
+}
+
+model ABTestEvent {
+  id             String   @id @default(cuid())
+  participantId  String
+  eventType      String   // page_view, cta_click, conversion, etc.
+  eventData      Json?    // Additional event metadata
+  timestamp      DateTime @default(now())
+  
+  participant    ABTestParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  
+  @@index([participantId, eventType])
+  @@index([timestamp])
+}
+
+model ABTestResult {
+  id                String   @id @default(cuid())
+  testName          String
+  variant           String
+  totalParticipants Int      @default(0)
+  totalConversions  Int      @default(0)
+  conversionRate    Float    @default(0)
+  confidenceLevel   Float?   // Statistical significance
+  startDate         DateTime @default(now())
+  endDate           DateTime?
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@unique([testName, variant], name: "test_variant")
+  @@index([testName])
+  @@index([isActive])
 }
