@@ -61,6 +61,15 @@ npm run dev
 
 The app is automatically deployed to Vercel through direct GitHub integration. Every push to `main` triggers a production deployment, and pull requests get preview deployments.
 
+### Automated Deployment Monitoring
+This project includes fully automated deployment monitoring via Git hooks:
+- **Pre-push validation**: Automatically validates builds before pushing
+- **Post-push monitoring**: Instantly monitors deployment status after push
+- **Health checking**: Tests all API endpoints automatically
+- **Smart reporting**: Provides detailed deployment success/failure reports
+
+Simply use `git push` and the system automatically handles deployment monitoring!
+
 ### Required Vercel Environment Variables:
 Configure these in your Vercel project settings:
 - `DATABASE_URL` - Supabase PostgreSQL connection string
