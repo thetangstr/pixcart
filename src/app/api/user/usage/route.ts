@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    const supabase = await createClient();
+    const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !authUser) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get user from database
-    const user = await db.user.findUnique({
-      where: { email: session.user.email! },
+    const user = await prisma.user.findUnique({
+      where: { email: authUser.email! },
       select: {
         id: true,
         email: true,
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const todayUsage = await db.apiUsage.count({
+    const todayUsage = await prisma.apiUsage.count({
       where: {
         userId: user.id,
         createdAt: {
@@ -46,7 +47,7 @@ export async function GET(request: NextRequest) {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const weeklyUsage = await db.apiUsage.findMany({
+    const weeklyUsage = await prisma.apiUsage.findMany({
       where: {
         userId: user.id,
         createdAt: {
