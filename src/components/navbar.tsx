@@ -26,13 +26,23 @@ export function Navbar() {
     const checkAdminStatus = async () => {
       if (user) {
         try {
+          // Check email first for immediate admin access
+          if (user.email === 'thetangstr@gmail.com') {
+            setIsAdmin(true);
+            return;
+          }
+          
           const response = await fetch('/api/user/beta-status');
           if (response.ok) {
             const data = await response.json();
-            setIsAdmin(data.isAdmin);
+            setIsAdmin(data.isAdmin || user.email === 'thetangstr@gmail.com');
           }
         } catch (error) {
           console.error('Error checking admin status:', error);
+          // Still check email even if API fails
+          if (user.email === 'thetangstr@gmail.com') {
+            setIsAdmin(true);
+          }
         }
       }
     };

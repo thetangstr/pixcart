@@ -123,17 +123,22 @@ export default function AdminPage() {
       try {
         const response = await fetch('/api/user/beta-status');
         const data = await response.json();
-        if (data.isAdmin) {
+        
+        // Also check email directly for admin access
+        const isAdminUser = data.isAdmin || user.email === 'thetangstr@gmail.com';
+        
+        if (isAdminUser) {
           setIsAdmin(true);
           fetchUsers();
           fetchFeedback();
           fetchUsageAnalytics();
         } else {
-          router.push('/');
+          // Redirect to dashboard instead of home to avoid redirect loop
+          router.push('/dashboard');
         }
       } catch (error) {
         console.error('Error checking admin status:', error);
-        router.push('/');
+        router.push('/dashboard');
       }
     } else if (!loading && !user) {
       router.push('/auth/signin?callbackUrl=/admin');
