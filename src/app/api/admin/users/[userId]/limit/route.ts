@@ -1,21 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { createClient } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
+import { checkImageGenerationLimit, getUserImageStats } from "@/lib/rate-limit";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { userId: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    const supabase = createClient();
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
-    const adminUser = await db.user.findUnique({
-      where: { email: session.user.email! },
+    const adminUser = await prisma.user.findUnique({
+      where: { email: user.email! },
       select: { isAdmin: true }
     });
 
@@ -24,7 +25,7 @@ export async function GET(
     }
 
     // Get user's current usage stats
-    const user = await db.user.findUnique({
+    const targetUser = await prisma.user.findUnique({
       where: { id: params.userId },
       select: {
         id: true,
@@ -35,7 +36,7 @@ export async function GET(
       }
     });
 
-    if (!user) {
+    if (!targetUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
@@ -45,7 +46,7 @@ export async function GET(
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const todayUsage = await db.apiUsage.count({
+    const todayUsage = await prisma.apiUsage.count({
       where: {
         userId: params.userId,
         createdAt: {
@@ -60,7 +61,7 @@ export async function GET(
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const monthlyUsage = await db.apiUsage.findMany({
+    const monthlyUsage = await prisma.apiUsage.findMany({
       where: {
         userId: params.userId,
         createdAt: {
@@ -88,15 +89,15 @@ export async function GET(
 
     const stats = {
       user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        dailyLimit: user.dailyImageLimit || 10, // Default limit
-        memberSince: user.createdAt
+        id: targetUser.id,
+        email: targetUser.email,
+        name: targetUser.name,
+        dailyLimit: targetUser.dailyImageLimit || 10, // Default limit
+        memberSince: targetUser.createdAt
       },
       usage: {
         today: todayUsage,
-        remaining: Math.max(0, (user.dailyImageLimit || 10) - todayUsage),
+        remaining: Math.max(0, (targetUser.dailyImageLimit || 10) - todayUsage),
         monthly: {
           totalRequests: monthlyUsage.length,
           successfulRequests: monthlyUsage.filter(u => u.success).length,
@@ -124,14 +125,15 @@ export async function PATCH(
   { params }: { params: { userId: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    const supabase = createClient();
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Check if user is admin
-    const adminUser = await db.user.findUnique({
-      where: { email: session.user.email! },
+    const adminUser = await prisma.user.findUnique({
+      where: { email: user.email! },
       select: { isAdmin: true }
     });
 
@@ -150,7 +152,7 @@ export async function PATCH(
     }
 
     // Update user's daily limit
-    const updatedUser = await db.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: params.userId },
       data: { dailyImageLimit: dailyLimit },
       select: {
