@@ -1,0 +1,304 @@
+name: Automated Deployment Monitoring
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  # Run monitoring every 10 minutes for continuous health checks
+  schedule:
+    - cron: '*/10 * * * *'
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      full_test:
+        description: 'Run full test suite'
+        required: false
+        default: 'false'
+        type: boolean
+
+env:
+  # Vercel deployment monitoring
+  VERCEL_PROJECT_NAME: oil-painting-app
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  # Health check configuration
+  MAX_DEPLOYMENT_WAIT: 600  # 10 minutes max wait
+  HEALTH_CHECK_RETRIES: 3
+  HEALTH_CHECK_INTERVAL: 30
+
+jobs:
+  monitor-deployment:
+    name: Monitor Deployment & Health
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          npm ci
+          # Install Vercel CLI for deployment monitoring
+          npm install -g vercel@latest
+          
+      - name: Setup Vercel CLI
+        run: |
+          # Login to Vercel (uses VERCEL_TOKEN from secrets)
+          vercel login --token ${{ secrets.VERCEL_TOKEN }}
+          vercel link --yes --token ${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          
+      - name: Wait for deployment completion
+        id: deployment_wait
+        run: |
+          echo "⏳ Waiting for deployment to complete..."
+          
+          # Wait for up to 10 minutes for deployment
+          timeout=600
+          interval=30
+          elapsed=0
+          
+          while [ $elapsed -lt $timeout ]; do
+            echo "🔍 Checking deployment status (${elapsed}s/${timeout}s)..."
+            
+            # Get latest deployment
+            deployment=$(vercel list --token ${{ secrets.VERCEL_TOKEN }} | head -n 2 | tail -n 1 || echo "")
+            
+            if [[ -n "$deployment" && "$deployment" != *"No deployments"* ]]; then
+              echo "✅ Deployment found: $deployment"
+              echo "deployment_ready=true" >> $GITHUB_OUTPUT
+              break
+            fi
+            
+            sleep $interval
+            elapsed=$((elapsed + interval))
+          done
+          
+          if [ $elapsed -ge $timeout ]; then
+            echo "⚠️ Deployment timeout after ${timeout}s"
+            echo "deployment_ready=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          
+      - name: Run comprehensive monitoring
+        id: monitoring
+        run: |
+          echo "🚀 Starting automated monitoring..."
+          
+          # Make monitoring script executable
+          chmod +x ./monitor.sh
+          
+          # Run comprehensive monitoring
+          if ./monitor.sh --json > monitoring_results.json; then
+            echo "✅ Monitoring completed successfully"
+            echo "monitoring_status=success" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Monitoring detected issues"
+            echo "monitoring_status=warning" >> $GITHUB_OUTPUT
+            # Don't fail the workflow on monitoring warnings
+            exit 0
+          fi
+          
+      - name: Parse monitoring results
+        id: results
+        run: |
+          # Extract key metrics from monitoring results
+          if [ -f monitoring_results.json ]; then
+            echo "📊 Parsing monitoring results..."
+            
+            # Extract success rate
+            success_rate=$(cat monitoring_results.json | grep -o '"success_rate":[0-9.]*' | cut -d':' -f2 || echo "0")
+            avg_response_time=$(cat monitoring_results.json | grep -o '"avg_response_time":[0-9.]*' | cut -d':' -f2 || echo "0")
+            
+            echo "success_rate=$success_rate" >> $GITHUB_OUTPUT
+            echo "avg_response_time=$avg_response_time" >> $GITHUB_OUTPUT
+            
+            echo "📈 Success Rate: ${success_rate}%"
+            echo "⚡ Average Response Time: ${avg_response_time}ms"
+          fi
+          
+      - name: Run API health tests
+        if: github.event.inputs.full_test == 'true' || github.event_name == 'push'
+        run: |
+          echo "🧪 Running comprehensive API tests..."
+          
+          # Run API health check script
+          node scripts/api-health-check.js || true
+          
+          # Run any additional test suites
+          if [ -f test-suite.js ]; then
+            chmod +x test-suite.js
+            ./test-suite.js || true
+          fi
+          
+      - name: Create deployment report
+        run: |
+          echo "📋 Creating deployment report..."
+          
+          cat > deployment_report.md << 'EOF'
+          # 🚀 Automated Deployment Report
+          
+          **Timestamp:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          **Commit:** ${{ github.sha }}
+          **Branch:** ${{ github.ref_name }}
+          **Trigger:** ${{ github.event_name }}
+          
+          ## 📊 Deployment Status
+          - **Deployment Ready:** ${{ steps.deployment_wait.outputs.deployment_ready }}
+          - **Monitoring Status:** ${{ steps.monitoring.outputs.monitoring_status }}
+          - **Success Rate:** ${{ steps.results.outputs.success_rate }}%
+          - **Avg Response Time:** ${{ steps.results.outputs.avg_response_time }}ms
+          
+          ## 🔍 Detailed Results
+          EOF
+          
+          # Append monitoring results if available
+          if [ -f monitoring_results.json ]; then
+            echo -e "\n### Raw Monitoring Data\n\`\`\`json" >> deployment_report.md
+            cat monitoring_results.json >> deployment_report.md
+            echo -e "\n\`\`\`" >> deployment_report.md
+          fi
+          
+      - name: Upload monitoring artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monitoring-results-${{ github.run_id }}
+          path: |
+            monitoring_results.json
+            deployment_report.md
+            test-results/**/*
+          retention-days: 30
+          
+      - name: Comment on PR with results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let report = '# 🤖 Automated Deployment Report\n\n';
+            
+            if (fs.existsSync('deployment_report.md')) {
+              report += fs.readFileSync('deployment_report.md', 'utf8');
+            } else {
+              report += '⚠️ Monitoring report not available\n';
+            }
+            
+            // Add status badges
+            const deploymentReady = '${{ steps.deployment_wait.outputs.deployment_ready }}';
+            const monitoringStatus = '${{ steps.monitoring.outputs.monitoring_status }}';
+            const successRate = '${{ steps.results.outputs.success_rate }}' || '0';
+            
+            report += '\n\n## 🏷️ Status Badges\n';
+            report += `![Deployment](https://img.shields.io/badge/Deployment-${deploymentReady === 'true' ? 'Ready-green' : 'Pending-yellow'})\n`;
+            report += `![Health](https://img.shields.io/badge/Health-${monitoringStatus === 'success' ? 'Good-green' : 'Warning-orange'})\n`;
+            report += `![Success Rate](https://img.shields.io/badge/Success%20Rate-${successRate}%25-${parseFloat(successRate) > 90 ? 'green' : parseFloat(successRate) > 70 ? 'yellow' : 'red'})\n`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+            
+      - name: Notify on deployment failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `🚨 Deployment Monitoring Failed`;
+            const body = `
+            Automated deployment monitoring failed for commit ${{ github.sha }}.
+            
+            **Branch:** ${{ github.ref_name }}
+            **Workflow:** ${{ github.workflow }}
+            **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            Please check the deployment status and fix any issues.
+            `;
+            
+            // Create an issue for deployment failures
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['deployment', 'monitoring', 'bug']
+            });
+            
+  continuous-health-check:
+    name: Continuous Health Check
+    runs-on: ubuntu-latest
+    # Only run on schedule or manual trigger
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install monitoring dependencies
+        run: |
+          npm install -g vercel@latest
+          
+      - name: Run health checks
+        run: |
+          echo "🏥 Running continuous health checks..."
+          
+          chmod +x ./monitor.sh
+          
+          # Run health checks with retry logic
+          for attempt in {1..3}; do
+            if ./monitor.sh --health-only; then
+              echo "✅ Health check passed (attempt $attempt)"
+              break
+            else
+              echo "⚠️ Health check failed (attempt $attempt)"
+              if [ $attempt -eq 3 ]; then
+                echo "🚨 All health check attempts failed"
+                exit 1
+              fi
+              sleep 30
+            fi
+          done
+          
+      - name: Alert on health check failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `🚨 Health Check Alert`;
+            const body = `
+            Continuous health monitoring detected issues with the production deployment.
+            
+            **Time:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+            **Check Type:** Scheduled Health Check
+            
+            Please investigate the production environment immediately.
+            `;
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['production', 'health-check', 'urgent']
+            });

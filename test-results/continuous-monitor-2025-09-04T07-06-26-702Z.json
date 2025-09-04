@@ -1,0 +1,53 @@
+{
+  "timestamp": 1756969586702,
+  "deployment": {
+    "status": "error",
+    "error": "Command failed: vercel list oil-painting-app --json\nVercel CLI 41.4.1\nError: unknown or unexpected option: --json\n"
+  },
+  "health": {
+    "status": "healthy",
+    "healthScore": 100,
+    "avgResponseTime": 67,
+    "results": [
+      {
+        "endpoint": "Homepage",
+        "path": "/",
+        "status": 401,
+        "responseTime": 88,
+        "success": true,
+        "critical": true
+      },
+      {
+        "endpoint": "Auth API",
+        "path": "/api/auth/callback",
+        "status": 401,
+        "responseTime": 80,
+        "success": true,
+        "critical": true
+      },
+      {
+        "endpoint": "Generate API",
+        "path": "/api/generate",
+        "status": 401,
+        "responseTime": 33,
+        "success": true,
+        "critical": false
+      }
+    ],
+    "criticalFailures": 0
+  },
+  "cycleTime": 486,
+  "metrics": {
+    "totalChecks": 5,
+    "successfulChecks": 5,
+    "failedChecks": 0,
+    "averageResponseTime": 60.8,
+    "uptime": 100,
+    "startTime": 1756969464000
+  },
+  "config": {
+    "projectName": "oil-painting-app",
+    "baseUrl": "https://oil-painting-app-thetangstrs-projects.vercel.app",
+    "interval": 30000
+  }
+}

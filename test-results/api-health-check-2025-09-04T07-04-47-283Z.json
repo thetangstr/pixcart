@@ -1,0 +1,388 @@
+{
+  "timestamp": "2025-09-04T07:04:46.853Z",
+  "baseUrl": "https://oil-painting-app-thetangstrs-projects.vercel.app",
+  "summary": {
+    "total": 13,
+    "passed": 11,
+    "failed": 2,
+    "skipped": 0,
+    "averageResponseTime": 0
+  },
+  "tests": [
+    {
+      "endpoint": "Homepage",
+      "path": "/",
+      "method": "GET",
+      "status": 401,
+      "responseTime": 90,
+      "success": true,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14311",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:46 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=NwIPeG2WKaEnbjpcvmP0zAhD; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::qnr8h-1756969486966-75f07e08b504"
+      },
+      "bodySize": 14311,
+      "timestamp": "2025-09-04T07:04:46.945Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "Main application homepage",
+      "optional": false
+    },
+    {
+      "endpoint": "Sign In Page",
+      "path": "/login",
+      "method": "GET",
+      "status": 401,
+      "responseTime": 20,
+      "success": true,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14326",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:46 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=T6DaC7KTblin8o17j1lRDzhB; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::qnr8h-1756969486998-27e425ad0911"
+      },
+      "bodySize": 14326,
+      "timestamp": "2025-09-04T07:04:46.969Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "User sign in page",
+      "optional": false
+    },
+    {
+      "endpoint": "Auth Callback",
+      "path": "/api/auth/callback",
+      "method": "GET",
+      "status": 401,
+      "responseTime": 25,
+      "success": true,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14374",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:47 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=XbWxd8hq03E4TFQKZEnlLNSn; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::h8gkj-1756969487022-dff640c6facf"
+      },
+      "bodySize": 14374,
+      "timestamp": "2025-09-04T07:04:46.996Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "Authentication callback endpoint",
+      "optional": false
+    },
+    {
+      "endpoint": "Generate Preview API",
+      "path": "/api/generate",
+      "method": "POST",
+      "status": 401,
+      "responseTime": 47,
+      "success": true,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14353",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:47 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=tNx9TTdlClSKOVaX1vt4cbMe; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::8xc9p-1756969487058-8a97ac25a755"
+      },
+      "bodySize": 14353,
+      "timestamp": "2025-09-04T07:04:47.045Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "AI image generation endpoint",
+      "optional": false
+    },
+    {
+      "endpoint": "Upload API",
+      "path": "/api/upload",
+      "method": "POST",
+      "status": 401,
+      "responseTime": 21,
+      "success": true,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14347",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:47 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=esC8vccrqaEaPcO9EHhTiG03; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::8xc9p-1756969487098-25c5a81ae800"
+      },
+      "bodySize": 14347,
+      "timestamp": "2025-09-04T07:04:47.068Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "File upload endpoint",
+      "optional": false
+    },
+    {
+      "endpoint": "Orders API - List",
+      "path": "/api/orders",
+      "method": "GET",
+      "status": 401,
+      "responseTime": 23,
+      "success": true,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14347",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:47 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=uPgiBVq8oUdKNtlGV9TfTZdY; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::8xc9p-1756969487122-393d08c48858"
+      },
+      "bodySize": 14347,
+      "timestamp": "2025-09-04T07:04:47.093Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "List user orders",
+      "optional": false
+    },
+    {
+      "endpoint": "User Profile API",
+      "path": "/api/profile",
+      "method": "GET",
+      "status": 401,
+      "responseTime": 22,
+      "success": true,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14350",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:47 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=lBeFhgEnLwX0ZuillWXKoPfi; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::qnr8h-1756969487146-a24d5bf76e4c"
+      },
+      "bodySize": 14350,
+      "timestamp": "2025-09-04T07:04:47.117Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "User profile information",
+      "optional": false
+    },
+    {
+      "endpoint": "Feedback API",
+      "path": "/api/feedback",
+      "method": "POST",
+      "status": 401,
+      "responseTime": 26,
+      "success": false,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14353",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:47 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=489GKukrc1oPZzDv45k3paQo; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::8xc9p-1756969487174-a2a868fb781e"
+      },
+      "bodySize": 14353,
+      "timestamp": "2025-09-04T07:04:47.145Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "User feedback submission",
+      "optional": false
+    },
+    {
+      "endpoint": "Analytics Track API",
+      "path": "/api/analytics/track",
+      "method": "POST",
+      "status": 401,
+      "responseTime": 26,
+      "success": false,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14380",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:47 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=XoxKB5Ffc5VN4X4stTqdRBFe; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::8xc9p-1756969487202-65be6eb431bd"
+      },
+      "bodySize": 14380,
+      "timestamp": "2025-09-04T07:04:47.173Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "Analytics tracking endpoint",
+      "optional": false
+    },
+    {
+      "endpoint": "Admin Dashboard",
+      "path": "/admin",
+      "method": "GET",
+      "status": 401,
+      "responseTime": 25,
+      "success": true,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14326",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:47 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=keXt52JOXKbFK1GolbmNJ0IZ; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::8xc9p-1756969487230-29d7cc818898"
+      },
+      "bodySize": 14326,
+      "timestamp": "2025-09-04T07:04:47.201Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "Admin dashboard access",
+      "optional": true
+    },
+    {
+      "endpoint": "Admin Users API",
+      "path": "/api/admin/users",
+      "method": "GET",
+      "status": 401,
+      "responseTime": 21,
+      "success": true,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14368",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:47 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=h1CSEFMk0s2Zi2bb90KAP2w0; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::qnr8h-1756969487254-a0f3410018a7"
+      },
+      "bodySize": 14368,
+      "timestamp": "2025-09-04T07:04:47.225Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "Admin user management",
+      "optional": true
+    },
+    {
+      "endpoint": "User Usage API",
+      "path": "/api/user/usage",
+      "method": "GET",
+      "status": 401,
+      "responseTime": 21,
+      "success": true,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14365",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:47 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=qsc3HdMPyufpC0enQTXvXNTX; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::qnr8h-1756969487278-9a9af6a2f5da"
+      },
+      "bodySize": 14365,
+      "timestamp": "2025-09-04T07:04:47.249Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "User usage statistics",
+      "optional": false
+    },
+    {
+      "endpoint": "User Beta Status API",
+      "path": "/api/user/beta-status",
+      "method": "GET",
+      "status": 401,
+      "responseTime": 27,
+      "success": true,
+      "headers": {
+        "cache-control": "no-store, max-age=0",
+        "content-length": "14383",
+        "content-type": "text/html; charset=utf-8",
+        "date": "Thu, 04 Sep 2025 07:04:47 GMT",
+        "server": "Vercel",
+        "set-cookie": [
+          "_vercel_sso_nonce=lVTodKgMdpUlDIiULeccdOz4; Max-Age=3600; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ],
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "x-frame-options": "DENY",
+        "x-robots-tag": "noindex",
+        "x-vercel-id": "sfo1::m8swv-1756969487306-71afcebd7c45"
+      },
+      "bodySize": 14383,
+      "timestamp": "2025-09-04T07:04:47.279Z",
+      "response": "<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>Authentication Required</title><script type=text/llms.txt>\n## Note to agents ac",
+      "performance": "fast",
+      "description": "User beta access status",
+      "optional": false
+    }
+  ],
+  "issues": [
+    "Feedback API failed: 401",
+    "Analytics Track API failed: 401"
+  ],
+  "performance": {
+    "fastest": 20,
+    "slowest": 90,
+    "averageTime": 31,
+    "fastEndpoints": 11,
+    "slowEndpoints": 0
+  }
+}
