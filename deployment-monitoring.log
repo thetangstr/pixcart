@@ -41,3 +41,77 @@
 [2025-09-04 09:14:14] FINAL_STATUS: FAILED (0% success) - Session: autopush-1757002435-7e47f080
 [2025-09-04 09:14:14] NOTIFICATION: Created deployment-result-20250904-091414.txt
 [2025-09-04 09:14:14] POST_PUSH_MONITOR: Completed with exit code 2
+[2025-09-04 09:20:31] POST_PUSH_MONITOR: Started for main (3d4fde44)
+[2025-09-04 09:20:35] POST_PUSH_MONITOR: Push completion confirmed
+[2025-09-04 09:20:35] MONITORING_CONFIG: Level=enhanced, Branch=main, IsDeployment=true
+[2025-09-04 09:20:50] PHASE_1: Starting deployment monitoring
+/Users/Kailor/Desktop/Projects/pixcart/scripts/post-push-monitor.sh: line 180: timeout: command not found
+[2025-09-04 09:20:50] PHASE_1: FAILED - Deployment monitoring encountered issues
+[2025-09-04 09:20:50] PHASE_2: Starting API health checks
+/Users/Kailor/Desktop/Projects/pixcart/scripts/post-push-monitor.sh: line 199: timeout: command not found
+[2025-09-04 09:20:50] PHASE_2: FAILED - API health checks encountered issues
+[2025-09-04 09:20:50] PHASE_3: Starting comprehensive analysis
+/Users/Kailor/Desktop/Projects/pixcart/scripts/post-push-monitor.sh: line 219: timeout: command not found
+[2025-09-04 09:20:50] PHASE_3: FAILED - Comprehensive analysis encountered issues
+
+╔══════════════════════════════════════════════════════════════╗
+║                    🎯 MONITORING COMPLETE                     ║
+╠══════════════════════════════════════════════════════════════╣
+║ ❌ Overall Status: FAILED
+║ 📊 Success Rate: 0% (0/3 phases passed)
+║ 🌿 Branch: main
+║ 📦 Commit: 3d4fde44
+║ 📝 Message: Add deployment monitoring scripts and fix admin console
+║ 👤 Author: Kailor
+║ ⏰ Completed: Thu Sep  4 09:20:50 PDT 2025
+╠══════════════════════════════════════════════════════════════╣
+║ Phase Results:
+║ • Deployment Check: ❌ FAILED
+║ • Health Check:     ❌ FAILED
+║ • Comprehensive:    ❌ FAILED
+╠══════════════════════════════════════════════════════════════╣
+║ ❌ Deployment encountered significant issues.
+║ 🔧 Please review the logs and address the problems.
+║ 🚨 Your application may not be functioning properly.
+╚══════════════════════════════════════════════════════════════╝
+
+[2025-09-04 09:20:50] FINAL_STATUS: FAILED (0% success) - Session: autopush-1757002831-3d4fde44
+[2025-09-04 09:20:50] NOTIFICATION: Created deployment-result-20250904-092050.txt
+[2025-09-04 09:20:50] POST_PUSH_MONITOR: Completed with exit code 2
+[2025-09-04 09:38:00] POST_PUSH_MONITOR: Started for main (b1b2dda3)
+[2025-09-04 09:38:05] POST_PUSH_MONITOR: Push completion confirmed
+[2025-09-04 09:38:05] MONITORING_CONFIG: Level=enhanced, Branch=main, IsDeployment=true
+[2025-09-04 09:38:20] PHASE_1: Starting deployment monitoring
+/Users/Kailor/Desktop/Projects/pixcart/scripts/post-push-monitor.sh: line 180: timeout: command not found
+[2025-09-04 09:38:20] PHASE_1: FAILED - Deployment monitoring encountered issues
+[2025-09-04 09:38:20] PHASE_2: Starting API health checks
+/Users/Kailor/Desktop/Projects/pixcart/scripts/post-push-monitor.sh: line 199: timeout: command not found
+[2025-09-04 09:38:20] PHASE_2: FAILED - API health checks encountered issues
+[2025-09-04 09:38:20] PHASE_3: Starting comprehensive analysis
+/Users/Kailor/Desktop/Projects/pixcart/scripts/post-push-monitor.sh: line 219: timeout: command not found
+[2025-09-04 09:38:20] PHASE_3: FAILED - Comprehensive analysis encountered issues
+
+╔══════════════════════════════════════════════════════════════╗
+║                    🎯 MONITORING COMPLETE                     ║
+╠══════════════════════════════════════════════════════════════╣
+║ ❌ Overall Status: FAILED
+║ 📊 Success Rate: 0% (0/3 phases passed)
+║ 🌿 Branch: main
+║ 📦 Commit: b1b2dda3
+║ 📝 Message: Add critical production environment variables documentation
+║ 👤 Author: Kailor
+║ ⏰ Completed: Thu Sep  4 09:38:20 PDT 2025
+╠══════════════════════════════════════════════════════════════╣
+║ Phase Results:
+║ • Deployment Check: ❌ FAILED
+║ • Health Check:     ❌ FAILED
+║ • Comprehensive:    ❌ FAILED
+╠══════════════════════════════════════════════════════════════╣
+║ ❌ Deployment encountered significant issues.
+║ 🔧 Please review the logs and address the problems.
+║ 🚨 Your application may not be functioning properly.
+╚══════════════════════════════════════════════════════════════╝
+
+[2025-09-04 09:38:20] FINAL_STATUS: FAILED (0% success) - Session: autopush-1757003880-b1b2dda3
+[2025-09-04 09:38:20] NOTIFICATION: Created deployment-result-20250904-093820.txt
+[2025-09-04 09:38:20] POST_PUSH_MONITOR: Completed with exit code 2
