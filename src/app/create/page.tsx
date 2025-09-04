@@ -48,6 +48,16 @@ export default function CreatePage() {
 
   useEffect(() => {
     fetchUsageStats();
+    
+    // Check for stored image data from landing pages
+    if (typeof window !== 'undefined') {
+      const storedImage = sessionStorage.getItem('uploadedImage');
+      if (storedImage && !imageData) {
+        setImageData(storedImage);
+        // Clear the stored data after using it
+        sessionStorage.removeItem('uploadedImage');
+      }
+    }
   }, []);
 
   const fetchUsageStats = async () => {

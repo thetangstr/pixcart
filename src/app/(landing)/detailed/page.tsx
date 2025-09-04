@@ -96,6 +96,10 @@ export default function DetailedLandingPage() {
                 if (data && file.name) {
                   const imageUrl = `data:${file.type};base64,${data}`;
                   setUploadedImage(imageUrl);
+                  // Store image data in sessionStorage for create page
+                  if (typeof window !== 'undefined') {
+                    sessionStorage.setItem('uploadedImage', imageUrl);
+                  }
                 }
               }}
               className="glass-card p-8"

@@ -13,6 +13,10 @@ export default function SimpleLandingPage() {
 
   const handleImageSelect = (image: string) => {
     setSelectedImage(image);
+    // Store image data in sessionStorage for create page
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('uploadedImage', image);
+    }
     // Auto-redirect to create page when image is selected
     setTimeout(() => {
       router.push("/create");
