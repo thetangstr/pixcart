@@ -1,0 +1,21 @@
+PixCart Deployment Monitor - Results
+====================================
+
+❌ Status: FAILED (0% success rate)
+Branch: main (24b81c60)
+Message: Fix Playwright tests and update CLAUDE.md
+Author: Kailor
+Completed: Thu Sep  4 19:46:23 PDT 2025
+
+Phase Results:
+✓ Deployment: FAILED
+✓ Health Check: FAILED
+✓ Analysis: FAILED
+
+❌ Deployment encountered issues.
+🔧 Please review and fix problems.
+🚨 Application may not be working properly.
+
+Full logs: deployment-monitoring.log
+Test results: ./test-results/
+Session: autopush-1757040363-24b81c60
