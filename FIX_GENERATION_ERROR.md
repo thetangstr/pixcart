@@ -13,7 +13,7 @@ The application is failing to generate AI previews with the error "Failed to gen
 
 ## Solution
 
-### 1. Set GEMINI_API_KEY in Vercel
+### 1. Set GEMINI_API_KEY in Vercel (CRITICAL - THIS IS THE MAIN ISSUE)
 
 Go to your Vercel dashboard → Project Settings → Environment Variables and add:
 
@@ -22,9 +22,11 @@ GEMINI_API_KEY=your-actual-gemini-api-key
 ```
 
 To get a Gemini API key:
-1. Go to https://makersuite.google.com/app/apikey
-2. Create a new API key
-3. Copy and paste it into Vercel
+1. Go to https://makersuite.google.com/app/apikey (or https://aistudio.google.com/apikey)
+2. Click "Create API Key"
+3. Select your project or create a new one
+4. Copy the API key (starts with "AIza...")
+5. Add it to Vercel's environment variables
 
 ### 2. Verify All Required Environment Variables
 
