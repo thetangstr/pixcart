@@ -9,4 +9,5 @@ export const prisma = globalForPrisma.prisma ?? new PrismaClient({
   errorFormat: 'pretty',
 })
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// Store the instance globally to prevent multiple instances
+globalForPrisma.prisma = prisma
