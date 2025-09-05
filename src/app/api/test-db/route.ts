@@ -19,4 +19,4 @@ export async function GET() {
       ? "✅ Correct pooler configuration" 
       : "❌ Should use pooler connection on port 6543"
   });
-}
+}// Deployment trigger: Thu Sep  4 18:21:40 PDT 2025
