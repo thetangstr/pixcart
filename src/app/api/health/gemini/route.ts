@@ -17,7 +17,7 @@ export async function GET() {
     // Try to initialize the client
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "models/gemini-2.5-flash-image-preview" });
       
       // Just check if we can get the model - don't make actual API calls
       if (model) {
@@ -26,7 +26,7 @@ export async function GET() {
           service: "gemini",
           message: "Gemini API is configured and ready",
           configured: true,
-          model: "gemini-1.5-flash",
+          model: "models/gemini-2.5-flash-image-preview",
           keyLength: apiKey.length
         });
       }

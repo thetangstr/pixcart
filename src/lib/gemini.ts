@@ -43,7 +43,7 @@ export async function generateOilPaintingPreview(
   style: PaintingStyle,
   userId?: string
 ): Promise<{ generatedImage: string; description: string }> {
-  const modelName = "gemini-1.5-flash";
+  const modelName = "models/gemini-2.5-flash-image-preview";
   
   return UsageTracker.trackApiCall(
     async () => {
