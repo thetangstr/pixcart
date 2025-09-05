@@ -1,164 +1,153 @@
-# Claude Code - Agent Instructions
+# CLAUDE.md
 
-## Project Overview
-PixCart is an AI-powered pet portrait platform that transforms pet photos into oil painting masterpieces using Google Gemini AI.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Important Configuration
+## Project: PixCart - AI Pet Portrait Platform
 
-### Environment Variables (Required in Vercel)
-```
-DATABASE_URL=postgresql://username:password@db.mqkqyigujbamrvebrhsd.supabase.co:5432/postgres
-NEXT_PUBLIC_SUPABASE_URL=https://mqkqyigujbamrvebrhsd.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=[your-anon-key]
-SUPABASE_SERVICE_ROLE_KEY=[your-service-role-key]
-GEMINI_API_KEY=[your-gemini-api-key]
-```
+PixCart transforms pet photos into oil painting masterpieces using Google Gemini AI. Production site: https://oil-painting-app.vercel.app
 
-### Deployment
-- Deployed on Vercel at: https://oil-painting-app.vercel.app
-- GitHub repository: https://github.com/thetangstr/pixcart
-- Direct Vercel integration (no GitHub Actions needed)
-
-## Sprint-Based Development Workflow
-
-### 1. Check Active Sprint Feedback
-When starting work, ALWAYS check for scheduled feedback items:
+## Essential Commands
 
 ```bash
-# Check for active sprint items
-npx tsx scripts/check-sprint-items.ts
+# Development
+npm run dev                    # Start dev server with Turbopack on port 3000
+
+# Build & Deploy
+npm run build                  # Production build (includes Prisma generation)
+git push origin main           # Auto-deploys to Vercel
+
+# Database
+npx prisma db push             # Push schema changes to database
+npx prisma generate            # Generate Prisma client
+npx prisma studio              # Open database GUI
+
+# Testing & Monitoring
+npm run lint                   # ESLint (allows up to 100 warnings)
+npx playwright test            # Run E2E tests
+npm run monitor:comprehensive  # Check deployment status
 ```
 
-### 2. Feedback Processing Priority
-1. **CRITICAL** - Production breaking issues (fix immediately)
-2. **HIGH** - Major bugs affecting user experience
-3. **MEDIUM** - Feature requests and improvements
-4. **LOW** - Nice-to-have enhancements
+## Critical Configuration Issues & Solutions
 
-### 3. Development Process
-For each feedback item:
-1. Read the feedback details (expected vs actual behavior)
-2. Reproduce the issue locally
-3. Implement the fix/feature
-4. Test thoroughly
-5. Update feedback status to RESOLVED
-6. Deploy to preview environment
+### Database Connection (Most Common Issue)
+**Problem**: "Can't reach database server" or "Tenant or user not found"
 
-### 4. Testing Commands
+**Solution**: The app now uses Supabase JS client for IPUsage/UserUsage operations instead of Prisma direct connection. This bypasses DATABASE_URL issues entirely. See `/src/lib/rate-limit-supabase.ts`.
+
+**If DATABASE_URL is still needed**:
+- Use pooler connection (port 6543), NOT direct (port 5432)
+- Format: `postgresql://postgres.[project-ref]:[password]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1`
+
+### Required Environment Variables (Vercel)
+```
+NEXT_PUBLIC_SUPABASE_URL        # https://mqkqyigujbamrvebrhsd.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY   # Your anon key
+GEMINI_API_KEY                  # Google Gemini API key
+DATABASE_URL                     # Pooler connection string (see above)
+```
+
+## Architecture & Key Design Decisions
+
+### Hybrid Database Approach
+- **Prisma**: Used for User, Order, Feedback tables (complex relations)
+- **Supabase Client**: Used for IPUsage, UserUsage (rate limiting) to avoid connection issues
+- This split approach solved persistent DATABASE_URL authentication problems
+
+### Authentication & Access Control
+- **Admin Email**: thetangstr@gmail.com (hardcoded check in multiple places)
+- **Allowlist System**: New users are waitlisted by default, admin auto-approved
+- **Rate Limiting**: 1 image/day for anonymous, 10/day for users, unlimited for admin
+
+### API Route Structure
+```
+/api/generate          # Main image generation endpoint (uses Supabase client for rate limit)
+/api/user/*           # User-specific endpoints (usage, beta status)
+/api/admin/*          # Admin-only endpoints (require isAdmin check)
+/api/feedback         # User feedback submission
+/api/test-supabase    # Test endpoint to verify Supabase connection
+```
+
+### Image Generation Flow
+1. User uploads image → `/api/generate`
+2. Check rate limits via Supabase client (not Prisma)
+3. Call Gemini API with `gemini-2.0-flash-exp` model
+4. Track usage in database
+5. Return generated image + usage stats
+
+## Common Development Tasks
+
+### Fix "Failed to generate preview" Error
+1. Check browser console for specific error
+2. Verify Gemini API key is set
+3. Check rate limiting (IPUsage table)
+4. Ensure image data is valid base64
+
+### Add New User as Admin
+```sql
+-- Run in Supabase SQL Editor
+UPDATE "User" 
+SET "isAdmin" = true, "isAllowlisted" = true, "dailyImageLimit" = 999
+WHERE email = 'user@example.com';
+```
+
+### Reset Rate Limits
+```sql
+-- Clear today's IP usage
+DELETE FROM "IPUsage" WHERE date = '2025-09-05';
+
+-- Reset user's daily usage
+DELETE FROM "UserUsage" WHERE date = '2025-09-05';
+```
+
+### Deploy Emergency Fix
 ```bash
-# Run development server
-npm run dev
-
-# Run linting (currently configured to allow warnings)
-npm run lint
-
-# Build for production
-npm run build
-
-# Database migrations
-npx prisma migrate dev
-npx prisma db push
+# Make changes
+git add -A
+git commit -m "Fix: [description]"
+git push origin main
+# Auto-deploys to Vercel, wait ~2 minutes
 ```
 
-## Key Features & Architecture
+## File Organization
 
-### Authentication
-- Supabase Auth with Google OAuth
-- User roles: regular users, beta testers, admins
-- Admin email: thetangstr@gmail.com
-
-### Core Features
-1. **Image Upload & Processing**
-   - Upload pet photos
-   - Select from 3 art styles (Classic, Van Gogh, Monet)
-   - Generate AI preview using Gemini 2.0 Flash Experimental
-
-2. **Feedback System**
-   - Visible to all logged-in users (orange button, bottom-right)
-   - Captures: type, message, expected/actual behavior
-   - Admin panel at `/admin/feedback`
-   - Sprint management for organizing work
-
-3. **Order Management**
-   - Track orders through various stages
-   - Payment integration (Stripe - to be implemented)
-   - Order history and status tracking
-
-### Tech Stack
-- **Frontend**: Next.js 15.5, React 19, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, Prisma ORM
-- **Database**: PostgreSQL (Supabase)
-- **AI**: Google Gemini API (gemini-2.0-flash-exp model)
-- **Auth**: Supabase Authentication
-- **Deployment**: Vercel
-
-## Common Issues & Solutions
-
-### Gemini API Not Working
-- Check GEMINI_API_KEY is set in Vercel environment variables
-- Ensure using correct model: "gemini-2.0-flash-exp"
-- Check console logs for API errors
-
-### Database Connection Issues
-- Verify DATABASE_URL format and credentials
-- URL-encode special characters in password (#→%23, @→%40)
-- Check Supabase dashboard for connection limits
-
-### Build/Deployment Failures
-- ESLint and TypeScript errors are currently ignored in production
-- Check Vercel logs for specific error messages
-- Ensure all environment variables are set
-
-## Admin Functions
-
-### Make User Admin
-```typescript
-// Update user in database
-await prisma.user.update({
-  where: { email: 'user@example.com' },
-  data: { isAdmin: true }
-});
+```
+src/
+  app/                    # Next.js app router pages
+    api/                  # API routes
+      generate/           # Main AI generation endpoint
+      admin/              # Admin-only endpoints
+    admin/                # Admin UI pages
+  components/            # React components
+    ui/                  # Shadcn UI components
+  lib/                   # Utilities and configurations
+    supabase/            # Supabase client setup
+    rate-limit-supabase.ts  # Rate limiting using Supabase (NOT Prisma)
+    gemini.ts            # Gemini AI integration
+    prisma.ts            # Prisma client (for non-rate-limit operations)
 ```
 
-### Access Admin Panel
-- Navigate to `/admin` when logged in as admin
-- Manage users, feedback, and sprints
+## Production Monitoring
 
-## Development Guidelines
+### Check Deployment Status
+```bash
+# View latest deployment
+curl https://oil-painting-app.vercel.app/api/test-supabase
 
-1. **Code Style**
-   - Follow existing patterns in the codebase
-   - Use TypeScript for type safety
-   - Keep components modular and reusable
+# Test image generation
+curl -X POST https://oil-painting-app.vercel.app/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"imageData": "data:image/jpeg;base64,/9j/4AAQ...", "style": "renaissance"}'
+```
 
-2. **Database Changes**
-   - Update Prisma schema
-   - Run `npx prisma migrate dev` locally
-   - Run `npx prisma generate` before building
+### Monitor Errors
+- Check Vercel Functions logs for API errors
+- Browser console for client-side errors
+- Supabase dashboard for database issues
 
-3. **API Routes**
-   - All admin routes require authentication check
-   - Use proper HTTP status codes
-   - Include error handling and logging
+## Important Notes
 
-4. **UI/UX**
-   - Maintain oil painting theme (amber/orange/yellow colors)
-   - Ensure mobile responsiveness
-   - Add loading states for async operations
-
-## Feedback Implementation Checklist
-
-When implementing feedback:
-- [ ] Understand the issue completely
-- [ ] Check if it affects other parts of the system
-- [ ] Write clean, maintainable code
-- [ ] Add proper error handling
-- [ ] Test on multiple screen sizes
-- [ ] Update relevant documentation
-- [ ] Commit with clear message
-- [ ] Deploy and verify in production
-
-## Contact & Support
-- Admin: thetangstr@gmail.com
-- Repository: https://github.com/thetangstr/pixcart
-- Live Site: https://oil-painting-app.vercel.app
+1. **Prisma Generation**: Always included in build script, required for Vercel deployments
+2. **Git Hooks**: Pre-push validation runs automatically (can be slow)
+3. **Rate Limiting**: Enforced at IP level for anonymous users, user level for authenticated
+4. **Deployment**: Direct push to main auto-deploys, no PR needed for urgent fixes
+5. **Database Tables**: Must exist in Supabase before app works (see supabase-sql-setup.sql)
