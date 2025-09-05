@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real Admin Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Real Admin Flow Test</h1>
+    <p>This tests EXACTLY what happens when admin uploads an image</p>
+    
+    <div id="results"></div>
+    
+    <button onclick="runTest()">Run Full Test as Admin</button>
+    
+    <script>
+        // Test image - small valid JPEG
+        const TEST_IMAGE = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAACAAIDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=";
+        
+        async function runTest() {
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+            
+            // Step 1: Check if we're logged in
+            addResult('info', 'Step 1: Checking authentication...');
+            try {
+                const authRes = await fetch('https://oil-painting-app.vercel.app/api/user/usage');
+                if (authRes.status === 401) {
+                    addResult('error', '❌ Not authenticated. Please log in as admin first!');
+                    addResult('info', 'Go to https://oil-painting-app.vercel.app and sign in as thetangstr@gmail.com');
+                    return;
+                } else if (authRes.ok) {
+                    const authData = await authRes.json();
+                    addResult('success', '✅ Authenticated! Usage data:', authData);
+                } else {
+                    addResult('error', `❌ Auth check returned ${authRes.status}`);
+                    const text = await authRes.text();
+                    addResult('error', 'Response:', text);
+                }
+            } catch (e) {
+                addResult('error', '❌ Auth check failed: ' + e.message);
+            }
+            
+            // Step 2: Test the actual generate endpoint
+            addResult('info', 'Step 2: Testing /api/generate with real image...');
+            try {
+                const genRes = await fetch('https://oil-painting-app.vercel.app/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // Include cookies
+                    body: JSON.stringify({
+                        imageData: TEST_IMAGE,
+                        style: 'renaissance'
+                    })
+                });
+                
+                const genData = await genRes.json();
+                
+                if (genRes.ok) {
+                    addResult('success', '🎉 SUCCESS! Generation worked!');
+                    addResult('success', 'Preview description length: ' + (genData.preview?.description?.length || 0));
+                    addResult('success', 'Usage remaining: ' + genData.usage?.remaining);
+                } else {
+                    addResult('error', `❌ Generate failed with ${genRes.status}: ${genData.error}`);
+                    addResult('error', 'Full response:', genData);
+                    
+                    // Specific error checks
+                    if (genData.error?.includes('API key')) {
+                        addResult('error', '🔧 FIX: Check GEMINI_API_KEY in Vercel');
+                    }
+                    if (genData.error?.includes('rate limit')) {
+                        addResult('info', 'Rate limited - but API is working!');
+                    }
+                    if (genData.error?.includes('allowlist')) {
+                        addResult('error', 'Account not allowlisted - needs admin to approve');
+                    }
+                }
+            } catch (e) {
+                addResult('error', '❌ Generate request failed: ' + e.message);
+            }
+            
+            // Step 3: Check health
+            addResult('info', 'Step 3: Checking Gemini health...');
+            try {
+                const healthRes = await fetch('https://oil-painting-app.vercel.app/api/health/gemini');
+                const healthData = await healthRes.json();
+                if (healthData.status === 'healthy') {
+                    addResult('success', '✅ Gemini API is healthy');
+                } else {
+                    addResult('error', '❌ Gemini API issue:', healthData);
+                }
+            } catch (e) {
+                addResult('error', '❌ Health check failed: ' + e.message);
+            }
+        }
+        
+        function addResult(type, message, data) {
+            const div = document.createElement('div');
+            div.className = 'test ' + type;
+            div.innerHTML = message;
+            if (data) {
+                const pre = document.createElement('pre');
+                pre.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+                div.appendChild(pre);
+            }
+            document.getElementById('results').appendChild(div);
+        }
+    </script>
+</body>
+</html>

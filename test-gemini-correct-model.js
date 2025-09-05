@@ -1,7 +1,7 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 async function testGeminiKey() {
-  const apiKey = "AIzaSyB0QRFg7tayl1jW9oDkUfFST5K7hSx2EzM";
+  const apiKey = "AIzaSyCezYU2wRlZcQDV28tMY1XwiIYbv3s7Hhs";
   const modelName = "models/gemini-2.5-flash-image-preview"; // CORRECT MODEL NAME
   
   try {
