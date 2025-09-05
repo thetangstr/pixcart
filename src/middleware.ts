@@ -33,7 +33,28 @@ export async function middleware(request: NextRequest) {
     const updatedSupabase = createClient(request, response);
     const { data: { user } } = await updatedSupabase.auth.getUser();
     
-    // Protect admin routes
+    // Check allowlist for authenticated users on protected routes
+    const protectedRoutes = ['/admin', '/create', '/dashboard', '/profile', '/api/generate', '/api/user'];
+    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+    
+    if (user && isProtectedRoute) {
+      // Import dynamically to avoid circular dependency
+      const { checkUserAllowlist } = await import('@/lib/allowlist-check');
+      const { allowed, isAdmin } = await checkUserAllowlist(user.email);
+      
+      if (!allowed) {
+        // User is authenticated but not allowlisted
+        await updatedSupabase.auth.signOut();
+        return NextResponse.redirect(new URL('/waitlist?status=pending', request.url));
+      }
+      
+      // Additional check for admin routes
+      if (pathname.startsWith('/admin') && !isAdmin) {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+    }
+    
+    // Protect admin routes from non-authenticated users
     if (pathname.startsWith('/admin')) {
       if (!user) {
         // Redirect to login if not authenticated
