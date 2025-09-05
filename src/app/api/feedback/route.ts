@@ -25,15 +25,18 @@ export async function POST(request: NextRequest) {
 
     // Create user if doesn't exist
     if (!dbUser) {
+      const isAdminEmail = user.email === 'thetangstr@gmail.com';
       dbUser = await prisma.user.create({
         data: {
           id: user.id,
           email: user.email || `user_${user.id}@pixcart.com`,
           name: user.user_metadata?.name || user.user_metadata?.full_name || (user.email ? user.email.split('@')[0] : `user_${user.id}`),
           image: user.user_metadata?.avatar_url,
-          dailyImageLimit: 10,
-          isBetaTester: true,
-          isAllowlisted: true
+          dailyImageLimit: isAdminEmail ? 999 : 10,
+          isBetaTester: false,
+          isAllowlisted: isAdminEmail, // Only admin is auto-allowlisted
+          isWaitlisted: !isAdminEmail,
+          isAdmin: isAdminEmail
         }
       });
     }

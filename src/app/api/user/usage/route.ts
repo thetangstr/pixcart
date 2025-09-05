@@ -38,12 +38,16 @@ export async function GET(request: NextRequest) {
     }
 
     if (!user) {
-      // Create user if they don't exist
+      // Create user if they don't exist (waitlisted by default)
+      const isAdminEmail = authUser.email === 'thetangstr@gmail.com';
       user = await prisma.user.create({
         data: {
           id: authUser.id,
           email: authUser.email || `user_${authUser.id}@pixcart.com`,
-          dailyImageLimit: 10, // Default limit for new users
+          dailyImageLimit: isAdminEmail ? 999 : 10,
+          isAllowlisted: isAdminEmail, // Only admin is auto-allowlisted
+          isWaitlisted: !isAdminEmail,
+          isAdmin: isAdminEmail
         },
         select: {
           id: true,

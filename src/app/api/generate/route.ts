@@ -59,15 +59,18 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // Create user if they don't exist (with default allowlisted status)
+      // Create user if they don't exist (waitlisted by default)
       if (!dbUser) {
+        const isAdminEmail = user.email === 'thetangstr@gmail.com';
         dbUser = await prisma.user.create({
           data: {
             id: user.id,
             email: user.email || `user_${user.id}@pixcart.com`,
-            dailyImageLimit: 10,
-            isAllowlisted: true, // Allow new users by default for beta
-            isBetaTester: true
+            dailyImageLimit: isAdminEmail ? 999 : 10,
+            isAllowlisted: isAdminEmail, // Only admin is auto-allowlisted
+            isWaitlisted: !isAdminEmail, // Others go to waitlist
+            isBetaTester: false,
+            isAdmin: isAdminEmail
           },
           select: { isAllowlisted: true, isAdmin: true }
         });
