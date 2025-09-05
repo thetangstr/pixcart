@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateOilPaintingPreview, styleFilters, PaintingStyle } from "@/lib/gemini";
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
-import { checkImageGenerationLimit, checkIPRateLimit, incrementIPUsage } from "@/lib/rate-limit";
+import { checkImageGenerationLimit, checkIPRateLimit, incrementIPUsage, incrementUserImageUsage } from "@/lib/rate-limit-supabase";
 
 function getClientIP(request: NextRequest): string {
   const forwarded = request.headers.get('x-forwarded-for');
@@ -193,7 +193,8 @@ export async function POST(request: NextRequest) {
 
     // Increment usage counters after successful generation
     if (isAuthenticated && user) {
-      // User rate limit is tracked in the generateOilPaintingPreview function
+      // Increment user usage
+      await incrementUserImageUsage(user.id);
     } else {
       // Increment IP usage
       await incrementIPUsage(getClientIP(request));
