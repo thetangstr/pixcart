@@ -1,0 +1,21 @@
+PixCart Deployment Monitor - Results
+====================================
+
+❌ Status: FAILED (0% success rate)
+Branch: main (6f2831e1)
+Message: Fix Vercel build by adding Prisma generation
+Author: Kailor
+Completed: Thu Sep  4 19:13:52 PDT 2025
+
+Phase Results:
+✓ Deployment: FAILED
+✓ Health Check: FAILED
+✓ Analysis: FAILED
+
+❌ Deployment encountered issues.
+🔧 Please review and fix problems.
+🚨 Application may not be working properly.
+
+Full logs: deployment-monitoring.log
+Test results: ./test-results/
+Session: autopush-1757038412-6f2831e1
