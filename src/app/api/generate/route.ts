@@ -247,17 +247,38 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error("Generation error:", error);
     
-    // More detailed error response for debugging
-    const errorMessage = error.message || "Failed to generate preview";
+    // Check for specific error types
+    let errorMessage = "Failed to generate preview";
+    let errorCode = 'UNKNOWN_ERROR';
+    let statusCode = 500;
+    
+    if (error.message?.includes("GEMINI_API_KEY")) {
+      errorMessage = "AI service is not configured. Please contact support.";
+      errorCode = 'SERVICE_UNAVAILABLE';
+      statusCode = 503;
+    } else if (error.message?.includes("rate limit") || error.message?.includes("quota")) {
+      errorMessage = "AI service rate limit exceeded. Please try again later.";
+      errorCode = 'RATE_LIMITED';
+      statusCode = 429;
+    } else if (error.message?.includes("Invalid API key")) {
+      errorMessage = "AI service configuration error. Please contact support.";
+      errorCode = 'INVALID_CONFIG';
+      statusCode = 503;
+    } else if (error.message) {
+      errorMessage = error.message;
+      errorCode = error.code || 'API_ERROR';
+    }
+    
     const errorResponse: any = { 
       error: errorMessage,
-      code: error.code || 'UNKNOWN_ERROR'
+      code: errorCode
     };
     
     // Add more details in development
     if (process.env.NODE_ENV === "development") {
       errorResponse.details = error.stack;
       errorResponse.name = error.name;
+      errorResponse.originalMessage = error.message;
     }
     
     // Log the full error for debugging
@@ -268,6 +289,6 @@ export async function POST(request: NextRequest) {
       stack: error.stack
     });
     
-    return NextResponse.json(errorResponse, { status: 500 });
+    return NextResponse.json(errorResponse, { status: statusCode });
   }
 }
