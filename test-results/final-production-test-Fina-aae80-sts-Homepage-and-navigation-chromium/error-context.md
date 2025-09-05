@@ -1,0 +1,49 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "PixCart" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img [ref=e5] [cursor=pointer]
+        - generic [ref=e11] [cursor=pointer]: PixCart
+      - button "Sign In" [active] [ref=e13]
+  - main [ref=e14]:
+    - generic [ref=e16]:
+      - link "PixCart" [ref=e17] [cursor=pointer]:
+        - /url: /
+        - img [ref=e18] [cursor=pointer]
+        - generic [ref=e24] [cursor=pointer]: PixCart
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: Welcome to PixCart
+          - generic [ref=e28]: Sign in to transform your pet photos into art
+        - generic [ref=e29]:
+          - button "Continue with Google" [ref=e30]:
+            - img
+            - text: Continue with Google
+          - generic [ref=e35]: Or continue with
+          - generic [ref=e36]:
+            - tablist [ref=e37]:
+              - tab "Sign In" [selected] [ref=e38]
+              - tab "Sign Up" [ref=e39]
+            - tabpanel "Sign In" [ref=e40]:
+              - generic [ref=e41]:
+                - generic [ref=e42]:
+                  - generic [ref=e43]: Email
+                  - textbox "Email" [ref=e44]
+                - generic [ref=e45]:
+                  - generic [ref=e46]: Password
+                  - textbox "Password" [ref=e47]
+                - button "Sign In" [ref=e48]
+        - paragraph [ref=e50]:
+          - text: By signing in, you agree to our
+          - link "Terms of Service" [ref=e51] [cursor=pointer]:
+            - /url: /terms
+          - text: and
+          - link "Privacy Policy" [ref=e52] [cursor=pointer]:
+            - /url: /privacy
+  - region "Notifications alt+T"
+  - alert [ref=e53]
+```
