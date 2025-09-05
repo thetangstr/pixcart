@@ -161,15 +161,19 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // Create user if they don't exist
+      // Create user if they don't exist (waitlisted by default)
       if (!dbUser) {
+        const isAdminEmail = user.email === 'thetangstr@gmail.com';
         dbUser = await prisma.user.create({
           data: {
             id: user.id,
             email: user.email || `user_${user.id}@pixcart.com`,
             name: user.user_metadata?.full_name || null,
             image: user.user_metadata?.avatar_url || null,
-            dailyImageLimit: 10, // Default limit for new users
+            dailyImageLimit: isAdminEmail ? 999 : 10,
+            isAllowlisted: isAdminEmail,
+            isWaitlisted: !isAdminEmail,
+            isAdmin: isAdminEmail
           },
           select: { id: true }
         });
@@ -241,12 +245,28 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     console.error("Generation error:", error);
-    return NextResponse.json(
-      { 
-        error: error.message || "Failed to generate preview",
-        details: process.env.NODE_ENV === "development" ? error.stack : undefined
-      },
-      { status: 500 }
-    );
+    
+    // More detailed error response for debugging
+    const errorMessage = error.message || "Failed to generate preview";
+    const errorResponse: any = { 
+      error: errorMessage,
+      code: error.code || 'UNKNOWN_ERROR'
+    };
+    
+    // Add more details in development
+    if (process.env.NODE_ENV === "development") {
+      errorResponse.details = error.stack;
+      errorResponse.name = error.name;
+    }
+    
+    // Log the full error for debugging
+    console.error("Full error object:", {
+      name: error.name,
+      message: error.message,
+      code: error.code,
+      stack: error.stack
+    });
+    
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }
