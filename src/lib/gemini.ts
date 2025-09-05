@@ -47,13 +47,10 @@ export async function generateOilPaintingPreview(
   
   return UsageTracker.trackApiCall(
     async () => {
-      console.log(`Starting Gemini API call for ${style} style...`);
-      
       // Get Gemini client with runtime API key
       let genAI;
       try {
         genAI = getGeminiClient();
-        console.log("Gemini client initialized successfully");
       } catch (error) {
         console.error("Failed to initialize Gemini client:", error);
         throw error;
@@ -63,7 +60,6 @@ export async function generateOilPaintingPreview(
       const model = genAI.getGenerativeModel({ 
         model: modelName
       });
-      console.log(`Using Gemini model: ${modelName}`);
 
       // Prepare the image and text prompt for transformation
       const prompt = stylePrompts[style];
@@ -77,17 +73,11 @@ export async function generateOilPaintingPreview(
         },
       };
 
-      console.log("Calling Gemini generateContent with image and prompt...");
       
       // Get artistic instructions from Gemini
       const result = await model.generateContent([imagePart, prompt]);
       const response = await result.response;
       
-      console.log("Gemini response received:", {
-        hasResponse: !!response,
-        hasCandidates: !!response.candidates,
-        candidatesLength: response.candidates?.length || 0
-      });
       
       let description = '';
       let inputTokens = 0;
@@ -102,7 +92,6 @@ export async function generateOilPaintingPreview(
       // Extract the artistic instructions
       if (response.candidates && response.candidates[0]) {
         const text = response.text();
-        console.log("Artistic instructions received, length:", text.length);
         description = text;
         
         // Estimate tokens if not provided
@@ -110,16 +99,9 @@ export async function generateOilPaintingPreview(
           outputTokens = Math.ceil(text.length / 4); // ~4 chars per token
         }
       } else {
-        console.log("No response from Gemini");
         throw new Error("Failed to get artistic instructions from Gemini");
       }
       
-      console.log("Analysis result:", {
-        hasDescription: !!description,
-        descriptionLength: description.length,
-        inputTokens,
-        outputTokens
-      });
       
       // If no description was provided, create a fallback
       if (!description) {
