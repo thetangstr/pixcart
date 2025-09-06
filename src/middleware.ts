@@ -33,31 +33,47 @@ export async function middleware(request: NextRequest) {
     const updatedSupabase = createClient(request, response);
     const { data: { user } } = await updatedSupabase.auth.getUser();
     
-    // Check allowlist for authenticated users on protected routes
-    const protectedRoutes = ['/admin', '/create', '/dashboard', '/profile', '/api/generate', '/api/user'];
-    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
-    
-    if (user && isProtectedRoute) {
-      // Import dynamically to avoid circular dependency
-      const { checkUserAllowlist } = await import('@/lib/allowlist-check');
-      const { allowed, isAdmin } = await checkUserAllowlist(user.email);
+    // Protect routes based on authentication and authorization
+    if (user) {
+      // User is authenticated, check permissions for protected routes
+      const protectedRoutes = ['/admin', '/create', '/dashboard', '/profile', '/api/generate', '/api/user'];
+      const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
       
-      if (!allowed) {
-        // User is authenticated but not allowlisted
-        await updatedSupabase.auth.signOut();
-        return NextResponse.redirect(new URL('/waitlist?status=pending', request.url));
+      if (isProtectedRoute) {
+        try {
+          // Import dynamically to avoid circular dependency
+          const { checkUserAllowlist } = await import('@/lib/allowlist-check');
+          const { allowed, isAdmin } = await checkUserAllowlist(user.email);
+          
+          if (!allowed) {
+            // User is authenticated but not allowlisted
+            await updatedSupabase.auth.signOut();
+            return NextResponse.redirect(new URL('/waitlist?status=pending', request.url));
+          }
+          
+          // Additional check for admin routes
+          if (pathname.startsWith('/admin') && !isAdmin) {
+            // User is allowlisted but not admin, redirect to dashboard
+            return NextResponse.redirect(new URL('/dashboard', request.url));
+          }
+          
+          // User is allowed and has correct permissions, continue
+        } catch (error) {
+          console.error('Error checking user permissions:', error);
+          // On error, redirect to dashboard for safety
+          if (pathname.startsWith('/admin')) {
+            return NextResponse.redirect(new URL('/dashboard', request.url));
+          }
+        }
       }
+    } else {
+      // User is NOT authenticated
+      // Protect all authenticated routes
+      const authRequiredRoutes = ['/admin', '/dashboard', '/profile', '/create'];
+      const requiresAuth = authRequiredRoutes.some(route => pathname.startsWith(route));
       
-      // Additional check for admin routes
-      if (pathname.startsWith('/admin') && !isAdmin) {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
-      }
-    }
-    
-    // Protect admin routes from non-authenticated users
-    if (pathname.startsWith('/admin')) {
-      if (!user) {
-        // Redirect to login if not authenticated
+      if (requiresAuth) {
+        // Redirect to login
         const loginUrl = new URL('/auth/signin', request.url);
         loginUrl.searchParams.set('callbackUrl', pathname);
         return NextResponse.redirect(loginUrl);

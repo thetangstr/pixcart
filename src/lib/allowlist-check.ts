@@ -26,8 +26,9 @@ export async function checkUserAllowlist(email: string | undefined): Promise<{
 
     // If user doesn't exist, create them as waitlisted (not allowed)
     if (!user) {
-      // Special case: admin email always gets access
-      const isAdminEmail = email === 'thetangstr@gmail.com';
+      // Special case: admin emails always get access
+      const adminEmails = ['thetangstr@gmail.com'];
+      const isAdminEmail = adminEmails.includes(email.toLowerCase());
       
       user = await prisma.user.create({
         data: {
